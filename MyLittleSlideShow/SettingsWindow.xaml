@@ -1,0 +1,56 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:MyLittleSlideShow" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Name="SettingsWindowMain" x:Class="MyLittleSlideShow.SettingsWindow"
+        Title="Menü" Height="447" Width="578" ResizeMode="NoResize" Loaded="SettingsWindowMain_Loaded" WindowStartupLocation="CenterOwner" Icon="Images/MyIcon.png">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/GlassButton.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Background>
+        <ImageBrush ImageSource="Images/Gear.jpg"/>
+    </Window.Background>
+
+
+    <Grid>
+        <Button x:Name="ChangeLog_Button" Content="Infos" HorizontalAlignment="Right" Margin="0,0,125,10" VerticalAlignment="Bottom" Width="75" Click="InfoWindow_Button_Click"/>
+
+        <Label Content="Bildwechsel in Minuten" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,198,0,0"/>
+        <TextBox x:Name="Interval_in_Minutes" HorizontalAlignment="Left" Height="22" Margin="152,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="133" TextAlignment="Center" PreviewTextInput="NumberValidationTextBox" />
+
+        <Label Content="Pfad der Bilder" HorizontalAlignment="Left" Margin="16,0,0,110" VerticalAlignment="Bottom" FontWeight="Bold"/>
+        <TextBlock  x:Name="FileFolderPath_Label" TextWrapping="Wrap"  HorizontalAlignment="Left" Margin="21,0,0,64" Width="383" Height="41" VerticalAlignment="Bottom"/>
+        <Button x:Name="SelectFolder_Button" Content="neuen Pfad wählen" HorizontalAlignment="Left" Margin="10,0,0,31" VerticalAlignment="Bottom" Width="198" Click="SelectFolder_Button_Click" RenderTransformOrigin="0.475,0.455"/>
+        <Button x:Name="SaveButton" Content="Speichern" Margin="0,0,10,10" VerticalAlignment="Bottom"  Click="SaveButton_Click" HorizontalAlignment="Right" Width="110"/>
+        <Button x:Name="resetPath_Button" Content="Pfad zurücksetzen" HorizontalAlignment="Left" Margin="213,0,0,31" VerticalAlignment="Bottom" Width="117" Click="resetPath_Button_Click"/>
+
+
+        <CheckBox x:Name="Rekursive" Content="Rekursive Scannen" HorizontalAlignment="Left" Margin="121,0,0,115" VerticalAlignment="Bottom" />
+        <CheckBox x:Name="Autostart_CheckBox" Content="Automatisch mit Windows starten" HorizontalAlignment="Left" Margin="21,51,0,0" VerticalAlignment="Top"   RenderTransformOrigin="0.924,0.688"/>
+        <Label x:Name="Hyperlink_Label" Foreground="#0850cc" Content="MyLittleSlideShow wird entwickelt von MTS-Solutions.de" HorizontalAlignment="Left" Margin="6,0,0,6" VerticalAlignment="Bottom" FontWeight="Bold" Cursor="Hand" MouseLeftButtonDown="Label_MouseLeftButtonDown">
+            <Label.Effect>
+                <DropShadowEffect RenderingBias="Quality" BlurRadius="6" Opacity="0.4" ShadowDepth="3"/>
+            </Label.Effect>
+        </Label>
+        <Label Content="MyLittleSlideShow Einstellungen" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <TextBox x:Name="SharpenValue_Textbox" HorizontalAlignment="Left" Height="23" Margin="121,91,0,0" TextWrapping="Wrap" Text="25" VerticalAlignment="Top" Width="48" TextAlignment="Center" MaxLength="2" PreviewTextInput="NumberValidationTextBox"/>
+        <Label Content="(0-99  default: 25)" HorizontalAlignment="Left" Margin="169,89,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="BilderSchaerfenCheckbox" Content="Bilder Schärfen" HorizontalAlignment="Left" Margin="21,94,0,0" VerticalAlignment="Top" />
+        <Image x:Name="SpendenImageButton" HorizontalAlignment="Right" Height="22" Margin="0,0,11,37" VerticalAlignment="Bottom" Width="71" Source="Images/Spenden.png" Cursor="Hand" MouseLeftButtonDown="SpendenImageButton_MouseLeftButtonDown" ToolTip="Du möchtest MTS-Solutions.de via PayPal unterstützen? Dann Klick Mich."/>
+        <CheckBox x:Name="SetEveryImageAsWallpaper_Checkbox" Content="Jedes Bild beim wechsel auch als Hintergrundbild verwenden" HorizontalAlignment="Left" Margin="21,177,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="ShowAmbiFrameCheckbox" Content="AmbiFrame anzeigen, mit einer Deckkraft von" HorizontalAlignment="Left" Margin="21,122,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="AmbiFrameOpacity" HorizontalAlignment="Left" Height="23" Margin="285,119,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="48" TextAlignment="Center" MaxLength="2" PreviewTextInput="NumberValidationTextBox"/>
+        <Label Content="(0-99  default: 90)" HorizontalAlignment="Left" Margin="333,117,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="WallpaperStyle_ComboBox" HorizontalAlignment="Left" Margin="169,229,0,0" VerticalAlignment="Top" Width="116"/>
+        <Label Content="Desktophintergrund Style:" HorizontalAlignment="Left" Margin="15,227,0,0" VerticalAlignment="Top"/>
+        <Image HorizontalAlignment="Left" Margin="253,0,0,115" Width="27" Source="Images/Info2.png" Stretch="None" ToolTip="Folgende Formate werden unterstützt: &quot;jpg&quot;, &quot;jpeg&quot;, &quot;png&quot;, &quot;gif&quot;, &quot;tiff&quot;, &quot;bmp&quot;" Height="21" VerticalAlignment="Bottom"/>
+
+        <local:UserControl_InfoWindow x:Name="UC_InfoWindow" VerticalAlignment="Top" Width="Auto" Height="Auto" Visibility="Hidden"/>
+
+    </Grid>
+
+
+</Window>

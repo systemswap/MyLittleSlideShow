@@ -1,0 +1,86 @@
+﻿Änderungshistorie von MyLittleSlideShow
+
+1.0.0.0
+	#New - erstes Design in WPF
+1.1.0.1
+	#New - Steuerung für Vor, Zurück und Start / Stop 
+
+1.2.0.1
+	#New - Einstellungsmöglichkeit hinzugefügt
+	#New - Autostart hinzugefügt
+
+1.3.0.1
+	#New - Contextmenü im Systemtray eingefügt
+
+1.4.0.1
+	#New - Automatische Bildrotation durch ExifTag "Orientation"
+	#New - ExifDaten Auslesen
+
+1.5.0.1
+	#New - Schärfefilter hinzugefügt
+	#New - aktuelles Bild als Hintergrundbild verwenden
+	#New – neue Option – jeder Bildwechsel wechselt auch den Desktophintergrund
+
+1.6.0.1
+	#New - verschiedenste Optimierungen
+	#New – mehr individuelle Einstellungen möglich
+
+1.7.5.1	
+	#New - Desktop Hintergrundstyle ist jetzt wählbar (Zentriert, Gestreckt, Angepasst)
+	#New - Die Transparenz des AmbiFrame ist jetzt einstellbar
+	#Fixed – Fehleingaben werden jetzt in den Einstellungen abgefangen 
+
+1.7.5.2
+	#New - AmbiFrame kann jetzt Transparent gesetzt werden
+
+1.7.5.3
+	#Fixed - AmbiFrame blendet sich jetzt Zeitgleich mit den Controls aus
+
+1.7.5.4
+	#New - im Contextmenü des Systemtray Minimieren hinzugefügt
+	#Fixed - Optimierung der automatischen Bildrotation via Exif Daten
+	#Fixed - Allgemeine Fixes
+
+1.8.0.1
+	#New - MyLittleSlideShow ist Resize fähig
+
+1.8.0.2
+	#New - Change Log hinzugefügt
+	#Fixed - Bild als Hintergrund verwenden optimiert
+
+1.8.0.3
+	#Fixed - Change Log Anzeige optimierte
+	#New - MyLittleSlideShow ist jetzt in der Lage ein gesamtes Laufwerk nach Bildern zu scannen
+
+1.8.1.1
+	#Fixed - Einlesen der Bilder Optimiert
+
+1.8.1.2
+	#Fixed - weitere Performance Optimierungen beim einlesen der Bilder
+
+1.8.1.3
+	#Fixed - Optimierung beim Einlesen eines gesamten Laufwerks
+	#Fixed - kleinere Bug Fixes beim laden
+
+1.8.1.4
+	#Fixed - Fehler beim Autostart behoben
+
+1.8.1.5
+	#New - den Controls eine halb Transparenten weißen Hintergrund für besser Sicht spendiert
+
+1.8.1.6
+	#New - es können jetzt auch Bilder als Hintergrund gesetzt werden bei denen der Mime typ kein „jpg“ oder „bmp“ ist
+
+1.8.2.1
+	#Fixed - Optimierung um verschiedene Formate als Hintergrund setzen zu können
+
+1.8.2.2
+	#New - Mausrad kann jetzt zum Wechseln der Bilder verwendet werden
+
+1.8.2.3
+	#Fixed - Fehler beim Minimieren behoben
+
+1.8.2.4
+	#New - Vergrößern und verkleinern funktioniert jetzt mit der Kombination "rechter maustaste + Mausrad"
+
+

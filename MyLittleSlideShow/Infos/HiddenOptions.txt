@@ -1,0 +1,8 @@
+﻿Versteckte Optionen
+
+Befindet sich die Maus über dem gezeigten Bild sind folgende Optionen möglich.
+-	Bildwechsel durch Drehen des Mausrades
+-	Vergrößern und Verkleinern der Anwendung durch
+	gedrückt halten der rechten Maustaste und drehen des Mausrades
+
+Die Anwendung muß aktiv bzw. einmal mit der linken Maustaste angeklickt wurden sein.
