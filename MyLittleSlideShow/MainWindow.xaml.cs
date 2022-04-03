@@ -888,8 +888,9 @@ namespace MyLittleSlideShow
 
         private void ShowImage_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            
             //wenn der rechte maus taste gedrückt ist soll die form größe geändert werden ansonsten bildwechsel
-            if (e.RightButton == MouseButtonState.Pressed) //((System.Windows.Forms.Control.MouseButtons & MouseButtons.Right) != 0)
+            if(Keyboard.IsKeyDown(Key.LeftCtrl))//if (e.RightButton == MouseButtonState.Pressed) //((System.Windows.Forms.Control.MouseButtons & MouseButtons.Right) != 0)
             {
                 // right button is down.
                 if (e.Delta < 0)
@@ -1084,5 +1085,8 @@ namespace MyLittleSlideShow
             ZoomImage.Opacity = 1;
         }
         #endregion
+      
+       
+        
     }
 }
