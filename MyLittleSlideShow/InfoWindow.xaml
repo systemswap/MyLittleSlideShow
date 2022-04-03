@@ -1,0 +1,10 @@
+﻿<Window x:Name="InfoWindow1" x:Class="MyLittleSlideShow.InfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="FileInfos" Height="445" Width="402" WindowStartupLocation="CenterScreen" Icon="Images/MyIcon.png" ResizeMode="NoResize">
+    <Grid>
+        <ListBox x:Name="InfoLB" Margin="10,24,10,42"/>
+        <Button x:Name="OpenDirectory_Button" Content="Verzeichnis öffnen" Margin="0,0,124,10" Click="OpenDirectory_Button_Click" Height="27" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="128"/>
+        <Button x:Name="CloseButton" Content="Schließen" Margin="277,0,10,10" Click="CloseButton_Click" Height="27" VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>
