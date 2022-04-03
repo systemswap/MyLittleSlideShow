@@ -2,10 +2,10 @@
 Diashow Tool for Desktop
 
 ## Features
-* option to sharp the Images
-* option to change the Size of the Diashowtool
-* Enable / disable Backgroud with Menu (Ambiframe)
-* start with Windows automatic
+* sharp the Images
+* change the Size of the Diashowtool
+* Enable / disable Background with Menu (Ambiframe)
+* start with Windows
 * set every Picture as Windows background
 
 ## with Ambiframe
