@@ -27,12 +27,12 @@
 
     <Grid x:Name="MainGrid" HorizontalAlignment="Left" Width="367" Background="Transparent">
 
-        <Image x:Name="BackgroundImageBox" Source="pack://siteoforigin:,,,/Images/Buch.png" Margin="-29,-12,-21,-38" Stretch="Fill" Opacity="0.9" >
+        <Image x:Name="BackgroundImageBox" Source="pack://siteoforigin:,,,/Images/Buch.png" Margin="-29,-12,-21,-38" Stretch="Fill" Opacity="0.9">
             <Image.Effect>
                 <BlurEffect Radius="50" RenderingBias="Quality"/>
             </Image.Effect>
         </Image>
-        <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Margin="15,12,17,48" Source="pack://siteoforigin:,,,/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel" >
+        <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Margin="15,12,17,48" Source="pack://siteoforigin:,,,/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel">
             <Image.Effect>
                 <DropShadowEffect RenderingBias="Quality" Opacity="0.6" BlurRadius="10" ShadowDepth="6"/>
             </Image.Effect>

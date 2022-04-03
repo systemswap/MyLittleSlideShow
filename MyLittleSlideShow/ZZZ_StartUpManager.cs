@@ -52,7 +52,7 @@ namespace ZZZ
 
             try
             {
-                if (all_key.GetValue(FullAssemblyName) != null && is_the_same_location)
+                if (all_key != null && all_key.GetValue(FullAssemblyName) != null && is_the_same_location)
                 {
                     _isonstartup = true;
                 }
