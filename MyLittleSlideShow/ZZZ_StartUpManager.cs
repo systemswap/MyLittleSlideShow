@@ -13,12 +13,12 @@ namespace ZZZ
 {
     public class StartUpManager
     {
-        string AppPath_with_Name = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+        string AppPath_with_Name = System.Reflection.Assembly.GetExecutingAssembly().Location;
         string appName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
         string FullAssemblyName = Assembly.GetExecutingAssembly().FullName;
 
         string myDocumentsFile = string.Empty;
-        string MyLocation = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+        string MyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
         public string getCurrentLocationOfApplication
         {

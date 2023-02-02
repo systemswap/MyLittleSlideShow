@@ -581,7 +581,9 @@ namespace MyLittleSlideShow
             {
                 // Attempt to get a list of security permissions from the folder. 
                 // This will raise an exception if the path is read only or do not have access to view the permissions. 
-                System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(folder, System.Security.AccessControl.AccessControlSections.Access);
+                //System.Security.AccessControl.DirectorySecurity ds = Directory.GetAccessControl(folder, System.Security.AccessControl.AccessControlSections.Access);
+
+                System.Security.AccessControl.DirectorySecurity ds = FileSystemAclExtensions.GetAccessControl(new DirectoryInfo(folder), System.Security.AccessControl.AccessControlSections.Access);
                 return true;
             }
             catch (UnauthorizedAccessException)

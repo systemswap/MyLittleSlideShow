@@ -87,4 +87,6 @@
 	#New - Erweiterung der Zoom Eigenschaft auf Strg (ctrl) und Mausrad
 	#Fixed - Startup Position wird jetzt auch bei mehreren Monitoren richtig gewählt
 
+1.9.0.0
+	#New - upgrade to .Net7
 
