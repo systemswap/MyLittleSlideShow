@@ -4,22 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Forms;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MyLittleSlideShow
 {
@@ -764,7 +754,7 @@ namespace MyLittleSlideShow
         #endregion
 
         #region ResizeMainForm
-        Timer ResizeFormTimer = new Timer();
+        System.Windows.Forms.Timer ResizeFormTimer = new System.Windows.Forms.Timer();
         private void Main_Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             ResizeFormTimer.Tick += ResizeOffestTimer_Tick;
