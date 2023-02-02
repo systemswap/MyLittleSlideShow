@@ -18,7 +18,7 @@ namespace ZZZ
         static public void PayPalSpenden(Sprache welcheSprache)
         {
             string url = "";
-            string business = "thomas.mueller@tuta.io";         // your paypal email
+            string business = "mail.t.mueller@googlemail.com";         // your paypal email
             string description = string.Empty;                         // '%20' represents a space. remember HTML!
             string country = string.Empty;                             // DE, AU, US, etc.
             string currency = string.Empty;                            // EUR, AUD, USD, etc.

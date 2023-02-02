@@ -30,7 +30,7 @@
 
         <CheckBox x:Name="Rekursive" Content="Rekursive Scannen" HorizontalAlignment="Left" Margin="121,0,0,115" VerticalAlignment="Bottom" />
         <CheckBox x:Name="Autostart_CheckBox" Content="Automatisch mit Windows starten" HorizontalAlignment="Left" Margin="21,51,0,0" VerticalAlignment="Top"   RenderTransformOrigin="0.924,0.688"/>
-        <Label x:Name="Hyperlink_Label" Foreground="#0850cc" Content="MyLittleSlideShow" HorizontalAlignment="Left" Margin="6,0,0,6" VerticalAlignment="Bottom" FontWeight="Bold" Cursor="Hand" MouseLeftButtonDown="Label_MouseLeftButtonDown">
+        <Label x:Name="Hyperlink_Label" Foreground="#0850cc" Content="MyLittleSlideShow wird entwickelt von MTS-Solutions.de" HorizontalAlignment="Left" Margin="6,0,0,6" VerticalAlignment="Bottom" FontWeight="Bold" Cursor="Hand" MouseLeftButtonDown="Label_MouseLeftButtonDown">
             <Label.Effect>
                 <DropShadowEffect RenderingBias="Quality" BlurRadius="6" Opacity="0.4" ShadowDepth="3"/>
             </Label.Effect>

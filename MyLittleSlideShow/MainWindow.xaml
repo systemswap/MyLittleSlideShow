@@ -3,7 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"       
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:MyLittleSlideShow" mc:Ignorable="d" x:Name="Main_Window" x:Class="MyLittleSlideShow.MainWindow"       
-        Title="MyLittleSlideShow" MinWidth="340" Height="315" Width="367" Loaded="Window_Loaded" WindowStyle="None"  MouseDown="Main_Window_MouseDown" AllowsTransparency="True" Closing="Main_Window_Closing" MouseLeave="Main_Window_MouseLeave" MouseMove="Main_Window_MouseMove" Background="Transparent">
+        Title="MyLittleSlideShow" MinWidth="340" Height="315" Width="367" Loaded="Window_Loaded" WindowStyle="None"  MouseDown="Main_Window_MouseDown" AllowsTransparency="True" Closing="Main_Window_Closing" MouseLeave="Main_Window_MouseLeave" MouseMove="Main_Window_MouseMove" Background="Transparent" MouseUp="Main_Window_MouseUp" KeyDown="Main_Window_KeyDown" KeyUp="Main_Window_KeyUp">
 
 
 
@@ -27,12 +27,12 @@
 
     <Grid x:Name="MainGrid" HorizontalAlignment="Left" Width="367" Background="Transparent">
 
-        <Image x:Name="BackgroundImageBox" Source="pack://siteoforigin:,,,/Images/Buch.png" Margin="-29,-12,-21,-38" Stretch="Fill" Opacity="0.9">
+        <Image x:Name="BackgroundImageBox" Source="pack://siteoforigin:,,,/Images/Buch.png" Margin="-29,-12,-21,-38" Stretch="Fill" Opacity="0.9" >
             <Image.Effect>
                 <BlurEffect Radius="50" RenderingBias="Quality"/>
             </Image.Effect>
         </Image>
-        <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Margin="15,12,17,48" Source="pack://siteoforigin:,,,/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel">
+        <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Margin="15,12,17,48" Source="pack://siteoforigin:,,,/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel" >
             <Image.Effect>
                 <DropShadowEffect RenderingBias="Quality" Opacity="0.6" BlurRadius="10" ShadowDepth="6"/>
             </Image.Effect>

@@ -116,9 +116,24 @@ namespace MyLittleSlideShow
 
             //Load all Settings from PropertiesSettings  
             zsm.LoadAllSettings();
-    
+
+            int wholeScreenWidth = 0;
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                wholeScreenWidth += screen.Bounds.Width;
+            }
+
             Main_Window.Top = zsm._PositionTop;
-            Main_Window.Left = zsm._PositionLeft;             
+            if (wholeScreenWidth > zsm._PositionLeft)
+            {
+                Main_Window.Left = zsm._PositionLeft;
+            }
+            else
+            {
+                Main_Window.Left = Screen.AllScreens[0].Bounds.Width - Main_Window.Width - 20;
+            }
+            zsm.SaveAllSettings();
+                        
 
 
             //NotifyIcon and create the ContextMenu
@@ -719,6 +734,8 @@ namespace MyLittleSlideShow
                     if (MoveForm)
                     {                        
                         this.DragMove();
+                        zsm._PositionTop = Main_Window.Top;
+                        zsm._PositionLeft = Main_Window.Left;
                         zsm.SaveAllSettings();
                     }
                     else
@@ -888,9 +905,8 @@ namespace MyLittleSlideShow
 
         private void ShowImage_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            
             //wenn der rechte maus taste gedrückt ist soll die form größe geändert werden ansonsten bildwechsel
-            if(Keyboard.IsKeyDown(Key.LeftCtrl))//if (e.RightButton == MouseButtonState.Pressed) //((System.Windows.Forms.Control.MouseButtons & MouseButtons.Right) != 0)
+            if (e.RightButton == MouseButtonState.Pressed || holdsStrg) //((System.Windows.Forms.Control.MouseButtons & MouseButtons.Right) != 0)
             {
                 // right button is down.
                 if (e.Delta < 0)
@@ -1085,8 +1101,24 @@ namespace MyLittleSlideShow
             ZoomImage.Opacity = 1;
         }
         #endregion
-      
-       
-        
+
+        private void Main_Window_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            //zsm.SaveAllSettings();
+        }
+
+        bool holdsStrg = false;
+        private void Main_Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                holdsStrg = true;
+            }
+        }
+
+        private void Main_Window_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            holdsStrg = false;
+        }
     }
 }

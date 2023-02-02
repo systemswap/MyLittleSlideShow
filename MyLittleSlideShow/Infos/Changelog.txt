@@ -84,4 +84,7 @@
 	#New - Vergrößern und verkleinern funktioniert jetzt mit der Kombination "rechter maustaste + Mausrad"
 
 1.8.2.5
-	#New - Vergrößern und verkleinern geändert auf linkte Strg Taste und Mausrad drehen
+	#New - Erweiterung der Zoom Eigenschaft auf Strg (ctrl) und Mausrad
+	#Fixed - Startup Position wird jetzt auch bei mehreren Monitoren richtig gewählt
+
+

@@ -3,6 +3,6 @@
 Befindet sich die Maus über dem gezeigten Bild sind folgende Optionen möglich.
 -	Bildwechsel durch Drehen des Mausrades
 -	Vergrößern und Verkleinern der Anwendung durch
-	gedrückt halten der linken Strg Taste und drehen des Mausrades
+	gedrückt halten der rechten Maustaste oder Strg (ctrl) und drehen des Mausrades
 
 Die Anwendung muß aktiv bzw. einmal mit der linken Maustaste angeklickt wurden sein.
