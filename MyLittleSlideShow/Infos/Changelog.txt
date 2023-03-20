@@ -90,3 +90,6 @@
 1.9.0.0
 	#New - upgrade to .Net7
 
+1.9.0.1
+	#Fixed - Link in Autostart referenced to the .dll instead to .exe
+

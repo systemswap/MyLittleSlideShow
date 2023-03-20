@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -124,7 +125,7 @@ namespace ZZZ
         {           
             using (StreamWriter writer = new StreamWriter(AutostartFile))
             {
-                string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                string app = Process.GetCurrentProcess().MainModule.FileName; //System.Reflection.Assembly.GetExecutingAssembly().Location;
                 writer.WriteLine("[InternetShortcut]");
                 writer.WriteLine("URL=file:///" + app);
                 writer.WriteLine("IconIndex=0");
@@ -151,7 +152,7 @@ namespace ZZZ
                     File.Delete(myDocumentsFile);
                 }
 
-                all_key.DeleteValue(FullAssemblyName, false);
+                if(all_key != null) all_key.DeleteValue(FullAssemblyName, false);
             }
             catch (Exception)
             {
