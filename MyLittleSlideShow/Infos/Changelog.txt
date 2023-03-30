@@ -101,3 +101,6 @@
 
 1.9.0.4
 	#Fixed - some little issues
+
+1.9.0.5
+	#Fixed - some Timer issues
