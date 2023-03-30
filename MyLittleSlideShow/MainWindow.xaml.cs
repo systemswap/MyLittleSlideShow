@@ -925,7 +925,8 @@ namespace MyLittleSlideShow
 
         private void RotateRightImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBoxResult result = System.Windows.MessageBox.Show("Soll das Bild, im Uhrzeigersinn gedreht werden?", "Achtung", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            //MessageBoxResult result = System.Windows.MessageBox.Show("Soll das Bild, im Uhrzeigersinn gedreht werden?", "Achtung", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBoxResult.Yes;
 
             if (result == MessageBoxResult.Yes)
             {
@@ -936,7 +937,8 @@ namespace MyLittleSlideShow
         
         private void RotateLeftImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBoxResult result = System.Windows.MessageBox.Show("Soll das Bild, gegen den Uhrzeigersinn gedreht werden?", "Achtung", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            //MessageBoxResult result = System.Windows.MessageBox.Show("Soll das Bild, gegen den Uhrzeigersinn gedreht werden?", "Achtung", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBoxResult.Yes;
 
             if (result == MessageBoxResult.Yes)
             {

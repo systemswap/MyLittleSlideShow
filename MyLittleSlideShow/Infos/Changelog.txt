@@ -93,3 +93,5 @@
 1.9.0.1
 	#Fixed - Link in Autostart referenced to the .dll instead to .exe
 
+1.9.0.2
+	#Fixed - question before rotate image was removed
