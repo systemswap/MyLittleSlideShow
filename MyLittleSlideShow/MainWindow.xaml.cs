@@ -156,7 +156,8 @@ namespace MyLittleSlideShow
             LoadMyImage(whichImage.LastLoadedFile, zsm._ScanFolderRekursive, true, true);
 
             initializeSlideShowTimer();
-            SlideShowTimer.Start();                       
+
+            if(zsm._ActivateSlideShow) SlideShowTimer.Start(); else SlideShowTimer.Stop();
         }
 
         public void CloseMyLittleSlideShow()
@@ -570,7 +571,14 @@ namespace MyLittleSlideShow
 
             }
 
-            ToggleSlideShowTimer(TimerStartStopToggle.Start);
+            if (zsm._ActivateSlideShow)
+            {
+                ToggleSlideShowTimer(MainWindow.TimerStartStopToggle.Start);
+            }
+            else
+            {
+                ToggleSlideShowTimer(MainWindow.TimerStartStopToggle.Stop);
+            }
         }
 
         public bool isReadable(string folder)
@@ -712,6 +720,7 @@ namespace MyLittleSlideShow
             }
             else
             {
+               ToggleSlideShowTimer(MainWindow.TimerStartStopToggle.Stop);                
                 RestTimeValue_Label.Content = "angehalten";
             }
         }
