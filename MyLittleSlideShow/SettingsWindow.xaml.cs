@@ -72,8 +72,10 @@ namespace MyLittleSlideShow
             ShowAmbiFrameCheckbox.IsChecked = _zsm._WithAmbiFrame;
             AmbiFrameOpacity.Text = _zsm._OpacityOfAmbiFrame.ToString();
 
+            chk_AktivateSlideShow.IsChecked = _zsm._ActivateSlideShow;
+            Interval_in_Sekunden.Text = _zsm._ImageChangeIntervallSeconds.ToString();
 
-            Interval_in_Minutes.Text = _zsm._ImageChangeIntervallMinutes.ToString();
+            chk_RandomImages.IsChecked = _zsm._RandomImages;
 
             SetEveryImageAsWallpaper_Checkbox.IsChecked = _zsm._SetEveryImageAsWallpaper;
             WallpaperStyle_ComboBox.ItemsSource = Enum.GetValues(typeof(ZZZ.ChangeWindowsWallpaper.WallpaperStyle));
@@ -134,11 +136,16 @@ namespace MyLittleSlideShow
             }
             _zsm._OpacityOfAmbiFrame = Convert.ToInt16(AmbiFrameOpacity.Text);
 
-            if (string.IsNullOrWhiteSpace(Interval_in_Minutes.Text))
+            if (string.IsNullOrWhiteSpace(Interval_in_Sekunden.Text))
             {
-                Interval_in_Minutes.Text = "2";
+                Interval_in_Sekunden.Text = "120";
             }
-            _zsm._ImageChangeIntervallMinutes = Convert.ToInt16(Interval_in_Minutes.Text);
+
+
+            _zsm._ActivateSlideShow = (bool)chk_AktivateSlideShow.IsChecked;
+            _zsm._RandomImages = (bool)chk_RandomImages.IsChecked;
+
+            _zsm._ImageChangeIntervallSeconds = Convert.ToInt16(Interval_in_Sekunden.Text);
             _zsm._SetEveryImageAsWallpaper = (bool)SetEveryImageAsWallpaper_Checkbox.IsChecked;
 
             _zsm._FolderPath = FileFolderPath_Label.Text;
@@ -150,9 +157,18 @@ namespace MyLittleSlideShow
 
 
 
-            _mainWindow.setSlideShowTimerInterval(_zsm._ImageChangeIntervallMinutes);
-            _mainWindow.LoadMyImage(MainWindow.whichImage.LastLoadedFile, _zsm._ScanFolderRekursive, true);
-            _mainWindow.ToggleSlideShowTimer(MainWindow.TimerStartStopToggle.Start);
+            _mainWindow.setSlideShowTimerInterval(_zsm._ImageChangeIntervallSeconds);
+            _mainWindow.LoadMyImage(MainWindow.whichImage.LastLoadedFile, _zsm._ScanFolderRekursive, true, false);
+
+            if (_zsm._ActivateSlideShow)
+            {
+                _mainWindow.ToggleSlideShowTimer(MainWindow.TimerStartStopToggle.Start);
+            }
+            else
+            {
+                _mainWindow.ToggleSlideShowTimer(MainWindow.TimerStartStopToggle.Stop);
+            }
+            
 
             this.Close();
         }

@@ -115,7 +115,7 @@
         <Label x:Name="LoadedFilesLabel" Content="Datei: " HorizontalAlignment="Left" Foreground="Black" Opacity="0.6" Height="23" Margin="74,0,0,-5" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
         <Label x:Name="RestTime_Label" Content="Timer:" HorizontalAlignment="Right" Foreground="Black" Opacity="0.6" Height="23" Margin="0,0,68,-5" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
         <Label x:Name="RestTimeValue_Label" Content="angehalten" HorizontalAlignment="Right" Foreground="Black" Opacity="0.6" Height="23" Margin="0,0,19,-5" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
-        <Grid x:Name="LoadTime_Grid" Margin="0,0,97,-5" HorizontalAlignment="Right" Width="123" Height="23" VerticalAlignment="Bottom">
+        <Grid x:Name="LoadTime_Grid" Margin="0,0,97,-5" HorizontalAlignment="Right" Width="110" Height="23" VerticalAlignment="Bottom">
             <Label x:Name="LoadTime_Label" Content="LadeZeit [ms]:" Foreground="Black" Opacity="0.6" Height="23" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom" HorizontalAlignment="Left" Width="65"/>
             <Label x:Name="LoadTimeValue_Label" Content="..." HorizontalAlignment="Left" Foreground="Black" Opacity="0.6" Height="23" Margin="61,0,0,0" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
 

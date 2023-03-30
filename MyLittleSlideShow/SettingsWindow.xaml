@@ -18,8 +18,8 @@
     <Grid>
         <Button x:Name="ChangeLog_Button" Content="Infos" HorizontalAlignment="Right" Margin="0,0,125,10" VerticalAlignment="Bottom" Width="75" Click="InfoWindow_Button_Click"/>
 
-        <Label Content="Bildwechsel in Minuten" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,198,0,0"/>
-        <TextBox x:Name="Interval_in_Minutes" HorizontalAlignment="Left" Height="22" Margin="152,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="133" TextAlignment="Center" PreviewTextInput="NumberValidationTextBox" />
+        <CheckBox x:Name="chk_AktivateSlideShow" Content="Bildwechsel in Sekunden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="21,164,0,0"/>
+        <TextBox x:Name="Interval_in_Sekunden" HorizontalAlignment="Left" Height="22" Margin="180,161,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" TextAlignment="Center" PreviewTextInput="NumberValidationTextBox" />
 
         <Label Content="Pfad der Bilder" HorizontalAlignment="Left" Margin="16,0,0,110" VerticalAlignment="Bottom" FontWeight="Bold"/>
         <TextBlock  x:Name="FileFolderPath_Label" TextWrapping="Wrap"  HorizontalAlignment="Left" Margin="21,0,0,64" Width="383" Height="41" VerticalAlignment="Bottom"/>
@@ -36,19 +36,20 @@
             </Label.Effect>
         </Label>
         <Label Content="MyLittleSlideShow Einstellungen" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <TextBox x:Name="SharpenValue_Textbox" HorizontalAlignment="Left" Height="23" Margin="121,91,0,0" TextWrapping="Wrap" Text="25" VerticalAlignment="Top" Width="48" TextAlignment="Center" MaxLength="2" PreviewTextInput="NumberValidationTextBox"/>
+        <TextBox x:Name="SharpenValue_Textbox" HorizontalAlignment="Left" Height="23" Margin="123,91,0,0" TextWrapping="Wrap" Text="25" VerticalAlignment="Top" Width="48" TextAlignment="Center" MaxLength="2" PreviewTextInput="NumberValidationTextBox"/>
         <Label Content="(0-99  default: 25)" HorizontalAlignment="Left" Margin="169,89,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="BilderSchaerfenCheckbox" Content="Bilder Schärfen" HorizontalAlignment="Left" Margin="21,94,0,0" VerticalAlignment="Top" />
         <Image x:Name="SpendenImageButton" HorizontalAlignment="Right" Height="22" Margin="0,0,11,37" VerticalAlignment="Bottom" Width="71" Source="Images/Spenden.png" Cursor="Hand" MouseLeftButtonDown="SpendenImageButton_MouseLeftButtonDown" ToolTip="Du möchtest MTS-Solutions.de via PayPal unterstützen? Dann Klick Mich."/>
-        <CheckBox x:Name="SetEveryImageAsWallpaper_Checkbox" Content="Jedes Bild beim wechsel auch als Hintergrundbild verwenden" HorizontalAlignment="Left" Margin="21,177,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="SetEveryImageAsWallpaper_Checkbox" Content="Jedes Bild beim wechsel auch als Hintergrundbild verwenden" HorizontalAlignment="Left" Margin="21,204,0,0" VerticalAlignment="Top"/>
         <CheckBox x:Name="ShowAmbiFrameCheckbox" Content="AmbiFrame anzeigen, mit einer Deckkraft von" HorizontalAlignment="Left" Margin="21,122,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="AmbiFrameOpacity" HorizontalAlignment="Left" Height="23" Margin="285,119,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="48" TextAlignment="Center" MaxLength="2" PreviewTextInput="NumberValidationTextBox"/>
         <Label Content="(0-99  default: 90)" HorizontalAlignment="Left" Margin="333,117,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="WallpaperStyle_ComboBox" HorizontalAlignment="Left" Margin="169,229,0,0" VerticalAlignment="Top" Width="116"/>
+        <ComboBox x:Name="WallpaperStyle_ComboBox" HorizontalAlignment="Left" Margin="180,229,0,0" VerticalAlignment="Top" Width="116"/>
         <Label Content="Desktophintergrund Style:" HorizontalAlignment="Left" Margin="15,227,0,0" VerticalAlignment="Top"/>
         <Image HorizontalAlignment="Left" Margin="253,0,0,115" Width="27" Source="Images/Info2.png" Stretch="None" ToolTip="Folgende Formate werden unterstützt: &quot;jpg&quot;, &quot;jpeg&quot;, &quot;png&quot;, &quot;gif&quot;, &quot;tiff&quot;, &quot;bmp&quot;" Height="21" VerticalAlignment="Bottom"/>
 
         <local:UserControl_InfoWindow x:Name="UC_InfoWindow" VerticalAlignment="Top" Width="Auto" Height="Auto" Visibility="Hidden"/>
+        <CheckBox x:Name="chk_RandomImages" Content="Random Images" HorizontalAlignment="Left" Margin="21,184,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 

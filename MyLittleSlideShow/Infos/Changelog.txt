@@ -95,3 +95,9 @@
 
 1.9.0.2
 	#Fixed - question before rotate image was removed
+
+1.9.0.3
+	#New - add possibility for random select
+
+1.9.0.4
+	#Fixed - some little issues

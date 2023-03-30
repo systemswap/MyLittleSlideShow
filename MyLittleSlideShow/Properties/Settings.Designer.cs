@@ -12,7 +12,7 @@ namespace MyLittleSlideShow.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,13 +25,13 @@ namespace MyLittleSlideShow.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int ImageChangeIntervall_Minutes {
+        [global::System.Configuration.DefaultSettingValueAttribute("120")]
+        public int ImageChangeIntervall_Seconds {
             get {
-                return ((int)(this["ImageChangeIntervall_Minutes"]));
+                return ((int)(this["ImageChangeIntervall_Seconds"]));
             }
             set {
-                this["ImageChangeIntervall_Minutes"] = value;
+                this["ImageChangeIntervall_Seconds"] = value;
             }
         }
         
@@ -224,6 +224,30 @@ namespace MyLittleSlideShow.Properties {
             }
             set {
                 this["UpdateRequired"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RandomImages {
+            get {
+                return ((bool)(this["RandomImages"]));
+            }
+            set {
+                this["RandomImages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ActivateSlideShow {
+            get {
+                return ((bool)(this["ActivateSlideShow"]));
+            }
+            set {
+                this["ActivateSlideShow"] = value;
             }
         }
     }
