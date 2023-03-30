@@ -16,7 +16,7 @@ namespace MyLittleSlideShow
 
         string FolerPath = string.Empty;
         bool ScanFolderRekursive = false;
-        int ImageChangeIntervallMinutes = 0;
+        int ImageChangeIntervallSeconds = 0;
         string LastLoadedFile = string.Empty;
 
         double PositionTop = 0;
@@ -27,6 +27,9 @@ namespace MyLittleSlideShow
 
         bool WithAmbiFrame = true;
         int OpacityOfAmbiFrame = 90;
+
+        bool ActivateSlideShow = true;
+        bool RandomImages = false;
 
         bool SetEveryImageAsWallpaper = false;
         ZZZ.ChangeWindowsWallpaper.WallpaperStyle WallpaperStyle;
@@ -71,10 +74,10 @@ namespace MyLittleSlideShow
         }
 
 
-        public int _ImageChangeIntervallMinutes
+        public int _ImageChangeIntervallSeconds
         {
-            get { return ImageChangeIntervallMinutes; }
-            set { ImageChangeIntervallMinutes = value; }
+            get { return ImageChangeIntervallSeconds; }
+            set { ImageChangeIntervallSeconds = value; }
         }
 
 
@@ -122,6 +125,18 @@ namespace MyLittleSlideShow
             set { OpacityOfAmbiFrame = value; }
         }
 
+        public bool _ActivateSlideShow
+        {
+            get { return ActivateSlideShow; }
+            set { ActivateSlideShow = value; }
+        }
+
+        public bool _RandomImages
+        {
+            get { return RandomImages; }
+            set { RandomImages = value; }
+        }
+
         public bool _SetEveryImageAsWallpaper
         {
             get { return SetEveryImageAsWallpaper; }
@@ -157,7 +172,7 @@ namespace MyLittleSlideShow
 
             FolerPath = Properties.Settings.Default.FolderPath;
             ScanFolderRekursive = Properties.Settings.Default.ScanFolderRekursiv;
-            ImageChangeIntervallMinutes = Properties.Settings.Default.ImageChangeIntervall_Minutes;
+            ImageChangeIntervallSeconds = Properties.Settings.Default.ImageChangeIntervall_Seconds;
             LastLoadedFile = Properties.Settings.Default.LastLoadedFile;
 
             PositionTop = Properties.Settings.Default.PositionTop;
@@ -169,6 +184,9 @@ namespace MyLittleSlideShow
 
             WithAmbiFrame = Properties.Settings.Default.WithAmbiFrame;
             OpacityOfAmbiFrame = Properties.Settings.Default.OpacityOfAmbiFrame;
+
+            ActivateSlideShow = Properties.Settings.Default.ActivateSlideShow;
+            RandomImages = Properties.Settings.Default.RandomImages;
 
             SetEveryImageAsWallpaper = Properties.Settings.Default.SetEveryImageAsWallpaper;
             WallpaperStyle = (ZZZ.ChangeWindowsWallpaper.WallpaperStyle)Properties.Settings.Default.WallpaperStyle;
@@ -186,7 +204,7 @@ namespace MyLittleSlideShow
 
             Properties.Settings.Default.FolderPath = FolerPath;
             Properties.Settings.Default.ScanFolderRekursiv = ScanFolderRekursive;
-            Properties.Settings.Default.ImageChangeIntervall_Minutes = ImageChangeIntervallMinutes;
+            Properties.Settings.Default.ImageChangeIntervall_Seconds = ImageChangeIntervallSeconds;
             Properties.Settings.Default.LastLoadedFile = LastLoadedFile;
 
             Properties.Settings.Default.PositionTop = PositionTop;
@@ -197,6 +215,9 @@ namespace MyLittleSlideShow
 
             Properties.Settings.Default.WithAmbiFrame = WithAmbiFrame;
             Properties.Settings.Default.OpacityOfAmbiFrame = OpacityOfAmbiFrame;
+
+            Properties.Settings.Default.ActivateSlideShow = ActivateSlideShow;
+            Properties.Settings.Default.RandomImages = RandomImages;
 
             Properties.Settings.Default.SetEveryImageAsWallpaper = SetEveryImageAsWallpaper;
             Properties.Settings.Default.WallpaperStyle = WallpaperStyle;

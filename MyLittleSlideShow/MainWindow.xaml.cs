@@ -153,7 +153,7 @@ namespace MyLittleSlideShow
             RotateLeftImage.Source = iP.LoadBitmapImageFromResource("/Images/Rotate.png", null);
             InfoImage.Source = iP.LoadBitmapImageFromResource("/Images/Info.png", null);
 
-            LoadMyImage(whichImage.LastLoadedFile, zsm._ScanFolderRekursive, true);
+            LoadMyImage(whichImage.LastLoadedFile, zsm._ScanFolderRekursive, true, true);
 
             initializeSlideShowTimer();
             SlideShowTimer.Start();                       
@@ -176,7 +176,7 @@ namespace MyLittleSlideShow
 
         #region Functions
         int FileIndex_in_Array = 0;
-        public void LoadMyImage(whichImage whichImage, bool ScanFolderRekursive, bool RescanFolders)
+        public void LoadMyImage(whichImage whichImage, bool ScanFolderRekursive, bool RescanFolders, bool AllowRandom)
         {
             zsm._PositionLeft = Main_Window.Left;
             zsm._PositionTop = Main_Window.Top;
@@ -237,27 +237,35 @@ namespace MyLittleSlideShow
                     whichImage = MainWindow.whichImage.LastLoadedFile;
                 }
 
-                if (LastLoadedFileExists && MyFiles.Contains(zsm._LastLoadedFile) && !isFirstFileAtStart)
+                if (zsm._RandomImages && AllowRandom)
                 {
-                    FileIndex_in_Array = Array.FindIndex(MyFiles, x => x.Contains(CurrentFile));
-                }                
-
-                switch (whichImage)
+                    Random r = new Random();
+                    FileIndex_in_Array = r.Next(0, MyFiles.Count());
+                }
+                else
                 {
-                    case whichImage.next:
-                        FileIndex_in_Array = FileIndex_in_Array + 1;
-                        break;
+                    if (LastLoadedFileExists && MyFiles.Contains(zsm._LastLoadedFile) && !isFirstFileAtStart)
+                    {
+                        FileIndex_in_Array = Array.FindIndex(MyFiles, x => x.Contains(CurrentFile));
+                    }
 
-                    case whichImage.previous:
-                        FileIndex_in_Array = FileIndex_in_Array - 1;
-                        break;
+                    switch (whichImage)
+                    {
+                        case whichImage.next:
+                            FileIndex_in_Array = FileIndex_in_Array + 1;
+                            break;
 
-                    case whichImage.start:
-                        FileIndex_in_Array = 0;
-                        break;
+                        case whichImage.previous:
+                            FileIndex_in_Array = FileIndex_in_Array - 1;
+                            break;
 
-                    case whichImage.LastLoadedFile:
-                        break;
+                        case whichImage.start:
+                            FileIndex_in_Array = 0;
+                            break;
+
+                        case whichImage.LastLoadedFile:
+                            break;
+                    }
                 }
             }
             else
@@ -384,7 +392,7 @@ namespace MyLittleSlideShow
                         
                                             
                         isFirstFileAtStart = false;
-                        setSlideShowTimerInterval(zsm._ImageChangeIntervallMinutes);
+                        setSlideShowTimerInterval(zsm._ImageChangeIntervallSeconds);
 
                         if (zsm._SetEveryImageAsWallpaper)
                         {                            
@@ -401,7 +409,7 @@ namespace MyLittleSlideShow
                     }
                     else
                     {
-                        LoadMyImage(MainWindow.whichImage.next, zsm._ScanFolderRekursive, true);
+                        LoadMyImage(MainWindow.whichImage.next, zsm._ScanFolderRekursive, true, true);
                     }
                     
                 }
@@ -502,7 +510,7 @@ namespace MyLittleSlideShow
             {
                 newFile = OldFilePath + oldFileName + oldFileMimeType;
                 File.Move(FileName, newFile);
-                LoadMyImage(whichImage.LastLoadedFile, zsm._ScanFolderRekursive, true);
+                LoadMyImage(whichImage.LastLoadedFile, zsm._ScanFolderRekursive, true, false);
             }
             else
             {
@@ -692,13 +700,13 @@ namespace MyLittleSlideShow
         {
             if (SlideShowTimerTicks <= 0)
             {
-                SlideShowTimerTicks = zsm._ImageChangeIntervallMinutes * 60;
-                LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false);
+                SlideShowTimerTicks = zsm._ImageChangeIntervallSeconds * 60;
+                LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false, true);
             }
 
             SlideShowTimerTicks--;
 
-            if (!string.IsNullOrEmpty(CurrentFile))
+            if (!string.IsNullOrEmpty(CurrentFile) && zsm._ActivateSlideShow)
             {
                 RestTimeValue_Label.Content = TimeSpan.FromSeconds((double)SlideShowTimerTicks);
             }
@@ -708,9 +716,9 @@ namespace MyLittleSlideShow
             }
         }
 
-        public void setSlideShowTimerInterval(int Minutes)
+        public void setSlideShowTimerInterval(int Seconds)
         {
-            SlideShowTimerTicks = Minutes * 60;
+            SlideShowTimerTicks = Seconds;
         }
         #endregion
 
@@ -845,7 +853,7 @@ namespace MyLittleSlideShow
             MoveForm = false;
             MoveCursor(CursorX, value);
 
-            LoadMyImage(whichImage.LastLoadedFile, zsm._ScanFolderRekursive, false);
+            LoadMyImage(whichImage.LastLoadedFile, zsm._ScanFolderRekursive, false, false);
         }
 
 
@@ -877,22 +885,22 @@ namespace MyLittleSlideShow
         
         private void Next_Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false);
+            LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false, true);
         }
         
         private void Prev_Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            LoadMyImage(whichImage.previous, zsm._ScanFolderRekursive, false);
+            LoadMyImage(whichImage.previous, zsm._ScanFolderRekursive, false, true);
         }
 
         private void Next_Button_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false);
+            LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false, true);
         }
 
         private void Prev_Button_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            LoadMyImage(whichImage.previous, zsm._ScanFolderRekursive, false);
+            LoadMyImage(whichImage.previous, zsm._ScanFolderRekursive, false, true);
         }
 
         private void ShowImage_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -914,11 +922,11 @@ namespace MyLittleSlideShow
             {
                 if (e.Delta < 0)
                 {
-                    LoadMyImage(whichImage.previous, zsm._ScanFolderRekursive, false);
+                    LoadMyImage(whichImage.previous, zsm._ScanFolderRekursive, false, true);
                 }
                 else
                 {
-                    LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false);
+                    LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, false, true);
                 }
             }
         }
@@ -931,7 +939,7 @@ namespace MyLittleSlideShow
             if (result == MessageBoxResult.Yes)
             {
                 iP.RotateAndSaveImageFile(CurrentFile, true, ZZZ.ImageProcessing.Rotation.Right);
-                LoadMyImage(whichImage.LastLoadedFile, true, false);
+                LoadMyImage(whichImage.LastLoadedFile, true, false, false);
             }
         }
         
@@ -943,7 +951,7 @@ namespace MyLittleSlideShow
             if (result == MessageBoxResult.Yes)
             {
                 iP.RotateAndSaveImageFile(CurrentFile, true, ZZZ.ImageProcessing.Rotation.Left);
-                LoadMyImage(whichImage.LastLoadedFile, true, false);
+                LoadMyImage(whichImage.LastLoadedFile, true, false, false);
             }
         }
         
@@ -963,7 +971,7 @@ namespace MyLittleSlideShow
             try
             {
                 Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(CurrentFile, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs, Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
-                LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, true);
+                LoadMyImage(whichImage.next, zsm._ScanFolderRekursive, true, true);
             }
             catch (Exception) { }
         }       
