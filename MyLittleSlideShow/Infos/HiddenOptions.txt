@@ -5,4 +5,7 @@ Befindet sich die Maus über dem gezeigten Bild sind folgende Optionen möglich.
 -	Vergrößern und Verkleinern der Anwendung durch
 	gedrückt halten der rechten Maustaste oder Strg (ctrl) und drehen des Mausrades
 
+Bild in Standard Bildbetrachter öffnen
+- doppel Klick auf das Bild
+
 Die Anwendung muß aktiv bzw. einmal mit der linken Maustaste angeklickt wurden sein.

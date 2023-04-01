@@ -1131,5 +1131,13 @@ namespace MyLittleSlideShow
         {
             holdsStrg = false;
         }
+
+        private void ShowImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
+            {
+                System.Diagnostics.Process.Start("explorer.exe", CurrentFile);
+            }
+        }
     }
 }

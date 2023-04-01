@@ -32,7 +32,7 @@
                 <BlurEffect Radius="50" RenderingBias="Quality"/>
             </Image.Effect>
         </Image>
-        <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Margin="15,12,17,48" Source="pack://siteoforigin:,,,/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel" >
+        <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Margin="15,12,17,48" Source="pack://siteoforigin:,,,/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel" MouseDown="ShowImage_MouseDown" >
             <Image.Effect>
                 <DropShadowEffect RenderingBias="Quality" Opacity="0.6" BlurRadius="10" ShadowDepth="6"/>
             </Image.Effect>
