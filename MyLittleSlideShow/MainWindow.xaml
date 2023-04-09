@@ -4,17 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:MyLittleSlideShow" mc:Ignorable="d" x:Name="Main_Window" x:Class="MyLittleSlideShow.MainWindow"       
         Title="MyLittleSlideShow" MinWidth="340" Height="315" Width="367" Loaded="Window_Loaded" WindowStyle="None"  MouseDown="Main_Window_MouseDown" AllowsTransparency="True" Closing="Main_Window_Closing" MouseLeave="Main_Window_MouseLeave" MouseMove="Main_Window_MouseMove" Background="Transparent" MouseUp="Main_Window_MouseUp" KeyDown="Main_Window_KeyDown" KeyUp="Main_Window_KeyUp" Closed="Main_Window_Closed">
 
-
-
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/GlassButton.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-
-
     <Window.Clip>
         <RectangleGeometry x:Name="MainWindowRectangleGeometriy" RadiusX="5" RadiusY="5">
             <RectangleGeometry.Rect>
@@ -23,105 +12,143 @@
         </RectangleGeometry>
     </Window.Clip>
 
-
-    <Grid x:Name="MainGrid" HorizontalAlignment="Left" Width="367" Background="Transparent">
-
-        <Image x:Name="BackgroundImageBox" Source="/Images/Buch.png" Margin="-29,-12,-21,-38" Stretch="Fill" Opacity="0.9" >
-            <Image.Effect>
-                <BlurEffect Radius="50" RenderingBias="Quality"/>
-            </Image.Effect>
-        </Image>
-        <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Margin="15,12,17,48" Source="/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel" MouseDown="ShowImage_MouseDown" >
-            <Image.Effect>
-                <DropShadowEffect RenderingBias="Quality" Opacity="0.6" BlurRadius="10" ShadowDepth="6"/>
-            </Image.Effect>
-        </Image>
-        <Grid x:Name="ControlsBackgroundGrid" Height="39" VerticalAlignment="Bottom" Background="White" Opacity="0.6"/>
-
-
-
-        <Grid x:Name="GridControls2" Margin="16,0,0,8" HorizontalAlignment="Left" Width="94" Height="26" VerticalAlignment="Bottom">
-
-            <Image x:Name="Prev_Button" Source="Images\Prev.png" Height="16" Margin="2,3,0,0" VerticalAlignment="Top" Opacity="0.4" MouseLeave="Prev_Button_MouseLeave" MouseMove="Prev_Button_MouseMove" MouseLeftButtonDown="Prev_Button_MouseLeftButtonDown" HorizontalAlignment="Left" Width="24" Cursor="Hand" ToolTip="vorheriges Bild" MouseWheel="Prev_Button_MouseWheel">
+    <Grid x:Name="MainGrid" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Image x:Name="BackgroundImageBox" Source="/Images/Buch.png" Margin="-29,-12,-21,-16" Stretch="Fill" Opacity="0.9" >
                 <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    <BlurEffect Radius="50" RenderingBias="Quality"/>
                 </Image.Effect>
             </Image>
-            <Image x:Name="Next_Button" Source="Images\Next.png" Height="16" Margin="64,3,0,0" VerticalAlignment="Top" Opacity="0.4" MouseMove="Next_Button_MouseMove" MouseLeave="Next_Button_MouseLeave" MouseLeftButtonDown="Next_Button_MouseLeftButtonDown" RenderTransformOrigin="0.225,0.528" Width="24" HorizontalAlignment="Left" Cursor="Hand" ToolTip="nächstes Bild" MouseWheel="Next_Button_MouseWheel">
+            <Image x:Name="ShowImage"  RenderOptions.BitmapScalingMode="Fant" Source="/Images/Buch.png" StretchDirection="DownOnly" MouseWheel="ShowImage_MouseWheel" MouseDown="ShowImage_MouseDown" Margin="10,10,10,10" >
                 <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" RenderingBias="Quality" Opacity="0.6"/>
-                </Image.Effect>
-            </Image>
-            <Image x:Name="PlayStopImage" Width="28" Height="24" Source="Images/Pause.png" MouseLeftButtonDown="PlayStopImage_MouseLeftButtonDown" Margin="32,-1,0,0" Opacity="0.4" MouseLeave="PlayStopImage_MouseLeave" MouseMove="PlayStopImage_MouseMove" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="DiaShow Start/Stop" Cursor="Hand">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" RenderingBias="Quality" Opacity="0.6"/>
+                    <DropShadowEffect RenderingBias="Quality" Opacity="0.6" BlurRadius="10" ShadowDepth="6"/>
                 </Image.Effect>
             </Image>
         </Grid>
 
+        <Grid x:Name="ControlsBackgroundGrid" Background="White" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="33"/>
+                <RowDefinition Height="17"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="8"/>
+                </Grid.ColumnDefinitions>
 
-        <Grid x:Name="GridOptions" Height="26" Margin="0,0,10,8" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="233">
+                <Image x:Name="Prev_Button" Grid.Column="1" Source="Images\Prev.png" Height="22"  VerticalAlignment="Center" Opacity="0.4" MouseLeave="Prev_Button_MouseLeave" MouseMove="Prev_Button_MouseMove" MouseLeftButtonDown="Prev_Button_MouseLeftButtonDown" HorizontalAlignment="Center" Width="22" Cursor="Hand" ToolTip="vorheriges Bild" MouseWheel="Prev_Button_MouseWheel" >
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
 
-            <Image x:Name="CloseImageButton" Source="/Images/Shutdown.png" RenderTransformOrigin="0.438,0.5" Cursor="Hand" MouseLeftButtonDown="CloseImageButton_MouseLeftButtonDown" Opacity="0.4" MouseLeave="CloseImageButton_MouseLeave" MouseMove="CloseImageButton_MouseMove" Margin="0,0,2,0" HorizontalAlignment="Right" Width="22" Height="22" VerticalAlignment="Top" ToolTip="MyLittleSlideShow Beenden">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
-                </Image.Effect>
-            </Image>
+                <Image x:Name="PlayStopImage" Grid.Column="2" Width="22" Height="22" Source="Images/Pause.png" MouseLeftButtonDown="PlayStopImage_MouseLeftButtonDown"  Opacity="0.4" MouseLeave="PlayStopImage_MouseLeave" MouseMove="PlayStopImage_MouseMove" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="DiaShow Start/Stop" Cursor="Hand">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" RenderingBias="Quality" Opacity="0.6"/>
+                    </Image.Effect>
+                </Image>
 
-            <Image x:Name="SettingsImageButton" Source="/Images/Settings.png" RenderTransformOrigin="0.5,0.5" Cursor="Hand" MouseLeftButtonDown="SettingsImageButton_MouseLeftButtonDown" MouseLeave="SettingsImageButton_MouseLeave" MouseMove="SettingsImageButton_MouseMove" Opacity="0.4" Margin="0,0,33,0" HorizontalAlignment="Right" Width="22" Height="22" VerticalAlignment="Top" ToolTip="Einstellungen">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
-                </Image.Effect>
-            </Image>
+                <Image x:Name="Next_Button" Grid.Column="3" Source="Images\Next.png" Height="22"  VerticalAlignment="Center" Opacity="0.4" MouseMove="Next_Button_MouseMove" MouseLeave="Next_Button_MouseLeave" MouseLeftButtonDown="Next_Button_MouseLeftButtonDown"  Width="22" HorizontalAlignment="Center" Cursor="Hand" ToolTip="nächstes Bild" MouseWheel="Next_Button_MouseWheel">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" RenderingBias="Quality" Opacity="0.6"/>
+                    </Image.Effect>
+                </Image>
 
-            <Image x:Name="RotateRightImage" Source="Images/Rotate.png" Opacity="0.4" Cursor="Hand" MouseMove="RotateRightImage_MouseMove" MouseLeftButtonDown="RotateRightImage_MouseLeftButtonDown" MouseLeave="RotateRightImage_MouseLeave" Margin="0,0,66,0" HorizontalAlignment="Right" Width="24" Height="24" VerticalAlignment="Top" ToolTip="90° im Uhrzeigersinn drehen">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
-                </Image.Effect>
-            </Image>
-            <Image x:Name="RotateLeftImage" HorizontalAlignment="Right" Width="24" Source="Images/Rotate.png" Opacity="0.4" MouseMove="RotateLeftImage_MouseMove" MouseLeftButtonDown="RotateLeftImage_MouseLeftButtonDown" MouseLeave="RotateLeftImage_MouseLeave" Margin="0,0,71,0" Height="24" VerticalAlignment="Top" ToolTip="90° gegen Uhrzeigersinn drehen" Cursor="Hand">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality" Direction="225"/>
-                </Image.Effect>
-                <Image.RenderTransform>
-                    <ScaleTransform ScaleX="-1" />
-                </Image.RenderTransform>
-            </Image>
-            <Image x:Name="ChangeWallpaperImageButton" HorizontalAlignment="Right" Height="22"  VerticalAlignment="Top" Width="22" Margin="0,0,153,0" Source="Images/ChangeWallpaper.png" Opacity="0.4" MouseLeave="ChangeWallpaperImageButton_MouseLeave" MouseLeftButtonDown="ChangeWallpaperImageButton_MouseLeftButtonDown" MouseMove="ChangeWallpaperImageButton_MouseMove" ToolTip="Aktuelles Bild als Desktophintergrund verwenden." Cursor="Hand">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
-                </Image.Effect>
-            </Image>
-            <Image x:Name="InfoImage" HorizontalAlignment="Right" Width="22" Source="Images/Info.png" Opacity="0.4" MouseLeave="InfoImage_MouseLeave" MouseLeftButtonDown="InfoImage_MouseLeftButtonDown" MouseMove="InfoImage_MouseMove" RenderTransformOrigin="0.917,0.393" Margin="0,0,183,0" Height="22" VerticalAlignment="Top" ToolTip="Exif Daten" Cursor="Hand">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
-                </Image.Effect>
-            </Image>
-            <Image x:Name="DeleteImageButton" HorizontalAlignment="Right" Height="24" Margin="0,0,124,0" VerticalAlignment="Top" Width="23" Source="Images/Delete.png" Opacity="0.4" MouseLeave="DeleteImageButton_MouseLeave" MouseLeftButtonDown="DeleteImageButton_MouseLeftButtonDown" MouseMove="DeleteImageButton_MouseMove" ToolTip="Bild in den Papierkorb verschieben" Cursor="Hand">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
-                </Image.Effect>
-            </Image>
-            <Image x:Name="ZoomImage" Source="Images/Zoom.png" Opacity="0.4"    RenderTransformOrigin="0.917,0.393" Margin="1,2,210,0" Height="22" VerticalAlignment="Top" ToolTip="Resize mit Linker oder Rechter Maustaste" Cursor="Hand" MouseLeave="ZoomImage_MouseLeave" MouseLeftButtonDown="ZoomImage_MouseLeftButtonDown" MouseMove="ZoomImage_MouseMove" MouseRightButtonDown="ZoomImage_MouseRightButtonDown">
-                <Image.Effect>
-                    <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
-                </Image.Effect>
-            </Image>
+
+                <Image x:Name="ZoomImage" Grid.Column="5" Source="Images/Zoom.png" Opacity="0.4"     Height="22" VerticalAlignment="Center" ToolTip="Resize mit Linker oder Rechter Maustaste" Cursor="Hand" MouseLeave="ZoomImage_MouseLeave" MouseLeftButtonDown="ZoomImage_MouseLeftButtonDown" MouseMove="ZoomImage_MouseMove" MouseRightButtonDown="ZoomImage_MouseRightButtonDown" Width="22" HorizontalAlignment="Center">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
+
+                <Image x:Name="InfoImage" Grid.Column="6" HorizontalAlignment="Center" Width="22" Source="Images/Info.png" Opacity="0.4" MouseLeave="InfoImage_MouseLeave" MouseLeftButtonDown="InfoImage_MouseLeftButtonDown" MouseMove="InfoImage_MouseMove"  Height="22" VerticalAlignment="Center" ToolTip="Exif Daten" Cursor="Hand">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
+
+                <Image x:Name="ChangeWallpaperImageButton" Grid.Column="7" HorizontalAlignment="Center" Height="22"  VerticalAlignment="Center" Width="22"  Source="Images/ChangeWallpaper.png" Opacity="0.4" MouseLeave="ChangeWallpaperImageButton_MouseLeave" MouseLeftButtonDown="ChangeWallpaperImageButton_MouseLeftButtonDown" MouseMove="ChangeWallpaperImageButton_MouseMove" ToolTip="Aktuelles Bild als Desktophintergrund verwenden." Cursor="Hand">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
+
+                <Image x:Name="DeleteImageButton" Grid.Column="8" HorizontalAlignment="Center" Height="22"  VerticalAlignment="Center" Width="22" Source="Images/Delete.png" Opacity="0.4" MouseLeave="DeleteImageButton_MouseLeave" MouseLeftButtonDown="DeleteImageButton_MouseLeftButtonDown" MouseMove="DeleteImageButton_MouseMove" ToolTip="Bild in den Papierkorb verschieben" Cursor="Hand">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
+
+                <Image x:Name="RotateLeftImage" Grid.Column="9" HorizontalAlignment="Left" Width="22" Source="Images/Rotate.png" Opacity="0.4" MouseMove="RotateLeftImage_MouseMove" MouseLeftButtonDown="RotateLeftImage_MouseLeftButtonDown" MouseLeave="RotateLeftImage_MouseLeave"  Height="22" VerticalAlignment="Center" ToolTip="90° gegen Uhrzeigersinn drehen" Cursor="Hand" Grid.ColumnSpan="2" Margin="26,0,0,0">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality" Direction="225"/>
+                    </Image.Effect>
+                    <Image.RenderTransform>
+                        <ScaleTransform ScaleX="-1" />
+                    </Image.RenderTransform>
+                </Image>
+
+                <Image x:Name="RotateRightImage" Grid.Column="10" Source="Images/Rotate.png" Opacity="0.4" Cursor="Hand" MouseMove="RotateRightImage_MouseMove" MouseLeftButtonDown="RotateRightImage_MouseLeftButtonDown" MouseLeave="RotateRightImage_MouseLeave"  HorizontalAlignment="Center" Width="22" Height="22" VerticalAlignment="Center" ToolTip="90° im Uhrzeigersinn drehen">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
+
+                <local:UserControl_Settings x:Name="UserControl_Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" Grid.ColumnSpan="14"/>
+                <Image x:Name="SettingsImageButton" Grid.Column="11" Source="/Images/Settings.png" Cursor="Hand" MouseLeftButtonDown="SettingsImageButton_MouseLeftButtonDown" MouseLeave="SettingsImageButton_MouseLeave" MouseMove="SettingsImageButton_MouseMove" Opacity="0.4" HorizontalAlignment="Center" Width="22" Height="22" VerticalAlignment="Center" ToolTip="Einstellungen">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
+
+                <Image x:Name="CloseImageButton" Grid.Column="12" Source="/Images/Shutdown.png"  Cursor="Hand" MouseLeftButtonDown="CloseImageButton_MouseLeftButtonDown" Opacity="0.4" MouseLeave="CloseImageButton_MouseLeave" MouseMove="CloseImageButton_MouseMove"  HorizontalAlignment="Left" Width="22" Height="22" VerticalAlignment="Center" ToolTip="MyLittleSlideShow Beenden" Grid.ColumnSpan="2" Margin="4,0,0,0">
+                    <Image.Effect>
+                        <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
+                    </Image.Effect>
+                </Image>
+
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="87"/>
+                    <ColumnDefinition Width="93"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="66"/>
+                    <ColumnDefinition Width="33"/>
+                    <ColumnDefinition Width="34"/>
+                    <ColumnDefinition Width="50"/>
+
+                </Grid.ColumnDefinitions>
+                <Label x:Name="VersionLabel" Content="..." Foreground="Black" Opacity="0.6" Height="27" VerticalAlignment="Top" FontSize="9" HorizontalContentAlignment="Left" Margin="8,0,0,0"/>
+
+                <Label x:Name="LoadedFilesLabel" Grid.Column="1" Content="Datei: " Foreground="Black" Opacity="0.6" Height="27"  VerticalAlignment="Top" FontSize="9" HorizontalContentAlignment="Left"/>
+
+                <Label x:Name="LoadTime_Label" Grid.Column="3" Content="LadeZeit [ms]:" Foreground="Black" Opacity="0.6" Height="27" VerticalAlignment="Top" FontSize="9" HorizontalContentAlignment="Right" Margin="0,0,1,0"/>
+                <Label x:Name="LoadTimeValue_Label" Grid.Column="3" Content="..." Foreground="Black" Opacity="0.6" Height="22"  VerticalAlignment="Top" FontSize="9" HorizontalContentAlignment="Left" Grid.ColumnSpan="2" Margin="62,0,0,0"/>
+
+                <Label x:Name="RestTime_Label" Grid.Column="5" Content="Timer:" Foreground="Black" Opacity="0.6" Height="27"  VerticalAlignment="Top" FontSize="9" HorizontalContentAlignment="Right"/>
+                <Label x:Name="RestTimeValue_Label" Grid.Column="5" Content="angehalten" Foreground="Black" Opacity="0.6" Height="27"  VerticalAlignment="Top" FontSize="9" HorizontalContentAlignment="Left" Margin="30,0,-5,0" Grid.ColumnSpan="2"/>
+
+            </Grid>
         </Grid>
-
-        <Label x:Name="VersionLabel" Content="..." HorizontalAlignment="Left" Foreground="Black" Opacity="0.6" Height="20" Margin="-2,0,0,-3" VerticalAlignment="Bottom" Width="69" FontSize="9" VerticalContentAlignment="Bottom"/>
-        <local:UserControl_Settings x:Name="UserControl_Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
-        <Label x:Name="LoadedFilesLabel" Content="Datei: " HorizontalAlignment="Left" Foreground="Black" Opacity="0.6" Height="23" Margin="74,0,0,-5" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
-        <Label x:Name="RestTime_Label" Content="Timer:" HorizontalAlignment="Right" Foreground="Black" Opacity="0.6" Height="23" Margin="0,0,68,-5" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
-        <Label x:Name="RestTimeValue_Label" Content="angehalten" HorizontalAlignment="Right" Foreground="Black" Opacity="0.6" Height="23" Margin="0,0,19,-5" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
-        <Grid x:Name="LoadTime_Grid" Margin="0,0,107,-5" HorizontalAlignment="Right" Width="110" Height="23" VerticalAlignment="Bottom">
-            <Label x:Name="LoadTime_Label" Content="LadeZeit [ms]:" Foreground="Black" Opacity="0.6" Height="23" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom" HorizontalAlignment="Left" Width="65"/>
-            <Label x:Name="LoadTimeValue_Label" Content="..." HorizontalAlignment="Left" Foreground="Black" Opacity="0.6" Height="23" Margin="61,0,0,0" VerticalAlignment="Bottom" FontSize="9" VerticalContentAlignment="Bottom"/>
-
-        </Grid>
-
     </Grid>
-
 
 
 
