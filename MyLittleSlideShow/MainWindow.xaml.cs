@@ -10,6 +10,7 @@ using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace MyLittleSlideShow
 {
@@ -106,7 +107,7 @@ namespace MyLittleSlideShow
 
             //Load all Settings from PropertiesSettings  
             zsm.LoadAllSettings();
-
+            
             int wholeScreenWidth = 0;
             foreach (Screen screen in Screen.AllScreens)
             {
@@ -1137,6 +1138,24 @@ namespace MyLittleSlideShow
             if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
             {
                 System.Diagnostics.Process.Start("explorer.exe", CurrentFile);
+
+                //string Location_ToOpen = CurrentFile;
+                //ProcessStartInfo Process_Info = new ProcessStartInfo(Location_ToOpen, @"%SystemRoot%\System32\rundll32.exe % ProgramFiles %\Windows Photo Viewer\PhotoViewer.dll, ImageView_Fullscreen %1");
+
+                //Process_Info.UseShellExecute = true;
+                //Process_Info.WorkingDirectory = Path.GetDirectoryName(Location_ToOpen);
+                //Process_Info.FileName = Location_ToOpen;
+                //Process_Info.Verb = "OPEN";
+                
+                //Process.Start(Process_Info);
+            }
+        }
+
+        private void Main_Window_Closed(object sender, EventArgs e)
+        {
+            if (this.notify != null)
+            {
+                this.notify.Dispose();
             }
         }
     }
