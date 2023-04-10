@@ -3,13 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:MyLittleSlideShow" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Name="SettingsWindowMain" x:Class="MyLittleSlideShow.SettingsWindow"
         Title="Menü" Height="447" Width="578" ResizeMode="NoResize" Loaded="SettingsWindowMain_Loaded" WindowStartupLocation="CenterOwner" Icon="Images/MyIcon.png">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/GlassButton.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+   
     <Window.Background>
         <ImageBrush ImageSource="Images/Gear.jpg"/>
     </Window.Background>

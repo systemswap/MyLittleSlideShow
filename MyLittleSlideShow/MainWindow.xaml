@@ -30,7 +30,7 @@
             </Image>
         </Grid>
 
-        <Grid x:Name="ControlsBackgroundGrid" Background="White" Grid.Row="1">
+        <Grid x:Name="ControlsBackgroundGrid" Opacity="75" Background="White" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="33"/>
                 <RowDefinition Height="17"/>
