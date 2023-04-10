@@ -798,7 +798,7 @@ namespace MyLittleSlideShow
         public void GrownFormToShowControls()
         {
             MainWindowRectangleGeometriy.Rect = new Rect(new System.Windows.Size(Main_Window.Width, Main_Window.Height));// 367, 315
-            ControlsBackgroundGrid.Opacity = 0.6;
+            ControlsBackgroundGrid.Opacity = 0.75;
         }
         public void ShrinkFormToHideControls()
         {
