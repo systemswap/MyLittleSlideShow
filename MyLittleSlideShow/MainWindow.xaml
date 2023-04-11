@@ -111,7 +111,6 @@
                     </Image.Effect>
                 </Image>
 
-                <local:UserControl_Settings x:Name="UserControl_Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" Grid.ColumnSpan="14"/>
                 <Image x:Name="SettingsImageButton" Grid.Column="11" Source="/Images/Settings.png" Cursor="Hand" MouseLeftButtonDown="SettingsImageButton_MouseLeftButtonDown" MouseLeave="SettingsImageButton_MouseLeave" MouseMove="SettingsImageButton_MouseMove" Opacity="0.4" HorizontalAlignment="Center" Width="22" Height="22" VerticalAlignment="Center" ToolTip="Einstellungen">
                     <Image.Effect>
                         <DropShadowEffect BlurRadius="6" Opacity="0.6" RenderingBias="Quality"/>
