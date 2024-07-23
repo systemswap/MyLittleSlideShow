@@ -113,3 +113,6 @@
 
 1.9.1.4
 	#Fixed - problems with Autostart on Windows 11
+
+1.9.1.5
+	#Fixed - Autostart issues

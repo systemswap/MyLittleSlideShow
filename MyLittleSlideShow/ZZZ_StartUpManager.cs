@@ -37,7 +37,7 @@ namespace ZZZ
         public StartUpManager()
         {
             myDocumentsFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + appName + ".txt";            
-            AutostartFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + appName + ".url";
+            AutostartFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + appName + ".lnk";
             try { all_key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true); }
             catch (Exception) { }
             is_the_same_location = is_same_location();
@@ -132,29 +132,14 @@ namespace ZZZ
             //    writer.WriteLine("IconIndex=0");
             //    string icon = app.Replace('\\', '/');
             //    writer.WriteLine("IconFile=" + icon);
-            //    writer.Flush();
-            //    set_locationInformation();
+            //    writer.Flush();                
             //}
-
-
-            //var sl = new ShellLink
-            //{
-            //    TargetPath = @"C:\Path\To\Your\Application.exe",
-            //    Arguments = "",
-            //    IconPath = @"C:\Path\To\Your\Icon.ico",
-            //    IconIndex = 0,
-            //    Description = "MyLittleSlideShow",
-            //    WorkingDirectory = @"C:\Path\To\Working\Directory"
-            //};
-
-            //sl.Save("Path to where you want to save the shortcut.lnk");
-
 
             // Pfad zum Autostart-Ordner des Benutzers
             string startupFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
 
             // Vollständiger Pfad zur Verknüpfungsdatei
-            string shortcutLocation = MyIO.Path.Combine(startupFolderPath, "MyLittleSlideShow.lnk");
+            string shortcutLocation = AutostartFile; // MyIO.Path.Combine(startupFolderPath, "MyLittleSlideShow.lnk");
 
             // Pfad zur ausführbaren Datei, für die eine Verknüpfung erstellt wird
             string appPath = Process.GetCurrentProcess().MainModule.FileName; // AppPath_with_Name;
@@ -176,6 +161,7 @@ namespace ZZZ
             // Speichern der Verknüpfung
             shortcut.Save();
 
+            set_locationInformation();
         }
 
         public void RemoveApplicationFromStartup()
