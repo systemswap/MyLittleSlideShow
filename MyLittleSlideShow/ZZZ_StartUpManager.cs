@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+using MyIO= System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Principal;
 using System.Text;
 
 using System.Windows.Forms;
+using IWshRuntimeLibrary;
 
 namespace ZZZ
 {
@@ -65,7 +66,7 @@ namespace ZZZ
             {
             }
 
-            if (File.Exists(AutostartFile) && is_the_same_location)
+            if (MyIO.File.Exists(AutostartFile) && is_the_same_location)
             {
                 _isonstartup = true;
             }
@@ -122,18 +123,59 @@ namespace ZZZ
 
 
         public void AddShortcutToAutostart()
-        {           
-            using (StreamWriter writer = new StreamWriter(AutostartFile))
-            {
-                string app = Process.GetCurrentProcess().MainModule.FileName; //System.Reflection.Assembly.GetExecutingAssembly().Location;
-                writer.WriteLine("[InternetShortcut]");
-                writer.WriteLine("URL=file:///" + app);
-                writer.WriteLine("IconIndex=0");
-                string icon = app.Replace('\\', '/');
-                writer.WriteLine("IconFile=" + icon);
-                writer.Flush();
-                set_locationInformation();
-            }
+        {
+            //using (StreamWriter writer = new StreamWriter(AutostartFile))
+            //{
+            //    string app = Process.GetCurrentProcess().MainModule.FileName; //System.Reflection.Assembly.GetExecutingAssembly().Location;
+            //    writer.WriteLine("[InternetShortcut]");
+            //    writer.WriteLine("URL=file:///" + app);
+            //    writer.WriteLine("IconIndex=0");
+            //    string icon = app.Replace('\\', '/');
+            //    writer.WriteLine("IconFile=" + icon);
+            //    writer.Flush();
+            //    set_locationInformation();
+            //}
+
+
+            //var sl = new ShellLink
+            //{
+            //    TargetPath = @"C:\Path\To\Your\Application.exe",
+            //    Arguments = "",
+            //    IconPath = @"C:\Path\To\Your\Icon.ico",
+            //    IconIndex = 0,
+            //    Description = "MyLittleSlideShow",
+            //    WorkingDirectory = @"C:\Path\To\Working\Directory"
+            //};
+
+            //sl.Save("Path to where you want to save the shortcut.lnk");
+
+
+            // Pfad zum Autostart-Ordner des Benutzers
+            string startupFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+
+            // Vollständiger Pfad zur Verknüpfungsdatei
+            string shortcutLocation = MyIO.Path.Combine(startupFolderPath, "MyLittleSlideShow.lnk");
+
+            // Pfad zur ausführbaren Datei, für die eine Verknüpfung erstellt wird
+            string appPath = Process.GetCurrentProcess().MainModule.FileName; // AppPath_with_Name;
+
+            // Erstellen Sie das Shell Objekt
+            WshShell shell = new WshShell();
+
+            // Erstellen Sie eine Verknüpfung mit der Shell
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
+
+            shortcut.Description = "MyLittleSlideShow Autostart"; // Beschreibung der Verknüpfung
+            shortcut.TargetPath = appPath; // Ziel der Verknüpfung
+            // Weitere Eigenschaften der Verknüpfung können hier gesetzt werden, wie z.B.:
+            // shortcut.WorkingDirectory = @"C:\Pfad\Zu\Anwendung";
+            // shortcut.IconLocation = "Pfad zu einem Icon, falls erwünscht.ico";
+            // shortcut.WindowStyle = 1;
+            // shortcut.Arguments = "Argumente falls benötigt";
+
+            // Speichern der Verknüpfung
+            shortcut.Save();
+
         }
 
         public void RemoveApplicationFromStartup()
@@ -142,14 +184,14 @@ namespace ZZZ
             {
                 key.DeleteValue(FullAssemblyName, false);               
 
-                if (File.Exists(AutostartFile))
+                if (MyIO.File.Exists(AutostartFile))
                 {
-                    File.Delete(AutostartFile);
+                    MyIO.File.Delete(AutostartFile);
                 }
 
-                if (File.Exists(myDocumentsFile))
+                if (MyIO.File.Exists(myDocumentsFile))
                 {
-                    File.Delete(myDocumentsFile);
+                    MyIO.File.Delete(myDocumentsFile);
                 }
 
                 if(all_key != null) all_key.DeleteValue(FullAssemblyName, false);
