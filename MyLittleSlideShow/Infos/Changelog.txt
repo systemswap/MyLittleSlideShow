@@ -110,3 +110,6 @@
 
 1.9.1.3
 	#Fixed - code cleanup
+
+1.9.1.4
+	#Fixed - problems with Autostart on Windows 11
