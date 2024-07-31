@@ -2,6 +2,7 @@
 
 1.0.0.0
 	#New - erstes Design in WPF
+
 1.1.0.1
 	#New - Steuerung für Vor, Zurück und Start / Stop 
 
@@ -115,4 +116,7 @@
 	#Fixed - problems with Autostart on Windows 11
 
 1.9.1.5
-	#Fixed - Autostart issues
+	#Fixed - Autostart fehler behoben
+
+1.9.1.6
+	#New - Display allways on, refresh alle 120 Sekunden

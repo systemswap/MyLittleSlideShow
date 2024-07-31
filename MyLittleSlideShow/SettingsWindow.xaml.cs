@@ -66,6 +66,8 @@ namespace MyLittleSlideShow
         {
             Autostart_CheckBox.IsChecked = sum.IsOnStartup();
 
+            DisplayImmerAn_CheckBox.IsChecked = _zsm._DisplayAllwayOn;
+
             BilderSchaerfenCheckbox.IsChecked = _zsm._SharpImages;
             SharpenValue_Textbox.Text = (_zsm._SharpenValue).ToString();
 
@@ -121,6 +123,8 @@ namespace MyLittleSlideShow
                     _zsm._Autostart = Convert.ToBoolean(Autostart_CheckBox.IsChecked);
                 }
             }
+
+            _zsm._DisplayAllwayOn = (bool)DisplayImmerAn_CheckBox.IsChecked;
 
             _zsm._SharpImages = (bool)BilderSchaerfenCheckbox.IsChecked;
             if (string.IsNullOrWhiteSpace(SharpenValue_Textbox.Text))
