@@ -12,6 +12,7 @@ namespace MyLittleSlideShow
         ZZZ.StartUpManager sum = new ZZZ.StartUpManager();
 
         bool Autostart = false;
+        bool DisplayAllwaysOn = false;
         string LastPathOfApplication = string.Empty;
 
         string FolerPath = string.Empty;
@@ -53,6 +54,12 @@ namespace MyLittleSlideShow
         {
             get { return Autostart; }
             set { Autostart = value; }
+        }
+
+        public bool _DisplayAllwayOn
+        {
+            get { return DisplayAllwaysOn; }
+            set { DisplayAllwaysOn = value; }
         }
 
         public string _LastPathOfApplication
@@ -168,6 +175,7 @@ namespace MyLittleSlideShow
         public void LoadAllSettings()
         {
             Autostart = Properties.Settings.Default.Autostart;
+            DisplayAllwaysOn = Properties.Settings.Default.DisplayAllwaysOn;
             LastPathOfApplication = Properties.Settings.Default.LastPathOfApplication;
 
             FolerPath = Properties.Settings.Default.FolderPath;
@@ -200,6 +208,7 @@ namespace MyLittleSlideShow
         public void SaveAllSettings()
         {
             Properties.Settings.Default.Autostart = Autostart;
+            Properties.Settings.Default.DisplayAllwaysOn = DisplayAllwaysOn;
             Properties.Settings.Default.LastPathOfApplication = LastPathOfApplication;
 
             Properties.Settings.Default.FolderPath = FolerPath;

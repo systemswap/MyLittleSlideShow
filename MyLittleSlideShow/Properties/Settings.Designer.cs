@@ -250,5 +250,17 @@ namespace MyLittleSlideShow.Properties {
                 this["ActivateSlideShow"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DisplayAllwaysOn {
+            get {
+                return ((bool)(this["DisplayAllwaysOn"]));
+            }
+            set {
+                this["DisplayAllwaysOn"] = value;
+            }
+        }
     }
 }

@@ -11,6 +11,8 @@ using System.Windows.Media.Imaging;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Cursor = System.Windows.Forms;
+using Point = System.Drawing.Point;
 
 namespace MyLittleSlideShow
 {
@@ -33,7 +35,7 @@ namespace MyLittleSlideShow
             if (versionAttribute != null)
             {
                 version = "version: " + versionAttribute.Version.ToString();
-            }
+            }            
         }
 
 
@@ -45,7 +47,68 @@ namespace MyLittleSlideShow
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        //Display immer an
+        [FlagsAttribute]
+        public enum EXECUTION_STATE : uint
+        {
+            ES_AWAYMODE_REQUIRED = 0x00000040,
+            ES_CONTINUOUS = 0x80000000,
+            ES_DISPLAY_REQUIRED = 0x00000002,
+            ES_SYSTEM_REQUIRED = 0x00000001
+            // Legacy flag, should not be used.
+            // ES_USER_PRESENT = 0x00000004
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
+
         #endregion
+
+        System.Windows.Forms.Timer displayAllwaysOnTimer = new System.Windows.Forms.Timer();
+        bool cursorMoved = false;
+
+
+        private void displayAllwayOn(bool sw)
+        {
+            if (sw)
+            {
+                SetThreadExecutionState(EXECUTION_STATE.ES_DISPLAY_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
+
+                //set seconds
+                int secondsUntilMove = 120;
+                displayAllwaysOnTimer.Interval = secondsUntilMove * 1000;
+                displayAllwaysOnTimer.Tick += displayAllwayOnTimer_Tick;
+                if (!displayAllwaysOnTimer.Enabled)
+                {
+                    displayAllwaysOnTimer.Start();
+                }
+            }
+            else
+            {
+                SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS);
+                displayAllwaysOnTimer.Stop();
+            }
+        }
+
+        private void displayAllwayOnTimer_Tick(object sender, EventArgs e)
+        {
+            //throw new NotImplementedException();
+           // this.Cursor = new System.Windows.Forms.Cursor(Cursor.Current.Handle);
+            if (cursorMoved)
+            {
+                System.Windows.Forms.Cursor.Position = new Point(System.Windows.Forms.Cursor.Position.X - 1, System.Windows.Forms.Cursor.Position.Y);
+                cursorMoved = false;
+            }
+            else
+            {
+                System.Windows.Forms.Cursor.Position = new Point(System.Windows.Forms.Cursor.Position.X + 1, System.Windows.Forms.Cursor.Position.Y);
+                cursorMoved = true;
+            }
+
+        }
+
+
 
         string version = string.Empty;
         ZZZ_SettingsManager zsm;
@@ -159,6 +222,9 @@ namespace MyLittleSlideShow
             initializeSlideShowTimer();
 
             if(zsm._ActivateSlideShow) SlideShowTimer.Start(); else SlideShowTimer.Stop();
+
+
+            displayAllwayOn(zsm._DisplayAllwayOn);
         }
 
         public void CloseMyLittleSlideShow()
@@ -762,7 +828,8 @@ namespace MyLittleSlideShow
         }
 
         private void Main_Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {          
+        {
+            displayAllwayOn(false);
             if (this.notify != null)
             {
                 this.notify.Dispose();
@@ -885,12 +952,13 @@ namespace MyLittleSlideShow
 
         private void SettingsImageButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
             //UserControl_Settings.Visibility = System.Windows.Visibility.Visible;
             zsm.LoadAllSettings();
             SettingsWindow w = new SettingsWindow(this, zsm);
             w.Owner = this;
             w.ShowDialog();
+
+            displayAllwayOn(zsm._DisplayAllwayOn);
         }
         
         private void Next_Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
