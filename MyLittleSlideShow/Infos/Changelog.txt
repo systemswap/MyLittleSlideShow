@@ -120,3 +120,6 @@
 
 1.9.1.6
 	#New - Display allways on, refresh alle 120 Sekunden
+
+1.9.1.7
+	#New - optimierung allways on
