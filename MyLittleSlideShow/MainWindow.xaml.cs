@@ -98,11 +98,13 @@ namespace MyLittleSlideShow
             if (cursorMoved)
             {
                 System.Windows.Forms.Cursor.Position = new Point(System.Windows.Forms.Cursor.Position.X - 1, System.Windows.Forms.Cursor.Position.Y);
+                SendKeys.SendWait("+");
                 cursorMoved = false;
             }
             else
             {
                 System.Windows.Forms.Cursor.Position = new Point(System.Windows.Forms.Cursor.Position.X + 1, System.Windows.Forms.Cursor.Position.Y);
+                SendKeys.SendWait("+");
                 cursorMoved = true;
             }
 
