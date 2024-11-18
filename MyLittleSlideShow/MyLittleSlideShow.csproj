@@ -28,7 +28,8 @@
     <Configurations>Debug;Release;x86</Configurations>
     <Platforms>AnyCPU;x86</Platforms>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <PublishSingleFile>true</PublishSingleFile>
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\My_Icon.ico</ApplicationIcon>

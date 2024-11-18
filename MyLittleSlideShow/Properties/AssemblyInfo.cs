@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Thomas Müller")]
 [assembly: AssemblyProduct("MyLittleSlideShow")]
-[assembly: AssemblyCopyright("Copyright © Thomas Müller 2015")]
+[assembly: AssemblyCopyright("Copyright © Thomas Müller 2015-2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.9.1.7")]
-[assembly: AssemblyFileVersion("1.9.1.7")]
+[assembly: AssemblyVersion("1.9.1.8")]
+[assembly: AssemblyFileVersion("1.9.1.8")]

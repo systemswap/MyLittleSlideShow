@@ -123,3 +123,6 @@
 
 1.9.1.7
 	#New - optimierung allways on
+
+1.9.1.8
+	#New - verhinder den Schlafmodus wenn am Laptop der Deckel geschlossen wird

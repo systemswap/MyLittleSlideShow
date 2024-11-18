@@ -35,9 +35,12 @@ namespace MyLittleSlideShow
             if (versionAttribute != null)
             {
                 version = "version: " + versionAttribute.Version.ToString();
-            }            
-        }
+            }
 
+           
+        }
+        PreventSleep preventSleep = new PreventSleep();
+        
 
         #region DLLImport
         //ausblenden aus der Taskleiste
@@ -227,6 +230,11 @@ namespace MyLittleSlideShow
 
 
             displayAllwayOn(zsm._DisplayAllwayOn);
+
+            if (zsm._DisplayAllwayOn)
+            {
+                preventSleep.KeepSystemAwake(); // Ruft die Methode auf, um den Systemzustand zu ändern
+            }
         }
 
         public void CloseMyLittleSlideShow()
@@ -836,6 +844,7 @@ namespace MyLittleSlideShow
             {
                 this.notify.Dispose();
             }
+            preventSleep.ResetThreadExecutionState(); // Ruft die Methode auf, um den Systemzustand zurückzusetzen
         }
 
         #endregion
