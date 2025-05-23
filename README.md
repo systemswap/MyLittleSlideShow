@@ -7,6 +7,7 @@ Diashow Tool for Desktop
 * Enable / disable Background with Menu (Ambiframe)
 * start with Windows
 * set every Picture as Windows background
+* always on Display by moving the cursor 1 pixel every minute, simple but works
 
 ## with Ambiframe
 ![MyLittleSlideShow](https://user-images.githubusercontent.com/101094761/161440621-2e7857d4-0821-4343-8d8c-f691107dda34.PNG)
