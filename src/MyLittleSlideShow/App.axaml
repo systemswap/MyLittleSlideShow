@@ -1,0 +1,31 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MyLittleSlideShow.App"
+             RequestedThemeVariant="Default">
+
+  <Application.Styles>
+    <FluentTheme />
+  </Application.Styles>
+
+  <!-- Ersetzt System.Windows.Forms.NotifyIcon.
+       TrayIcon ist in Avalonia eingebaut und funktioniert unter Windows sowie
+       unter Linux (StatusNotifierItem / AppIndicator). -->
+  <TrayIcon.Icons>
+    <TrayIcons>
+      <TrayIcon Icon="/Assets/My_Icon.ico"
+                ToolTipText="MyLittleSlideShow"
+                Clicked="TrayIcon_Clicked">
+        <TrayIcon.Menu>
+          <NativeMenu>
+            <NativeMenuItem Header="Anzeigen" Click="Tray_Show_Click" />
+            <NativeMenuItem Header="Minimieren" Click="Tray_Minimize_Click" />
+            <NativeMenuItemSeparator />
+            <NativeMenuItem Header="Neu starten" Click="Tray_Restart_Click" />
+            <NativeMenuItem Header="Beenden" Click="Tray_Exit_Click" />
+          </NativeMenu>
+        </TrayIcon.Menu>
+      </TrayIcon>
+    </TrayIcons>
+  </TrayIcon.Icons>
+
+</Application>

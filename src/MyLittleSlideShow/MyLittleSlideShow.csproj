@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>MyLittleSlideShow</RootNamespace>
+    <AssemblyName>MyLittleSlideShow</AssemblyName>
+
+    <!-- Avalonia -->
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+    <Version>2.0.0.0</Version>
+    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <Company>MTS-Solutions.de</Company>
+    <Product>MyLittleSlideShow</Product>
+
+    <!-- Kein RuntimeIdentifier hier fest verdrahten: wird beim publish uebergeben -->
+    <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
+    <SatelliteResourceLanguages>de;en</SatelliteResourceLanguages>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.0" Condition="'$(Configuration)' == 'Debug'" />
+
+    <!-- Avalonia.X11 zieht Tmds.DBus.Protocol 0.21.2 herein; 0.21.3 schliesst
+         GHSA-xrw6-gwf8-vvr9. Explizit setzen hebt die transitive Version an. -->
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+
+    <!-- Ersetzt System.Drawing.Common komplett (Resize, Schaerfen, EXIF, Format-Erkennung) -->
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Infos\Changelog.txt" />
+    <EmbeddedResource Include="Infos\HiddenOptions.txt" />
+  </ItemGroup>
+
+  <!--
+    Beim Single-File-Publish wandert normalerweise alles in die eine EXE.
+    Mit -p:KeepExternalLibsSeparate=true bleiben Fremdbibliotheken (aktuell
+    nur ImageSharp) als eigene DLL daneben liegen, damit sie z.B. wegen der
+    Lizenz separat austauschbar sind. Die Publish-Skripte setzen das.
+  -->
+  <ItemGroup>
+    <ExternalLibraryPrefix Include="SixLabors" />
+  </ItemGroup>
+
+  <Target Name="KeepExternalLibsOutOfBundle"
+          AfterTargets="ComputeResolvedFilesToPublishList"
+          Condition="'$(KeepExternalLibsSeparate)' == 'true'">
+    <ItemGroup>
+      <ResolvedFileToPublish Update="@(ResolvedFileToPublish)">
+        <ExcludeFromSingleFile Condition="$([System.String]::Copy('%(Filename)').StartsWith('SixLabors'))">true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>
