@@ -26,7 +26,9 @@ APP_VERSION="2.0.0"
 C_CYAN=$'\033[36m'; C_GREEN=$'\033[32m'; C_YELLOW=$'\033[33m'
 C_GRAY=$'\033[90m'; C_OFF=$'\033[0m'
 
-head() { printf '\n%s=== %s ===%s\n' "$C_CYAN" "$1" "$C_OFF"; }
+# Nicht "head" nennen: das wuerde das gleichnamige Kommando ueberdecken, das
+# weiter unten zum Kuerzen der Dateiliste gebraucht wird.
+section() { printf '\n%s=== %s ===%s\n' "$C_CYAN" "$1" "$C_OFF"; }
 warn() { printf '%s%s%s\n' "$C_YELLOW" "$1" "$C_OFF"; }
 ok()   { printf '%s%s%s\n' "$C_GREEN" "$1" "$C_OFF"; }
 
@@ -50,7 +52,7 @@ do_publish() {
     local mode; [ "$self" = "1" ] && mode="standalone" || mode="normal"
     local out="$OUTPUT_ROOT/$rid-$mode"
 
-    head "$label  ->  $out"
+    section "$label  ->  $out"
     rm -rf "$out"; mkdir -p "$out"
 
     local args=(
@@ -85,7 +87,9 @@ do_publish() {
     count="$(find "$out" -maxdepth 1 -type f | wc -l)"
     size="$(du -sh "$out" | cut -f1)"
     printf '\n'; ok "Fertig: $count Datei(en), $size"
-    ls -lhS "$out" | head -n 11 | tail -n +2 | awk '{printf "  %8s  %s\n", $5, $9}'
+    # awk statt "head -n 11": head beendet sich vorzeitig, ls laeuft dann in ein
+    # SIGPIPE und wegen "set -o pipefail" wuerde das ganze Skript abbrechen.
+    ls -lhS "$out" | awk 'NR > 1 && NR <= 11 {printf "  %8s  %s\n", $5, $9}'
 
     [ "$self" = "1" ] || warn $'\nHinweis: Diese Variante braucht eine installierte .NET-10-Laufzeit auf dem Zielrechner.'
 
@@ -137,7 +141,7 @@ build_appimage() {
 
     get_appimagetool || { warn "AppImage uebersprungen."; return 1; }
 
-    head "AppImage wird gepackt"
+    section "AppImage wird gepackt"
     local appdir="$OUTPUT_ROOT/$rid-appimage/AppDir"
     rm -rf "$OUTPUT_ROOT/$rid-appimage"
     mkdir -p "$appdir/usr/bin" "$appdir/usr/share/applications" \

@@ -85,23 +85,11 @@ jobs:
             https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x .tools/appimagetool-x86_64.AppImage
 
-      # Die naechsten drei Schritte sind bewusst getrennt: schlaegt etwas fehl,
-      # zeigt schon der Schrittname, woran es lag.
-      - name: Probe - dotnet publish (linux-x64 standalone)
-        env:
-          KEEP_EXTERNAL_LIBS: '0'
-        run: bash publish.sh 4
-
-      - name: Probe - appimagetool startbar
-        env:
-          APPIMAGE_EXTRACT_AND_RUN: '1'
-        run: ./.tools/appimagetool-x86_64.AppImage --version
-
       - name: AppImage bauen
         env:
           KEEP_EXTERNAL_LIBS: '0'
           APPIMAGE_EXTRACT_AND_RUN: '1'
-        run: bash -x publish.sh 7
+        run: bash publish.sh 7
 
       - name: Ergebnis pruefen
         run: |
