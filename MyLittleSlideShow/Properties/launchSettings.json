@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "MyLittleSlideShow": {
-      "commandName": "Project",
-      "nativeDebugging": true,
-      "sqlDebugging": true
-    }
-  }
-}

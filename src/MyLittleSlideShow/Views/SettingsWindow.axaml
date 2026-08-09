@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MyLittleSlideShow.Views.SettingsWindow"
+        Title="MyLittleSlideShow Einstellungen"
+        Width="820" Height="560"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Icon="/Assets/My_Icon.ico">
+
+  <Panel>
+    <!-- Hintergrundbild wie im Original, jetzt aber abgedunkelt fuer Lesbarkeit -->
+    <Image Source="/Assets/Images/Gear.jpg" Stretch="UniformToFill" Opacity="0.25" />
+
+    <DockPanel Margin="16">
+
+      <!-- Fusszeile -->
+      <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+          <Button Content="Spenden" Click="Donate_Click" />
+          <Button Content="Infos" Click="Info_Click" />
+          <Button Content="Speichern" Click="Save_Click" IsDefault="True" MinWidth="100" />
+        </StackPanel>
+      </Grid>
+
+      <ScrollViewer>
+        <StackPanel Spacing="12">
+
+          <TextBlock Text="Allgemein" FontWeight="Bold" />
+
+          <CheckBox x:Name="Autostart_CheckBox"
+                    Content="Automatisch beim Anmelden starten" />
+
+          <CheckBox x:Name="DisplayAlwaysOn_CheckBox"
+                    Content="Bildschirm nicht abschalten, solange die Diaschau läuft" />
+
+          <Separator />
+          <TextBlock Text="Darstellung" FontWeight="Bold" />
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <CheckBox x:Name="Sharpen_CheckBox" Content="Bilder schärfen" Width="220" />
+            <NumericUpDown x:Name="SharpenValue_Box" Minimum="0" Maximum="99"
+                           Increment="1" FormatString="0" Width="110" />
+            <TextBlock Text="(0-99, Standard: 25)" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <StackPanel Orientation="Horizontal" Spacing="8" Margin="32,0,0,0">
+            <CheckBox x:Name="QuietSharpen_CheckBox" Content="Ruhiges Schärfen ab Schwelle" Width="188" />
+            <NumericUpDown x:Name="SharpenThreshold_Box" Minimum="0" Maximum="64"
+                           Increment="1" FormatString="0" Width="110" />
+            <TextBlock Text="(0-64, Standard: 6)" VerticalAlignment="Center" />
+          </StackPanel>
+          <TextBlock Text="Unterdrückt die Rauschverstärkung in glatten Flächen wie Himmel oder Hauttönen."
+                     Margin="32,-6,0,0" TextWrapping="Wrap" Opacity="0.7" FontSize="11" />
+
+          <CheckBox x:Name="StretchWhileZooming_CheckBox"
+                    Content="Während des Zoomens strecken (Neuberechnung erst nach dem Zoomen)" />
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <CheckBox x:Name="AmbiFrame_CheckBox" Content="AmbiFrame anzeigen, Deckkraft" Width="220" />
+            <NumericUpDown x:Name="AmbiFrameOpacity_Box" Minimum="0" Maximum="99"
+                           Increment="5" FormatString="0" Width="110" />
+            <TextBlock Text="(0-99, Standard: 90)" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <Separator />
+          <TextBlock Text="Diaschau" FontWeight="Bold" />
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <CheckBox x:Name="SlideShow_CheckBox" Content="Bildwechsel in Sekunden" Width="220" />
+            <NumericUpDown x:Name="Interval_Box" Minimum="1" Maximum="86400"
+                           Increment="10" FormatString="0" Width="110" />
+          </StackPanel>
+
+          <CheckBox x:Name="Random_CheckBox" Content="Bilder in zufälliger Reihenfolge" />
+
+          <Separator />
+          <TextBlock Text="Desktophintergrund" FontWeight="Bold" />
+
+          <CheckBox x:Name="EveryImageAsWallpaper_CheckBox"
+                    Content="Jedes Bild beim Wechsel auch als Hintergrundbild verwenden" />
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Style:" VerticalAlignment="Center" Width="60" />
+            <ComboBox x:Name="WallpaperStyle_ComboBox" Width="180" />
+          </StackPanel>
+
+          <TextBlock x:Name="WallpaperHint"
+                     Text=""
+                     TextWrapping="Wrap"
+                     Foreground="#8a3b00"
+                     IsVisible="False" />
+
+          <Separator />
+          <TextBlock Text="Pfad der Bilder" FontWeight="Bold" />
+
+          <TextBlock x:Name="FolderPath_Label" TextWrapping="Wrap" MinHeight="36" />
+
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="Neuen Pfad wählen" Click="SelectFolder_Click" />
+            <Button Content="Pfad zurücksetzen" Click="ResetPath_Click" />
+            <CheckBox x:Name="Recursive_CheckBox" Content="Rekursiv scannen"
+                      VerticalAlignment="Center" />
+          </StackPanel>
+
+          <TextBlock Text="Unterstützte Formate: jpg, jpeg, png, gif, tif, tiff, bmp, webp"
+                     FontSize="11" Opacity="0.8" />
+        </StackPanel>
+      </ScrollViewer>
+    </DockPanel>
+  </Panel>
+</Window>

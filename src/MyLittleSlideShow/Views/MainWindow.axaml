@@ -1,0 +1,169 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MyLittleSlideShow.Views.MainWindow"
+        x:Name="Main_Window"
+        Title="MyLittleSlideShow"
+        Width="386" Height="315" MinWidth="340"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        CanResize="False"
+        Topmost="False">
+
+  <!-- WPF nutzte Window.Clip mit einer RectangleGeometry fuer die runden Ecken.
+       Avalonia loest das ueber einen Border mit CornerRadius und ClipToBounds. -->
+  <Border x:Name="RootBorder"
+          CornerRadius="5"
+          ClipToBounds="True"
+          VerticalAlignment="Top"
+          HorizontalAlignment="Stretch"
+          Background="Transparent">
+
+    <Grid x:Name="MainGrid" Background="Transparent" RowDefinitions="*,50"
+          VerticalAlignment="Top">
+
+      <!-- Bildbereich -->
+      <Panel Grid.Row="0">
+        <Image x:Name="BackgroundImageBox"
+               Margin="-29,-12,-21,-16"
+               Stretch="Fill"
+               Opacity="0.9">
+          <Image.Effect>
+            <BlurEffect Radius="50" />
+          </Image.Effect>
+        </Image>
+
+        <Image x:Name="ShowImage"
+               Margin="10"
+               StretchDirection="DownOnly"
+               RenderOptions.BitmapInterpolationMode="HighQuality"
+               PointerWheelChanged="ShowImage_PointerWheelChanged"
+               PointerPressed="ShowImage_PointerPressed">
+          <Image.Effect>
+            <DropShadowEffect BlurRadius="10" OffsetX="6" OffsetY="6"
+                              Color="Black" Opacity="0.6" />
+          </Image.Effect>
+        </Image>
+      </Panel>
+
+      <!-- Bedienleiste: wird ueber Opacity ein- und ausgeblendet -->
+      <Grid x:Name="ControlsBackgroundGrid"
+            Grid.Row="1"
+            Background="White"
+            Opacity="0"
+            RowDefinitions="33,17">
+        <Grid.Transitions>
+          <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+          </Transitions>
+        </Grid.Transitions>
+
+        <Grid Grid.Row="0"
+              ColumnDefinitions="8,30,30,30,*,30,30,30,30,30,30,30,30,8">
+
+          <Image x:Name="Prev_Button" Grid.Column="1" Classes="toolButton"
+                 ToolTip.Tip="vorheriges Bild"
+                 PointerPressed="Prev_PointerPressed"
+                 PointerWheelChanged="Prev_PointerWheelChanged" />
+
+          <Image x:Name="PlayStopImage" Grid.Column="2" Classes="toolButton"
+                 ToolTip.Tip="DiaShow Start/Stop"
+                 PointerPressed="PlayStop_PointerPressed" />
+
+          <Image x:Name="Next_Button" Grid.Column="3" Classes="toolButton"
+                 ToolTip.Tip="nächstes Bild"
+                 PointerPressed="Next_PointerPressed"
+                 PointerWheelChanged="Next_PointerWheelChanged" />
+
+          <Image x:Name="ZoomImage" Grid.Column="5" Classes="toolButton"
+                 ToolTip.Tip="Größe ändern: links = größer, rechts = kleiner"
+                 PointerPressed="Zoom_PointerPressed" />
+
+          <Image x:Name="InfoImage" Grid.Column="6" Classes="toolButton"
+                 ToolTip.Tip="Exif Daten"
+                 PointerPressed="Info_PointerPressed" />
+
+          <Image x:Name="ChangeWallpaperImageButton" Grid.Column="7" Classes="toolButton"
+                 ToolTip.Tip="Aktuelles Bild als Desktophintergrund verwenden"
+                 PointerPressed="ChangeWallpaper_PointerPressed" />
+
+          <Image x:Name="DeleteImageButton" Grid.Column="8" Classes="toolButton"
+                 ToolTip.Tip="Bild in den Papierkorb verschieben"
+                 PointerPressed="Delete_PointerPressed" />
+
+          <Image x:Name="RotateLeftImage" Grid.Column="9" Classes="toolButton"
+                 ToolTip.Tip="90° gegen Uhrzeigersinn drehen"
+                 RenderTransform="scaleX(-1)"
+                 PointerPressed="RotateLeft_PointerPressed" />
+
+          <Image x:Name="RotateRightImage" Grid.Column="10" Classes="toolButton"
+                 ToolTip.Tip="90° im Uhrzeigersinn drehen"
+                 PointerPressed="RotateRight_PointerPressed" />
+
+          <Image x:Name="SettingsImageButton" Grid.Column="11" Classes="toolButton"
+                 ToolTip.Tip="Einstellungen"
+                 PointerPressed="Settings_PointerPressed" />
+
+          <Image x:Name="CloseImageButton" Grid.Column="12" Classes="toolButton"
+                 ToolTip.Tip="MyLittleSlideShow beenden"
+                 PointerPressed="Close_PointerPressed" />
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnDefinitions="87,93,*,66,33,34,50">
+          <TextBlock x:Name="VersionLabel" Grid.Column="0" Text="..."
+                     Classes="statusText" Margin="8,0,0,0" />
+
+          <TextBlock x:Name="LoadedFilesLabel" Grid.Column="1" Text="Datei: 0 / 0"
+                     Classes="statusText" />
+
+          <TextBlock x:Name="LoadTime_Label" Grid.Column="3" Text="Ladezeit [ms]:"
+                     Classes="statusText" HorizontalAlignment="Right" />
+          <TextBlock x:Name="LoadTimeValue_Label" Grid.Column="4" Text="..."
+                     Classes="statusText" />
+
+          <TextBlock x:Name="RestTime_Label" Grid.Column="5" Text="Timer:"
+                     Classes="statusText" HorizontalAlignment="Right" />
+          <TextBlock x:Name="RestTimeValue_Label" Grid.Column="6" Text="angehalten"
+                     Classes="statusText" />
+        </Grid>
+      </Grid>
+    </Grid>
+  </Border>
+
+  <Window.Styles>
+    <Style Selector="Image.toolButton">
+      <Setter Property="Width" Value="22" />
+      <Setter Property="Height" Value="22" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Opacity" Value="0.4" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+      <Setter Property="Effect">
+        <DropShadowEffect BlurRadius="6" OffsetX="2" OffsetY="2"
+                          Color="Black" Opacity="0.6" />
+      </Setter>
+      <Setter Property="Transitions">
+        <Transitions>
+          <DoubleTransition Property="Opacity" Duration="0:0:0.1" />
+        </Transitions>
+      </Setter>
+    </Style>
+
+    <!-- Ersetzt die vielen MouseMove/MouseLeave-Handler des WPF-Originals -->
+    <Style Selector="Image.toolButton:pointerover">
+      <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="TextBlock.statusText">
+      <Setter Property="FontSize" Value="9" />
+      <Setter Property="Foreground" Value="Black" />
+      <Setter Property="Opacity" Value="0.6" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="Margin" Value="2,4,2,0" />
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+  </Window.Styles>
+
+</Window>
