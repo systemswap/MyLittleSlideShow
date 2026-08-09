@@ -1,0 +1,144 @@
+name: Build & Release
+
+# Push auf master  -> nur bauen, Artefakte haengen am Workflow-Lauf (Testlauf)
+# Push eines Tags  -> bauen und ein GitHub-Release mit den Dateien anlegen
+#   git tag v2.0.0 && git push origin v2.0.0
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+
+jobs:
+  # ---------------------------------------------------------------- Windows
+  windows:
+    name: Windows x64 (Einzeldatei)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Publish
+        shell: pwsh
+        # Choice 2 = win-x64 standalone. KeepExternalLibsSeparate:$false packt
+        # auch ImageSharp mit in die EXE, damit wirklich nur eine Datei entsteht.
+        run: ./publish.ps1 -Choice 2 -KeepExternalLibsSeparate:$false
+
+      - name: Ergebnis pruefen
+        shell: pwsh
+        run: |
+          $out = 'publish/win-x64-standalone'
+          $files = Get-ChildItem $out -File
+          $files | ForEach-Object { '{0,10:N0} KB  {1}' -f ($_.Length / 1KB), $_.Name }
+          if ($files.Count -ne 1) {
+            throw "Erwartet wurde genau eine Datei, gefunden: $($files.Count)"
+          }
+          if ($files[0].Name -ne 'MyLittleSlideShow.exe') {
+            throw "Unerwarteter Dateiname: $($files[0].Name)"
+          }
+          Copy-Item $files[0].FullName 'MyLittleSlideShow-win-x64.exe'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: MyLittleSlideShow-win-x64.exe
+          if-no-files-found: error
+
+  # ------------------------------------------------------------------ Linux
+  linux:
+    name: Linux x64 (AppImage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: appimagetool bereitstellen
+        # publish.sh sucht zuerst hier und fragt dann interaktiv nach - im CI
+        # gibt es keine Eingabe, also legen wir das Werkzeug vorher ab.
+        run: |
+          mkdir -p .tools
+          curl -fLsS -o .tools/appimagetool-x86_64.AppImage \
+            https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x .tools/appimagetool-x86_64.AppImage
+
+      - name: AppImage bauen
+        env:
+          KEEP_EXTERNAL_LIBS: '0'
+          # Auf den Runnern fehlt libfuse2; appimagetool entpackt sich dann selbst.
+          APPIMAGE_EXTRACT_AND_RUN: '1'
+        run: bash publish.sh 7
+
+      - name: Ergebnis pruefen
+        run: |
+          shopt -s nullglob
+          files=(publish/linux-x64-appimage/*.AppImage)
+          if [ ${#files[@]} -ne 1 ]; then
+            echo "Erwartet wurde genau eine AppImage, gefunden: ${#files[@]}"
+            ls -lR publish/linux-x64-appimage || true
+            exit 1
+          fi
+          ls -lh "${files[0]}"
+          cp "${files[0]}" MyLittleSlideShow-x86_64.AppImage
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: MyLittleSlideShow-x86_64.AppImage
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------- Release
+  release:
+    name: Release veroeffentlichen
+    needs: [windows, linux]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Dateien benennen und Release anlegen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          version="${TAG#v}"
+          mv dist/MyLittleSlideShow-win-x64.exe "dist/MyLittleSlideShow-${version}-win-x64.exe"
+          mv dist/MyLittleSlideShow-x86_64.AppImage "dist/MyLittleSlideShow-${version}-x86_64.AppImage"
+          ls -lh dist
+
+          cat > notes.md <<EOF
+          ## Download
+
+          | Plattform | Datei | Hinweis |
+          |---|---|---|
+          | Windows x64 | \`MyLittleSlideShow-${version}-win-x64.exe\` | Eine einzige Datei, .NET ist enthalten - einfach starten. |
+          | Linux x64 | \`MyLittleSlideShow-${version}-x86_64.AppImage\` | Nach dem Download ausfuehrbar machen: \`chmod +x\`, dann starten. |
+
+          Beide Varianten sind self-contained, eine installierte .NET-Laufzeit ist nicht noetig.
+          EOF
+
+          gh release create "$TAG" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "MyLittleSlideShow $version" \
+            --notes-file notes.md
