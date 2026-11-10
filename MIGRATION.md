@@ -25,7 +25,7 @@ geändert wurde und worauf beim Weiterentwickeln zu achten ist.
 | `Label` | `TextBlock` |
 | `Visibility.Visible/Collapsed` | `IsVisible` (bool) |
 | `Window.Clip` mit `RectangleGeometry` | `Border` mit `CornerRadius` + `ClipToBounds` |
-| `AllowsTransparency`/`WindowStyle=None` | `SystemDecorations="None"`, `TransparencyLevelHint` |
+| `AllowsTransparency`/`WindowStyle=None` | `WindowDecorations="None"` (bis Avalonia 11: `SystemDecorations`), `TransparencyLevelHint` |
 | `Topmost` | `Topmost` (unverändert) |
 | WinForms `NotifyIcon` + `ContextMenuStrip` | `TrayIcon` + `NativeMenu` in `App.axaml` |
 | WinForms `Timer` | `DispatcherTimer` |
@@ -80,6 +80,24 @@ vollständig ersetzt:
 
 SkiaSharp kommt ohnehin mit Avalonia (MIT); die Paketversion im csproj muss
 der von Avalonia.Skia entsprechen.
+
+### 3b. Avalonia 12 und SkiaSharp 3 (Version 2.3.0)
+
+Avalonia 11.3 → 12.1, SkiaSharp 2.88 → 3.119. Der Code übersetzte ohne
+Fehler; angepasst wurden nur als veraltet markierte Stellen:
+
+| Vorher | Jetzt |
+|---|---|
+| `SystemDecorations="None"` | `WindowDecorations="None"` |
+| `ScalePixels(…, SKFilterQuality.High)` (Mitchell) | `ScalePixels(…, new SKSamplingOptions(SKCubicResampler.CatmullRom))` – näher an Lanczos3 |
+| `Avalonia.Diagnostics` (nur Debug, wurde nie angehängt) | entfernt; der Nachfolger `AvaloniaUI.DiagnosticsSupport` gehört zum kommerziellen Accelerate-Umfeld |
+
+Beim Testen auf einem Laptop (1920 × 1080, 125 %) fielen zwei Dinge auf, die
+unabhängig von Avalonia 12 sind und mitbehoben wurden: Das Hauptfenster
+wurde nur anhand seiner linken oberen Ecke geprüft (jetzt immer vollständig
+sichtbar, auch bei Monitorwechsel im Betrieb), und das Einstellungsfenster
+war höher als der Bildschirm (jetzt zweispaltig, alle Dialoge höchstens
+85 % der Bildschirmhöhe).
 
 Wegfall: **TIFF** wird nicht mehr angezeigt (Skia hat keinen TIFF-Decoder),
 und **GIF** kann nicht mehr gedreht werden (Skia hat keinen GIF-Encoder).

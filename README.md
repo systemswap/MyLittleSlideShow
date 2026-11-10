@@ -1,6 +1,6 @@
 # MyLittleSlideShow – .NET 10 / Avalonia
 
-Portierung von WPF + WinForms (net7.0-windows) auf **.NET 10 + Avalonia 11**.
+Portierung von WPF + WinForms (net7.0-windows) auf **.NET 10 + Avalonia 12**.
 Läuft auf **Windows** und **Linux** aus derselben Codebasis.
 
 ## Bauen

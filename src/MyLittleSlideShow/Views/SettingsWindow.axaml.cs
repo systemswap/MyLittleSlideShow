@@ -53,6 +53,7 @@ public partial class SettingsWindow : Window
     {
         _settingsManager = settingsManager;
         InitializeComponent();
+        ScreenFit.Attach(this);
         Loaded += OnLoaded;
     }
 

@@ -137,6 +137,10 @@ public partial class MainWindow : Window
         RestorePosition();
         HideControls();
 
+        // Monitor abgezogen, Laptop zugeklappt, Aufloesung geaendert: wieder
+        // vollstaendig sichtbar machen.
+        Screens.Changed += OnScreensChanged;
+
         LoadImage(WhichImage.LastLoadedFile, rescanFolders: true, allowRandom: true);
 
         SetSlideShowInterval(S.ImageChangeIntervalSeconds);
@@ -170,25 +174,110 @@ public partial class MainWindow : Window
     /// </summary>
     private void RestorePosition()
     {
-        var left = (int)S.PositionLeft;
-        var top = (int)S.PositionTop;
-
-        var target = new PixelPoint(left, top);
-        var fitsOnAnyScreen = Screens.All.Any(screen => screen.Bounds.Contains(target));
-
-        if (!fitsOnAnyScreen)
-        {
-            var primary = Screens.Primary ?? Screens.All.FirstOrDefault();
-            if (primary is not null)
-            {
-                left = primary.WorkingArea.X + primary.WorkingArea.Width - (int)Width - 20;
-                top = primary.WorkingArea.Y + 40;
-            }
-        }
-
-        Position = new PixelPoint(left, top);
+        PlaceFullyVisible(new PixelPoint((int)S.PositionLeft, (int)S.PositionTop));
         PersistState();
     }
+
+    /// <summary>
+    /// Setzt das Fenster an <paramref name="desired"/>, aber immer vollstaendig
+    /// sichtbar im Arbeitsbereich (ohne Taskleiste) eines Bildschirms.
+    ///
+    /// Typischer Fall: zuletzt auf einem grossen zweiten Monitor benutzt, dann
+    /// heruntergefahren und nur mit dem Laptop wieder gestartet. Die gespeicherte
+    /// Position liegt dann ausserhalb, oder das Fenster ragt ueber den Rand,
+    /// oder es ist (gezoomt) groesser als der ganze Laptop-Bildschirm.
+    ///
+    /// - Passt das Fenster schon vollstaendig auf einen Bildschirm, bleibt es
+    ///   pixelgenau, wo es ist.
+    /// - Sonst wird der Bildschirm mit der groessten Ueberlappung gewaehlt
+    ///   (ohne Ueberlappung der naechstgelegene) und das Fenster an die
+    ///   naechste vollstaendig sichtbare Stelle geschoben.
+    /// - Ist es groesser als der Arbeitsbereich, wird es mit gleichem
+    ///   Seitenverhaeltnis verkleinert.
+    ///
+    /// Position und Arbeitsbereich sind physische Pixel, Width/Height
+    /// geraeteunabhaengig - umgerechnet wird mit der Skalierung des jeweiligen
+    /// Bildschirms (z. B. 125 % am Laptop).
+    /// </summary>
+    private void PlaceFullyVisible(PixelPoint desired)
+    {
+        var screens = Screens.All;
+        if (screens.Count == 0)
+        {
+            Position = desired;
+            return;
+        }
+
+        PixelRect WindowRect(PixelPoint at, double scaling) =>
+            new(at, PixelSize.FromSize(new Size(Width, Height), scaling));
+
+        if (screens.Any(s => Contains(s.WorkingArea, WindowRect(desired, s.Scaling))))
+        {
+            Position = desired;
+            return;
+        }
+
+        // Zielbildschirm: groesste Ueberlappung, sonst kleinster Abstand der Mittelpunkte
+        var target = screens
+            .Select(s =>
+            {
+                var rect = WindowRect(desired, s.Scaling);
+                var overlap = rect.Intersect(s.WorkingArea);
+                long area = (long)overlap.Width * overlap.Height;
+                var dx = rect.Center.X - s.WorkingArea.Center.X;
+                var dy = rect.Center.Y - s.WorkingArea.Center.Y;
+                return (Screen: s, Area: area, Distance: (double)dx * dx + (double)dy * dy);
+            })
+            .OrderByDescending(c => c.Area)
+            .ThenBy(c => c.Distance)
+            .First().Screen;
+
+        var work = target.WorkingArea;
+        var scaling = target.Scaling;
+        const int margin = 8;   // physische Pixel Abstand zum Rand beim Verschieben
+
+        // Zu gross fuer den Bildschirm: proportional verkleinern
+        var maxWidth = (work.Width - 2 * margin) / scaling;
+        var maxHeight = (work.Height - 2 * margin) / scaling;
+        if (Width > maxWidth || Height > maxHeight)
+        {
+            var factor = Math.Min(maxWidth / Width, maxHeight / Height);
+            var newHeight = Math.Max(MinHeight, Math.Floor(Height * factor));
+            Width = Math.Max(MinWidth, Math.Floor(Width * newHeight / Height));
+            Height = newHeight;
+        }
+
+        var size = PixelSize.FromSize(new Size(Width, Height), scaling);
+        var x = Math.Clamp(desired.X, work.X + margin, Math.Max(work.X + margin, work.Right - size.Width - margin));
+        var y = Math.Clamp(desired.Y, work.Y + margin, Math.Max(work.Y + margin, work.Bottom - size.Height - margin));
+        Position = new PixelPoint(x, y);
+    }
+
+    private void OnScreensChanged(object? sender, EventArgs e)
+    {
+        // Windows verschiebt die Fenster selbst noch - erst danach nachsehen.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (WindowState != WindowState.Normal) return;
+
+            var oldSize = new Size(Width, Height);
+            PlaceFullyVisible(Position);
+
+            if (new Size(Width, Height) != oldSize)
+            {
+                // Verkleinert: Bild fuer die neue Groesse neu berechnen
+                ApplyClipHeight(ControlsBackgroundGrid.Opacity > 0);
+                LoadImage(WhichImage.LastLoadedFile, rescanFolders: false, allowRandom: false);
+            }
+            else
+            {
+                PersistState();
+            }
+        }, DispatcherPriority.Background);
+    }
+
+    private static bool Contains(PixelRect outer, PixelRect inner) =>
+        inner.X >= outer.X && inner.Y >= outer.Y && inner.Right <= outer.Right && inner.Bottom <= outer.Bottom;
 
     public void PersistState()
     {

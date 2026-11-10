@@ -13,6 +13,7 @@ public partial class AboutWindow : Window
     public AboutWindow()
     {
         InitializeComponent();
+        ScreenFit.Attach(this);
         HiddenOptions.ItemsSource = ReadEmbeddedLines("MyLittleSlideShow.Infos.HiddenOptions.txt");
         ChangeLogText_ListBox.ItemsSource = ReadEmbeddedLines("MyLittleSlideShow.Infos.Changelog.txt");
         Licenses_ListBox.ItemsSource = LicenseLines();

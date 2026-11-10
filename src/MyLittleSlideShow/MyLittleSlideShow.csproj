@@ -28,11 +28,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.23" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.23" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.23" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.23" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.23" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Avalonia" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.6" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.1.6" />
 
     <!-- Keine Build-Telemetrie: Avalonia.BuildServices kommt transitiv mit
          Avalonia und sendet bei jedem Build Projektname, Zielplattform und
@@ -47,7 +46,7 @@
          kommt ohnehin mit Avalonia.Skia; die Version muss exakt der von
          Avalonia entsprechen, sonst passen verwaltete und native Teile nicht
          zusammen. Bei einem Avalonia-Update hier mitziehen. MIT-Lizenz. -->
-    <PackageReference Include="SkiaSharp" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
 
     <!-- EXIF-Anzeige im Info-Fenster. Apache-2.0 (XmpCore: BSD-3). -->
     <PackageReference Include="MetadataExtractor" Version="2.9.3" />

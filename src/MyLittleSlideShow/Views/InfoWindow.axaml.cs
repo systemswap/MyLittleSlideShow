@@ -23,6 +23,7 @@ public partial class InfoWindow : Window
     {
         _fileName = filePath;
         InitializeComponent();
+        ScreenFit.Attach(this);
         FileNameText.Text = Path.GetFileName(filePath);
         if (File.Exists(_fileName)) Show(ImageMetadataReader.Read(_fileName));
     }
