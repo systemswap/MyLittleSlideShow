@@ -1,14 +1,14 @@
 name: Build & Release
 
-# Push auf master  -> nur bauen, Artefakte haengen am Workflow-Lauf (Testlauf)
-# Push eines Tags  -> bauen und ein GitHub-Release mit den Dateien anlegen
-#   git tag v2.3.0 && git push origin v2.3.0
+# Push auf main    -> nur bauen, Artefakte haengen am Workflow-Lauf (Testlauf)
+# Push eines Tags  -> bauen und ein GitHub-Release mit den Dateien anlegen.
+#   Vorher <Version> im csproj anheben, dann:  git tag vX.Y.Z && git push origin vX.Y.Z
 on:
   push:
-    branches: [master]
+    branches: [main]
     tags: ['v*']
   pull_request:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -36,15 +36,12 @@ jobs:
 
       - name: Publish
         shell: pwsh
-        # Choice 2 = win-x64 standalone. KeepExternalLibsSeparate:$false packt
-        # auch MetadataExtractor/XmpCore mit in die EXE, damit wirklich nur eine
-        # Datei entsteht.
-        run: ./publish.ps1 -Choice 2 -KeepExternalLibsSeparate:$false
+        run: ./publish.ps1
 
       - name: Ergebnis pruefen
         shell: pwsh
         run: |
-          $out = 'publish/win-x64-standalone'
+          $out = 'publish/windows-x64'
           Get-ChildItem $out -File | ForEach-Object { '{0,10:N0} KB  {1}' -f ($_.Length / 1KB), $_.Name }
           # Neben der EXE liegen nur die Lizenztexte; Bibliotheken muessen in der EXE stecken.
           $binaries = Get-ChildItem $out -File | Where-Object { $_.Extension -in '.exe', '.dll' }
@@ -79,8 +76,7 @@ jobs:
           sudo apt-get install -y -qq libfuse2t64 || sudo apt-get install -y -qq libfuse2
 
       - name: appimagetool bereitstellen
-        # publish.sh sucht zuerst hier und fragt dann interaktiv nach - im CI
-        # gibt es keine Eingabe, also legen wir das Werkzeug vorher ab.
+        # publish.sh wuerde es sonst selbst laden; so ist es im Log getrennt sichtbar.
         run: |
           mkdir -p .tools
           curl -fLsS -o .tools/appimagetool-x86_64.AppImage \
@@ -89,17 +85,16 @@ jobs:
 
       - name: AppImage bauen
         env:
-          KEEP_EXTERNAL_LIBS: '0'
           APPIMAGE_EXTRACT_AND_RUN: '1'
-        run: bash publish.sh 7
+        run: bash publish.sh
 
       - name: Ergebnis pruefen
         run: |
           shopt -s nullglob
-          files=(publish/linux-x64-appimage/*.AppImage)
+          files=(publish/linux-x64/*.AppImage)
           if [ ${#files[@]} -ne 1 ]; then
             echo "Erwartet wurde genau eine AppImage, gefunden: ${#files[@]}"
-            ls -lR publish/linux-x64-appimage || true
+            ls -lR publish/linux-x64 || true
             exit 1
           fi
           ls -lh "${files[0]}"
@@ -153,12 +148,16 @@ jobs:
         run: |
           set -euo pipefail
           version="${TAG#v}"
+
+          # Die Versionsnummer steht nur im csproj - das Tag muss dazu passen.
+          project_version="$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' src/MyLittleSlideShow/MyLittleSlideShow.csproj | head -n 1)"
+          if [ "$project_version" != "$version" ]; then
+            echo "::error::Tag $TAG passt nicht zur Version $project_version im csproj."
+            exit 1
+          fi
           mv dist/MyLittleSlideShow-win-x64.exe "dist/MyLittleSlideShow-${version}-win-x64.exe"
           mv dist/MyLittleSlideShow-x86_64.AppImage "dist/MyLittleSlideShow-${version}-x86_64.AppImage"
 
-          # Lizenztexte als eigenes Paket (stehen auch im Programm unter Infos > Lizenzen)
-          mkdir -p lic && cp LICENSE lic/LICENSE.txt && cp THIRD-PARTY-NOTICES.md lic/ && cp -r licenses lic/
-          (cd lic && zip -qr "../dist/MyLittleSlideShow-${version}-Lizenzen.zip" .)
           ls -lh dist
 
           cat > notes.md <<EOF
@@ -172,7 +171,7 @@ jobs:
           Beide Varianten sind self-contained, eine installierte .NET-Laufzeit ist nicht noetig.
 
           Lizenz: MIT. Verwendete Fremdbestandteile und ihre Lizenzen stehen im Programm unter
-          Einstellungen > Infos > Lizenzen und in \`MyLittleSlideShow-${version}-Lizenzen.zip\`.
+          Einstellungen > Infos > Lizenzen und in THIRD-PARTY-NOTICES.md im Repository.
           EOF
 
           gh release create "$TAG" dist/* \
