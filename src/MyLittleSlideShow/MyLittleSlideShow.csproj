@@ -64,6 +64,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Infos\Changelog.txt" />
     <EmbeddedResource Include="Infos\HiddenOptions.txt" />
+
+    <!-- Lizenztexte im Programm (Infos > Lizenzen), damit auch die einzelne
+         EXE alles mitbringt, was die Lizenzen der Fremdbestandteile verlangen. -->
+    <EmbeddedResource Include="..\..\LICENSE" LogicalName="MyLittleSlideShow.Licenses.LICENSE" />
+    <EmbeddedResource Include="..\..\THIRD-PARTY-NOTICES.md" LogicalName="MyLittleSlideShow.Licenses.THIRD-PARTY-NOTICES.md" />
+    <EmbeddedResource Include="..\..\licenses\*.txt" LogicalName="MyLittleSlideShow.Licenses.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <!--
