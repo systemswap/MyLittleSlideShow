@@ -15,14 +15,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 
-    <Version>2.3.0.0</Version>
-    <FileVersion>2.3.0.0</FileVersion>
-    <AssemblyVersion>2.3.0.0</AssemblyVersion>
+    <!-- Die einzige Stelle mit der Versionsnummer. Datei- und Assembly-Version
+         leitet .NET daraus ab (2.3.0 -> 2.3.0.0), publish.sh liest sie hier aus,
+         das Release bekommt sie aus dem Git-Tag (v2.3.0). -->
+    <Version>2.3.0</Version>
     <Company>MTS-Solutions.de</Company>
     <Product>MyLittleSlideShow</Product>
 
     <!-- Kein RuntimeIdentifier hier fest verdrahten: wird beim publish uebergeben -->
-    <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
     <SatelliteResourceLanguages>de;en</SatelliteResourceLanguages>
     <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
@@ -66,21 +67,5 @@
     <EmbeddedResource Include="..\..\THIRD-PARTY-NOTICES.md" LogicalName="MyLittleSlideShow.Licenses.THIRD-PARTY-NOTICES.md" />
     <EmbeddedResource Include="..\..\licenses\*.txt" LogicalName="MyLittleSlideShow.Licenses.%(Filename)%(Extension)" />
   </ItemGroup>
-
-  <!--
-    Beim Single-File-Publish wandert normalerweise alles in die eine EXE.
-    Mit -p:KeepExternalLibsSeparate=true bleiben die Fremdbibliotheken fuer
-    EXIF (MetadataExtractor, XmpCore) als eigene DLLs daneben liegen, damit
-    sie separat austauschbar sind. Die Publish-Skripte setzen das.
-  -->
-  <Target Name="KeepExternalLibsOutOfBundle"
-          AfterTargets="ComputeResolvedFilesToPublishList"
-          Condition="'$(KeepExternalLibsSeparate)' == 'true'">
-    <ItemGroup>
-      <ResolvedFileToPublish Update="@(ResolvedFileToPublish)">
-        <ExcludeFromSingleFile Condition="'%(Filename)' == 'MetadataExtractor' or '%(Filename)' == 'XmpCore'">true</ExcludeFromSingleFile>
-      </ResolvedFileToPublish>
-    </ItemGroup>
-  </Target>
 
 </Project>

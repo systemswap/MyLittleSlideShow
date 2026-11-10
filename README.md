@@ -1,39 +1,38 @@
-# MyLittleSlideShow – .NET 10 / Avalonia
+# MyLittleSlideShow
 
-Portierung von WPF + WinForms (net7.0-windows) auf **.NET 10 + Avalonia 12**.
-Läuft auf **Windows** und **Linux** aus derselben Codebasis.
+Kleine Diaschau für den Desktop – .NET 10 und Avalonia 12, läuft auf
+**Windows** und **Linux** aus derselben Codebasis.
 
-## Bauen
+## Bauen und starten
 
 Voraussetzung: .NET 10 SDK.
 
 ```bash
-dotnet restore
-dotnet build -c Release
 dotnet run --project src/MyLittleSlideShow
 ```
 
 ## Veröffentlichen
 
-Self-contained, damit auf dem Zielrechner keine Runtime nötig ist:
+| System | Befehl | Ergebnis |
+|---|---|---|
+| Windows | `.\publish.ps1` | `publish\windows-x64\MyLittleSlideShow.exe` – eine Datei, .NET enthalten |
+| Linux | `./publish.sh` | `publish/linux-x64/MyLittleSlideShow-<Version>-x86_64.AppImage` |
 
-```bash
-# Windows
-dotnet publish src/MyLittleSlideShow -c Release -r win-x64 \
-  --self-contained true -p:PublishSingleFile=true
+Neben dem Programm liegen jeweils `LICENSE.txt`, `THIRD-PARTY-NOTICES.md` und `licenses/`.
 
-# Linux
-dotnet publish src/MyLittleSlideShow -c Release -r linux-x64 \
-  --self-contained true -p:PublishSingleFile=true
-```
+## Release auf GitHub
 
-> `PublishTrimmed` ist bewusst **nicht** aktiviert. Avalonia und MetadataExtractor
-> nutzen Reflection; Trimming ist möglich, erfordert aber Testen und ggf.
-> `TrimmerRootDescriptor`-Einträge.
+1. `<Version>` in `src/MyLittleSlideShow/MyLittleSlideShow.csproj` anheben –
+   die einzige Stelle mit der Versionsnummer – und `Infos/Changelog.txt` ergänzen.
+2. Committen und auf `main` pushen. Der Workflow baut Windows und Linux zur Probe
+   und prüft die Lizenzen.
+3. `git tag vX.Y.Z && git push origin vX.Y.Z` – der Workflow baut erneut und
+   legt das Release mit EXE und AppImage an. Passt das Tag nicht zur Version im
+   csproj, bricht er ab.
+
+Sicherheitsupdates für Pakete schlägt Dependabot automatisch als Pull Request vor.
 
 ## Laufzeitabhängigkeiten unter Linux
-
-Die App selbst ist verwaltet, aber die Systemintegration ruft Standardwerkzeuge auf:
 
 | Funktion | Benötigt | Fällt zurück auf |
 |---|---|---|
@@ -41,72 +40,51 @@ Die App selbst ist verwaltet, aber die Systemintegration ruft Standardwerkzeuge 
 | Papierkorb | `gio` (glib2) | `trash-put`, sonst eigene Umsetzung der freedesktop-Trash-Spec |
 | Standby verhindern | `systemd-inhibit` | `xdg-screensaver reset` |
 | Datei/Ordner öffnen | `xdg-open` (xdg-utils) | – |
-| Tray-Icon | StatusNotifierItem-Unterstützung der Desktopumgebung | – |
+| Tray-Icon | StatusNotifierItem; unter GNOME die Erweiterung *AppIndicator and KStatusNotifierItem Support* | – |
 
-Fehlt ein Werkzeug, wird die betroffene Schaltfläche ausgeblendet bzw. der
-Menüpunkt deaktiviert – die App startet trotzdem.
+Fehlt ein Werkzeug, wird die betroffene Schaltfläche ausgeblendet – die App startet trotzdem.
 
-Unter reinem GNOME braucht das Tray-Icon die Erweiterung
-*AppIndicator and KStatusNotifierItem Support*.
-
-## Wo liegen die Einstellungen?
-
-`Properties.Settings` gibt es nicht mehr. Stattdessen JSON:
+## Einstellungen
 
 - Windows: `%APPDATA%\MyLittleSlideShow\settings.json`
 - Linux: `~/.config/MyLittleSlideShow/settings.json`
-
-Beim ersten Start unter Windows werden die Werte einer vorhandenen alten
-Installation (`user.config`) automatisch übernommen.
 
 ## Projektstruktur
 
 ```
 src/MyLittleSlideShow/
-├── Program.cs                 Einstiegspunkt (ersetzt StartupUri)
-├── App.axaml(.cs)             Theme, Tray-Icon, Lebenszyklus
+├── Program.cs, App.axaml       Start, Tray-Icon
 ├── Views/
-│   ├── MainWindow             Diaschau-Fenster
-│   ├── SettingsWindow         Einstellungen
-│   ├── InfoWindow             EXIF-Anzeige
-│   ├── AboutWindow            Changelog + versteckte Optionen
-│   └── MyMessageBox           Ja/Nein-Dialog
+│   ├── MainWindow              Diaschau-Fenster, Platzierung auf dem Bildschirm
+│   ├── SettingsWindow          Einstellungen mit Live-Vorschau
+│   ├── InfoWindow              Dateiinfos (EXIF, IPTC, XMP, ICC)
+│   ├── AboutWindow             Changelog, versteckte Optionen, Lizenzen
+│   ├── MyMessageBox            Ja/Nein-Dialog
+│   └── ScreenFit.cs            Dialoge passen immer auf den Bildschirm
+├── Themes/FineTheme.axaml      gemeinsames Design der Dialoge
 ├── Services/
-│   ├── SettingsManager.cs     JSON-Einstellungen + Migration
-│   ├── ImageProcessing.cs     Laden, Skalieren, Schärfen, Drehen, EXIF
-│   ├── SkiaImaging.cs         Bildkern auf SkiaSharp (ohne Avalonia)
-│   ├── ImageMetadataReader.cs Dateiinfos (EXIF, IPTC, XMP, ICC) wie im ImageConverter
-│   ├── JpegMetadata.cs        EXIF/ICC beim Drehen übernehmen
-│   └── Donation.cs            PayPal-Link
-└── Platform/
-    ├── IPlatformServices.cs   Interfaces + Auswahl zur Laufzeit
-    ├── WindowsServices.cs     Registry, SHFileOperation, P/Invoke
-    ├── LinuxServices.cs       gsettings, gio, systemd-inhibit, XDG
-    └── ShellService.cs        Öffnen von Dateien/URLs + Fallbacks
+│   ├── SkiaImaging.cs          Bildkern: dekodieren, skalieren, schärfen, kodieren
+│   ├── ImageProcessing.cs      Bildfunktionen für die Oberfläche
+│   ├── JpegMetadata.cs         EXIF/ICC beim Drehen übernehmen
+│   ├── ImageMetadataReader.cs  Dateiinfos (wie im ImageConverter)
+│   └── SettingsManager.cs      JSON-Einstellungen
+└── Platform/                   Windows/Linux: Hintergrund, Autostart, Papierkorb, Standby
+tools/check-licenses.py         Lizenzprüfung im Workflow
+licenses/                       Lizenztexte der Fremdbestandteile
 ```
 
-## Lizenz
+## Lizenz und Telemetrie
 
 MyLittleSlideShow steht unter der [MIT-Lizenz](LICENSE). Alle Fremdbestandteile
-stehen ebenfalls unter freien Lizenzen ohne Nutzungsgebühr (MIT, Apache-2.0,
-BSD-3-Clause, OFL-1.1) – Übersicht in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md),
-im Programm unter *Einstellungen › Infos › Lizenzen*.
+stehen unter freien Lizenzen (MIT, Apache-2.0, BSD-3-Clause, OFL-1.1) – Übersicht
+in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), im Programm unter
+*Einstellungen › Infos › Lizenzen*. Ändert ein Paket seine Lizenz, schlägt der
+Build fehl (`tools/check-licenses.py`).
 
-`tools/check-licenses.py` prüft bei jedem Build im Workflow alle NuGet-Pakete
-gegen eine Positivliste. Ändert ein Paket seine Lizenz (wie ImageSharp mit 3.2),
-schlägt der Build fehl. Dependabot schlägt wöchentlich Updates vor
-(`.github/dependabot.yml`).
+Das Programm sendet nichts. Beim Bauen ist Telemetrie ebenfalls aus: Avalonias
+Build-Telemetrie im csproj, .NET-CLI und MSBuild über
+`DOTNET_CLI_TELEMETRY_OPTOUT` / `MSBUILD_TELEMETRY_OPTOUT` in den Skripten und
+im Workflow. Für eigene `dotnet`-Aufrufe einmalig dauerhaft setzen:
+`setx DOTNET_CLI_TELEMETRY_OPTOUT 1` und `setx MSBUILD_TELEMETRY_OPTOUT 1`.
 
-## Telemetrie
-
-Das Programm sendet nichts. Beim Bauen ist Telemetrie ebenfalls aus:
-
-- **Avalonia**: `Avalonia.BuildServices` würde bei jedem Build Nutzungsdaten
-  senden; im csproj per `ExcludeAssets="all"` ausgeschaltet.
-- **.NET-CLI und MSBuild**: `publish.ps1`, `publish.sh` und der Workflow setzen
-  `DOTNET_CLI_TELEMETRY_OPTOUT=1` und `MSBUILD_TELEMETRY_OPTOUT=1`. Für
-  eigene `dotnet`-Aufrufe und die IDE einmalig dauerhaft setzen:
-  `setx DOTNET_CLI_TELEMETRY_OPTOUT 1` und `setx MSBUILD_TELEMETRY_OPTOUT 1`
-  (Linux: `export …` in `~/.profile`).
-
-Details zur Umstellung siehe [MIGRATION.md](MIGRATION.md).
+Hinweise zum Weiterentwickeln: [ENTWICKLUNG.md](ENTWICKLUNG.md).
