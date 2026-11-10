@@ -12,6 +12,12 @@
 
 set -euo pipefail
 
+# Keine Telemetrie von .NET-CLI und MSBuild (gilt nur fuer diesen Lauf).
+# Avalonias Build-Telemetrie ist im csproj abgeschaltet.
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export MSBUILD_TELEMETRY_OPTOUT=1
+export DOTNET_NOLOGO=1
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT="$ROOT/src/MyLittleSlideShow/MyLittleSlideShow.csproj"
 OUTPUT_ROOT="$ROOT/publish"
