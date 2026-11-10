@@ -126,3 +126,13 @@
 
 1.9.1.8
 	#New - verhinder den Schlafmodus wenn am Laptop der Deckel geschlossen wird
+
+2.0.0.0
+	#New - Migration auf Avalonia UI (.NET 10), läuft unter Windows und Linux
+
+2.1.0.0
+	#New - Einstellungsfenster neu gestaltet: kompakte, feinere Controls, Gruppen als Karten, Dunkelmodus
+	#New - Regler statt Zahlenfelder für Schärfe, Schwelle, AmbiFrame-Deckkraft und Bildwechsel
+	#New - Live-Vorschau: Änderungen an Schärfe und AmbiFrame sind sofort im Hauptfenster sichtbar
+	#New - Abbrechen-Knopf im Einstellungsfenster
+	#Fixed - Bild wurde nicht mehr angezeigt, wenn Windows das Fenster zusammengeschoben hatte (gespeicherte Höhe 39 px)

@@ -2,7 +2,7 @@ name: Build & Release
 
 # Push auf master  -> nur bauen, Artefakte haengen am Workflow-Lauf (Testlauf)
 # Push eines Tags  -> bauen und ein GitHub-Release mit den Dateien anlegen
-#   git tag v2.0.0 && git push origin v2.0.0
+#   git tag v2.1.0 && git push origin v2.1.0
 on:
   push:
     branches: [master]
