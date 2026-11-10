@@ -3,7 +3,7 @@
         x:Class="MyLittleSlideShow.Views.MainWindow"
         x:Name="Main_Window"
         Title="MyLittleSlideShow"
-        Width="386" Height="315" MinWidth="340"
+        Width="386" Height="315" MinWidth="340" MinHeight="290"
         SystemDecorations="None"
         TransparencyLevelHint="Transparent"
         Background="Transparent"
