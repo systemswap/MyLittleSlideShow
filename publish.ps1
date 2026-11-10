@@ -21,6 +21,12 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# Keine Telemetrie von .NET-CLI und MSBuild (gilt nur fuer diesen Lauf).
+# Avalonias Build-Telemetrie ist im csproj abgeschaltet.
+$env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
+$env:MSBUILD_TELEMETRY_OPTOUT    = '1'
+$env:DOTNET_NOLOGO               = '1'
+
 $Root       = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Project    = Join-Path $Root 'src\MyLittleSlideShow\MyLittleSlideShow.csproj'
 $OutputRoot = Join-Path $Root 'publish'

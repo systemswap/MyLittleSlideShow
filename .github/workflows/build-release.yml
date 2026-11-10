@@ -17,6 +17,9 @@ permissions:
 env:
   DOTNET_NOLOGO: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  # .NET 10 bringt zusaetzlich MSBuild-Telemetrie mit; Avalonias Build-
+  # Telemetrie ist im csproj abgeschaltet.
+  MSBUILD_TELEMETRY_OPTOUT: 'true'
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
 
 jobs:
