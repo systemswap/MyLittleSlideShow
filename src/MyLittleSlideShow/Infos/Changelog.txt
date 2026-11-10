@@ -143,3 +143,12 @@
 	#New - Drehen behält bei JPEG alle EXIF-Daten und das Farbprofil und berücksichtigt die vorhandene EXIF-Drehung
 	#New - ausführlichere, besser lesbare EXIF-Anzeige im Info-Fenster
 	#Changed - TIFF wird nicht mehr unterstützt, GIF kann nicht mehr gedreht werden
+
+2.2.0.0
+	#New - schärfere Darstellung: das Bild wird für genau die sichtbare Fläche berechnet und 1:1 angezeigt, ohne zweites Verkleinern
+	#New - Bildschirmskalierung (125 %, 150 %) wird berücksichtigt, auch beim Wechsel auf einen anderen Monitor
+	#New - Farbmanagement: Fotos mit Farbprofil (z. B. iPhone, Display P3) werden farbtreu statt blass angezeigt
+	#New - Dateiinfos neu: Übersicht nach Datei, Kamera, Aufnahme, Ort, Urheber und Farbprofil, dazu alle Einträge auf Klick
+	#New - Lizenzhinweise im Programm unter Einstellungen > Infos > Lizenzen; MyLittleSlideShow steht unter der MIT-Lizenz
+	#Changed - Avalonia 11.3.23
+	#Changed - beim Bauen werden keine Nutzungsdaten mehr an Avalonia oder Microsoft gesendet
