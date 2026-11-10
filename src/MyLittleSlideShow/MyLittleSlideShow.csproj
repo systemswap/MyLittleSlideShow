@@ -28,11 +28,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.0" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.0" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.0" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.0" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Avalonia" Version="11.3.23" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.23" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.23" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.23" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.23" Condition="'$(Configuration)' == 'Debug'" />
 
     <!-- Keine Build-Telemetrie: Avalonia.BuildServices kommt transitiv mit
          Avalonia und sendet bei jedem Build Projektname, Zielplattform und
@@ -40,12 +40,8 @@
          dokumentierten Abschalter hat das Paket nicht; mit ExcludeAssets
          wird sein MSBuild-Target gar nicht erst eingebunden. Die Version muss
          der von Avalonia geforderten entsprechen (sonst NU1605). -->
-    <PackageReference Include="Avalonia.BuildServices" Version="0.0.31"
+    <PackageReference Include="Avalonia.BuildServices" Version="11.3.2"
                       ExcludeAssets="all" PrivateAssets="all" />
-
-    <!-- Avalonia.X11 zieht Tmds.DBus.Protocol 0.21.2 herein; 0.21.3 schliesst
-         GHSA-xrw6-gwf8-vvr9. Explizit setzen hebt die transitive Version an. -->
-    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
 
     <!-- Bildverarbeitung (Dekodieren, Skalieren, Drehen, Kodieren). SkiaSharp
          kommt ohnehin mit Avalonia.Skia; die Version muss exakt der von

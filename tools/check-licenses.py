@@ -35,7 +35,8 @@ ALLOWED = {
 # erneut angesehen und der Eintrag angepasst werden.
 REVIEWED = {
     # ANGLE (Chromium-Projekt), BSD-3-Clause; nur Windows, kommt mit Avalonia
-    "Avalonia.Angle.Windows.Natives/2.1.22045.20230930": "BSD-3-Clause",
+    # Text: licenses/angle-BSD-3-Clause.txt (am 10.11.2026 im Paket geprueft)
+    "Avalonia.Angle.Windows.Natives/2.1.25547.20250602": "BSD-3-Clause",
     # Adobe XMP Toolkit, BSD-3-Clause; Text in licenses/xmpcore-BSD-3-Clause.txt
     "XmpCore/6.1.10.1": "BSD-3-Clause",
 }
