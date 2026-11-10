@@ -45,7 +45,7 @@
 
     <!-- Avalonia.X11 zieht Tmds.DBus.Protocol 0.21.2 herein; 0.21.3 schliesst
          GHSA-xrw6-gwf8-vvr9. Explizit setzen hebt die transitive Version an. -->
-    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.95.2" />
 
     <!-- Bildverarbeitung (Dekodieren, Skalieren, Drehen, Kodieren). SkiaSharp
          kommt ohnehin mit Avalonia.Skia; die Version muss exakt der von
