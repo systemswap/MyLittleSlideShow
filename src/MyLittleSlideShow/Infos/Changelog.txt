@@ -136,3 +136,10 @@
 	#New - Live-Vorschau: Änderungen an Schärfe und AmbiFrame sind sofort im Hauptfenster sichtbar
 	#New - Abbrechen-Knopf im Einstellungsfenster
 	#Fixed - Bild wurde nicht mehr angezeigt, wenn Windows das Fenster zusammengeschoben hatte (gespeicherte Höhe 39 px)
+
+2.1.1.0
+	#Fixed - Bildverarbeitung von ImageSharp auf SkiaSharp umgestellt: schließt sechs bekannte Sicherheitslücken von ImageSharp 3.1 (vor allem TIFF) ohne Lizenzpflicht
+	#New - Bilder laden etwa doppelt so schnell
+	#New - Drehen behält bei JPEG alle EXIF-Daten und das Farbprofil und berücksichtigt die vorhandene EXIF-Drehung
+	#New - ausführlichere, besser lesbare EXIF-Anzeige im Info-Fenster
+	#Changed - TIFF wird nicht mehr unterstützt, GIF kann nicht mehr gedreht werden

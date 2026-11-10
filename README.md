@@ -27,7 +27,7 @@ dotnet publish src/MyLittleSlideShow -c Release -r linux-x64 \
   --self-contained true -p:PublishSingleFile=true
 ```
 
-> `PublishTrimmed` ist bewusst **nicht** aktiviert. Avalonia und ImageSharp
+> `PublishTrimmed` ist bewusst **nicht** aktiviert. Avalonia und MetadataExtractor
 > nutzen Reflection; Trimming ist möglich, erfordert aber Testen und ggf.
 > `TrimmerRootDescriptor`-Einträge.
 
@@ -74,6 +74,8 @@ src/MyLittleSlideShow/
 ├── Services/
 │   ├── SettingsManager.cs     JSON-Einstellungen + Migration
 │   ├── ImageProcessing.cs     Laden, Skalieren, Schärfen, Drehen, EXIF
+│   ├── SkiaImaging.cs         Bildkern auf SkiaSharp (ohne Avalonia)
+│   ├── JpegMetadata.cs        EXIF/ICC beim Drehen übernehmen
 │   └── Donation.cs            PayPal-Link
 └── Platform/
     ├── IPlatformServices.cs   Interfaces + Auswahl zur Laufzeit

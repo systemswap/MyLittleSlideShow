@@ -62,6 +62,28 @@ Open-Source-/private Nutzung ist sie kostenlos; kommerzielle Nutzung oberhalb
 der Freigrenze erfordert eine kostenpflichtige Lizenz. Alternative wäre
 SkiaSharp (MIT), das aber weniger Bildoperationen mitbringt.
 
+### 3a. Wechsel von ImageSharp auf SkiaSharp (Version 2.1.1)
+
+ImageSharp 3.1.x hatte mehrere bekannte Sicherheitslücken (u. a.
+GHSA-v76p-62qx-wwq2, GHSA-j9gm-c75j-xc9q – überwiegend in den TIFF-Codecs).
+Behoben sind sie erst ab 3.2.0, und ab dieser Version bricht jeder
+Release-Build ohne Six-Labors-Lizenzschlüssel ab. Deshalb wurde ImageSharp
+vollständig ersetzt:
+
+| Aufgabe | jetzt |
+|---|---|
+| Dekodieren, EXIF-Ausrichtung | SkiaSharp `SKCodec`, `EncodedOrigin` (alle 8 Fälle); große JPEGs werden schon beim Dekodieren verkleinert |
+| Skalieren | Halbierungsschritte (2×2-Mittel) + abschließend bikubisch – visuell gleichwertig zu Lanczos3, etwa doppelt so schnell |
+| Schärfen | unverändert der eigene 3×3-Unschärfemaskierungs-Algorithmus, jetzt direkt im Bildspeicher der Avalonia-Bitmap |
+| Drehen + Speichern | Skia-Encoder (JPEG q100 4:4:4, PNG, WebP verlustfrei, BMP selbst geschrieben); EXIF und ICC-Profil werden bei JPEG übernommen, die Orientierung auf 1 gesetzt (`JpegMetadata.cs`) |
+| EXIF-Anzeige | **MetadataExtractor** (Apache-2.0) |
+
+SkiaSharp kommt ohnehin mit Avalonia (MIT); die Paketversion im csproj muss
+der von Avalonia.Skia entsprechen.
+
+Wegfall: **TIFF** wird nicht mehr angezeigt (Skia hat keinen TIFF-Decoder),
+und **GIF** kann nicht mehr gedreht werden (Skia hat keinen GIF-Encoder).
+
 ## 4. Einstellungen
 
 `Properties.Settings.Default` gibt es nicht mehr. Stattdessen
@@ -100,8 +122,8 @@ Mauszeiger zu bewegen und `SendKeys` zu schicken, entfällt ersatzlos.
 | Datei | Grund |
 |---|---|
 | `ZZZ_ThumbnailProvider.cs` (203 Z.) | wurde nie aufgerufen, shell32/gdi32-P/Invoke |
-| `ZZZ_GetKindOfFile.cs` (302 Z.) | ersetzt durch `Image.DetectFormat` |
-| `ExifReader.cs` (976 Z.) | ersetzt durch ImageSharp-Metadaten |
+| `ZZZ_GetKindOfFile.cs` (302 Z.) | ersetzt durch Formaterkennung des Decoders |
+| `ExifReader.cs` (976 Z.) | ersetzt durch MetadataExtractor (zuvor ImageSharp-Metadaten) |
 | `ExifTags.cs` (310 Z.) | dito |
 | `ZZZ_PreventSleep.cs` | ersetzt durch `ISleepInhibitor` |
 | `Properties/*` (Settings, Resources, AssemblyInfo) | ersetzt durch JSON bzw. SDK-Attribute |
