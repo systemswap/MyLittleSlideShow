@@ -152,3 +152,10 @@
 	#New - Lizenzhinweise im Programm unter Einstellungen > Infos > Lizenzen; MyLittleSlideShow steht unter der MIT-Lizenz
 	#Changed - Avalonia 11.3.23
 	#Changed - beim Bauen werden keine Nutzungsdaten mehr an Avalonia oder Microsoft gesendet
+
+2.3.0.0
+	#New - das Hauptfenster ist beim Start immer vollständig sichtbar, z. B. wenn vorher ein zweiter Monitor angeschlossen war und jetzt nur noch der Laptop-Bildschirm da ist; zu große Fenster werden passend verkleinert
+	#New - wird im Betrieb ein Monitor abgezogen, holt sich das Fenster ebenfalls vollständig auf den verbleibenden Bildschirm
+	#New - Einstellungen zweispaltig und deutlich niedriger; alle Dialoge passen auch auf kleine Laptop-Bildschirme (höchstens 85 % der Bildschirmhöhe)
+	#New - noch etwas schärfere Verkleinerung (Catmull-Rom statt Mitchell)
+	#Changed - Avalonia 12.1.6 und SkiaSharp 3.119.4
