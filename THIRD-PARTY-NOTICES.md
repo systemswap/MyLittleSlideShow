@@ -15,16 +15,16 @@ Build fehl.
 | Bestandteil | Version | Lizenz | Projekt |
 |---|---|---|---|
 | .NET-Laufzeit (nur in der Standalone-Fassung) | 10 | MIT | https://github.com/dotnet/runtime |
-| Avalonia (UI, Fluent-Design, Skia-, X11-, Win32- und FreeDesktop-Anbindung) | 11.3.23 | MIT | https://github.com/AvaloniaUI/Avalonia |
-| Avalonia.Fonts.Inter | 11.3.23 | MIT | https://github.com/AvaloniaUI/Avalonia |
+| Avalonia (UI, Fluent-Design, Skia-, X11-, Win32- und FreeDesktop-Anbindung) | 12.1.6 | MIT | https://github.com/AvaloniaUI/Avalonia |
+| Avalonia.Fonts.Inter | 12.1.6 | MIT | https://github.com/AvaloniaUI/Avalonia |
 | Schrift Inter (in Avalonia.Fonts.Inter) | | SIL Open Font License 1.1 – `licenses/inter-OFL.txt` | https://github.com/rsms/inter |
-| ANGLE (nur Windows, über Avalonia.Angle.Windows.Natives) | 2.1.25547 | BSD-3-Clause – `licenses/angle-BSD-3-Clause.txt` | https://chromium.googlesource.com/angle/angle |
-| SkiaSharp / Skia (Bilder dekodieren, skalieren, drehen, speichern) mit libjpeg-turbo, libpng, libwebp, zlib, FreeType, expat u. a. | 2.88.9 | MIT / BSD-3-Clause und weitere – `licenses/skiasharp-THIRD-PARTY-NOTICES.txt` | https://github.com/mono/SkiaSharp |
-| HarfBuzzSharp / HarfBuzz | 8.3.1.1 | MIT / „Old MIT“ – `licenses/skiasharp-THIRD-PARTY-NOTICES.txt` | https://github.com/mono/SkiaSharp, https://github.com/harfbuzz/harfbuzz |
+| ANGLE (nur Windows, über Avalonia.Angle.Windows.Natives) | 2.1.27548 | BSD-3-Clause – `licenses/angle-BSD-3-Clause.txt` | https://chromium.googlesource.com/angle/angle |
+| SkiaSharp / Skia (Bilder dekodieren, skalieren, drehen, speichern) mit libjpeg-turbo, libpng, libwebp, zlib, FreeType, expat u. a. | 3.119.4 | MIT / BSD-3-Clause und weitere – `licenses/skiasharp-THIRD-PARTY-NOTICES.txt` | https://github.com/mono/SkiaSharp |
+| HarfBuzzSharp / HarfBuzz | 8.3.1.3 | MIT / „Old MIT“ – `licenses/skiasharp-THIRD-PARTY-NOTICES.txt` | https://github.com/mono/SkiaSharp, https://github.com/harfbuzz/harfbuzz |
 | MetadataExtractor (Dateiinfos: EXIF, IPTC, XMP, ICC, Herstellerdaten) | 2.9.3 | Apache-2.0 – `licenses/Apache-2.0.txt` | https://github.com/drewnoakes/metadata-extractor-dotnet |
 | XmpCore (XMP lesen, von MetadataExtractor benutzt) | 6.1.10.1 | BSD-3-Clause (Adobe XMP) – `licenses/xmpcore-BSD-3-Clause.txt` | https://github.com/drewnoakes/xmp-core-dotnet |
-| Tmds.DBus.Protocol (nur Linux) | 0.21.3 | MIT | https://github.com/tmds/Tmds.DBus |
-| MicroCom.Runtime | 0.11.0 | MIT | https://github.com/kekekeks/MicroCom |
+| Tmds.DBus.Protocol (nur Linux) | 0.94.1 | MIT | https://github.com/tmds/Tmds.DBus |
+| MicroCom.Runtime | 0.11.6 | MIT | https://github.com/kekekeks/MicroCom |
 
 Für die MIT-lizenzierten Bestandteile gilt der folgende Text, jeweils mit dem
 Copyright-Vermerk des Projekts:
@@ -52,7 +52,6 @@ Copyright-Vermerk des Projekts:
 | Bestandteil | Hinweis |
 |---|---|
 | Avalonia.BuildServices | Kommt mit Avalonia und würde bei jedem Build Nutzungsdaten an Avalonia senden. Ist im Projekt per `ExcludeAssets` abgeschaltet und wird nicht ausgeführt. |
-| Avalonia.Diagnostics | Entwicklerwerkzeug, nur in Debug-Builds. |
 
 ## Netzzugriffe
 

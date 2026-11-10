@@ -10,6 +10,7 @@ public partial class MyMessageBox : Window
     public MyMessageBox()
     {
         InitializeComponent();
+        ScreenFit.Attach(this);
     }
 
     public MyMessageBox(string title, string message) : this()

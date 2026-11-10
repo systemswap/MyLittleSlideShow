@@ -175,9 +175,10 @@ internal static class SkiaImaging
     /// <summary>
     /// Skaliert auf die groesste Groesse, die in den Rahmen passt. Verkleinert
     /// wird erst in exakten Halbierungen (je 2x2 Pixel gemittelt, kein
-    /// Aliasing), dann in einem letzten bikubischen Schritt auf das Ziel -
-    /// das kommt Lanczos3 sehr nahe. Liefert die Quelle selbst zurueck, wenn
-    /// sie schon passt.
+    /// Aliasing), dann in einem letzten bikubischen Schritt mit Catmull-Rom
+    /// auf das Ziel. Catmull-Rom ist von den kubischen Filtern der schaerfste
+    /// ohne Ueberschwinger und kommt Lanczos3 am naechsten. Liefert die Quelle
+    /// selbst zurueck, wenn sie schon passt.
     /// </summary>
     public static SKBitmap ResizeToFit(SKBitmap source, int maxWidth, int maxHeight)
     {
@@ -191,21 +192,27 @@ internal static class SkiaImaging
         var current = source;
         while (current.Width >= width * 2 && current.Height >= height * 2)
         {
-            var half = Scale(current, current.Width / 2, current.Height / 2, SKFilterQuality.Low);
+            var half = Scale(current, current.Width / 2, current.Height / 2, HalvingSampling);
             if (!ReferenceEquals(current, source)) current.Dispose();
             current = half;
         }
 
-        var result = Scale(current, width, height, SKFilterQuality.High);
+        var result = Scale(current, width, height, FinalSampling);
         if (!ReferenceEquals(current, source)) current.Dispose();
         return result;
     }
 
-    private static SKBitmap Scale(SKBitmap source, int width, int height, SKFilterQuality quality)
+    // Exakte Halbierung: bilinear trifft genau die Mitte von 2x2 Pixeln = Mittelwert.
+    private static readonly SKSamplingOptions HalvingSampling = new(SKFilterMode.Linear, SKMipmapMode.None);
+
+    // Letzter Schritt: bikubisch, Catmull-Rom (B = 0, C = 0.5).
+    private static readonly SKSamplingOptions FinalSampling = new(SKCubicResampler.CatmullRom);
+
+    private static SKBitmap Scale(SKBitmap source, int width, int height, SKSamplingOptions sampling)
     {
         var result = new SKBitmap(new SKImageInfo(width, height, ColorType, AlphaType));
         using var destination = result.PeekPixels();
-        if (!source.ScalePixels(destination, quality))
+        if (!source.ScalePixels(destination, sampling))
         {
             result.Dispose();
             throw new InvalidOperationException("Skalieren fehlgeschlagen.");
