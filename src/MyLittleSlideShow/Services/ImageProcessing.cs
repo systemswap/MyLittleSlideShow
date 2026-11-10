@@ -34,27 +34,62 @@ public static class ImageProcessing
                                         bool sharpen, int sharpenValue,
                                         int sharpenThreshold = 0)
     {
-        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        using var image = ImageSharpImage.Load<Bgra32>(fs);
-
-        // AutoOrient wertet alle acht EXIF-Orientierungen aus - die alte
-        // Implementierung behandelte nur die Faelle 6 und 8.
-        image.Mutate(ctx => ctx.AutoOrient());
-
-        if (maxWidth > 0 && maxHeight > 0)
-        {
-            image.Mutate(ctx => ctx.Resize(new ResizeOptions
-            {
-                Size = new SixLabors.ImageSharp.Size(maxWidth, maxHeight),
-                Mode = ResizeMode.Max,             // Seitenverhaeltnis bleibt erhalten
-                Sampler = KnownResamplers.Lanczos3 // Qualitaet vergleichbar HighQualityBicubic
-            }));
-        }
+        using var image = LoadResized(path, maxWidth, maxHeight);
 
         if (sharpen && sharpenValue > 0)
             UnsharpMask(image, sharpenValue, sharpenThreshold);
 
         return ToAvaloniaBitmap(image);
+    }
+
+    /// <summary>
+    /// Laedt, richtet aus und skaliert - aber schaerft noch nicht. Fuer die
+    /// Live-Vorschau der Einstellungen: das teure Dekodieren passiert einmal,
+    /// danach wird pro Reglerbewegung nur noch <see cref="Render"/> gerechnet.
+    /// Der Aufrufer muss das Ergebnis freigeben.
+    /// </summary>
+    public static Image<Bgra32> LoadResized(string path, int maxWidth, int maxHeight)
+    {
+        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var image = ImageSharpImage.Load<Bgra32>(fs);
+
+        try
+        {
+            // AutoOrient wertet alle acht EXIF-Orientierungen aus - die alte
+            // Implementierung behandelte nur die Faelle 6 und 8.
+            image.Mutate(ctx => ctx.AutoOrient());
+            ResizeToFit(image, maxWidth, maxHeight);
+            return image;
+        }
+        catch
+        {
+            image.Dispose();
+            throw;
+        }
+    }
+
+    /// <summary>Schaerft eine Kopie des bereits skalierten Bilds und liefert die Avalonia-Bitmap.</summary>
+    public static Bitmap Render(Image<Bgra32> resized, bool sharpen, int sharpenValue,
+                                int sharpenThreshold = 0)
+    {
+        if (!sharpen || sharpenValue <= 0)
+            return ToAvaloniaBitmap(resized);
+
+        using var copy = resized.Clone();
+        UnsharpMask(copy, sharpenValue, sharpenThreshold);
+        return ToAvaloniaBitmap(copy);
+    }
+
+    private static void ResizeToFit(Image<Bgra32> image, int maxWidth, int maxHeight)
+    {
+        if (maxWidth <= 0 || maxHeight <= 0) return;
+
+        image.Mutate(ctx => ctx.Resize(new ResizeOptions
+        {
+            Size = new SixLabors.ImageSharp.Size(maxWidth, maxHeight),
+            Mode = ResizeMode.Max,             // Seitenverhaeltnis bleibt erhalten
+            Sampler = KnownResamplers.Lanczos3 // Qualitaet vergleichbar HighQualityBicubic
+        }));
     }
 
     /// <summary>Bild aus den eingebetteten Avalonia-Ressourcen laden.</summary>
@@ -75,15 +110,7 @@ public static class ImageProcessing
         using var stream = AssetLoader.Open(uri);
         using var image = ImageSharpImage.Load<Bgra32>(stream);
 
-        if (maxWidth > 0 && maxHeight > 0)
-        {
-            image.Mutate(ctx => ctx.Resize(new ResizeOptions
-            {
-                Size = new SixLabors.ImageSharp.Size(maxWidth, maxHeight),
-                Mode = ResizeMode.Max,
-                Sampler = KnownResamplers.Lanczos3
-            }));
-        }
+        ResizeToFit(image, maxWidth, maxHeight);
 
         if (sharpen && sharpenValue > 0)
             UnsharpMask(image, sharpenValue, sharpenThreshold);

@@ -9,6 +9,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using MyLittleSlideShow.Platform;
 using MyLittleSlideShow.Services;
+using PreviewSource = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Bgra32>;
 
 namespace MyLittleSlideShow.Views;
 
@@ -52,6 +53,17 @@ public partial class MainWindow : Window
     // Verhindert, dass das Fenster mitwandert, waehrend ueber der Lupe gezoomt wird.
     private bool _allowWindowDrag = true;
 
+    // Live-Vorschau, solange das Einstellungsfenster offen ist. _preview
+    // ueberlagert dann die gespeicherten Darstellungswerte.
+    private readonly DispatcherTimer _previewTimer;
+    private DisplayPreview? _preview;
+    private PreviewSource? _previewSource;
+    private bool _previewSourceFailed;
+    private (bool Sharpen, int Value, int Threshold) _renderedSharpening;
+
+    private bool AmbiVisible => _preview?.WithAmbiFrame ?? S.WithAmbiFrame;
+    private double AmbiOpacity => (_preview?.AmbiOpacity ?? S.OpacityOfAmbiFrame) / 100d;
+
     public MainWindow() : this(App.SettingsManager) { }
 
     public MainWindow(SettingsManager settingsManager)
@@ -75,6 +87,10 @@ public partial class MainWindow : Window
         _zoomReloadTimer = new DispatcherTimer { Interval = ZoomIdleDelay };
         _zoomReloadTimer.Tick += ZoomReloadTimer_Tick;
 
+        // Drosselt die Vorschau beim Ziehen eines Reglers auf ~25 Bilder/s.
+        _previewTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(40) };
+        _previewTimer.Tick += PreviewTimer_Tick;
+
         Loaded += OnLoaded;
         Closing += OnClosing;
 
@@ -87,8 +103,19 @@ public partial class MainWindow : Window
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        Width = S.MainWindowWidth;
-        Height = S.MainWindowHeight;
+        // Gespeicherte Groesse nur uebernehmen, wenn sie plausibel ist. War das
+        // Fenster einmal von aussen zusammengeschoben worden (z. B. auf 39 px
+        // Hoehe), blieb sonst fuer immer kein Platz mehr fuer das Bild.
+        if (IsUsableSize(S.MainWindowWidth, S.MainWindowHeight))
+        {
+            Width = S.MainWindowWidth;
+            Height = S.MainWindowHeight;
+        }
+        else
+        {
+            Width = DefaultWidth;
+            Height = DefaultHeight;
+        }
 
         VersionLabel.Text = _version;
 
@@ -158,12 +185,29 @@ public partial class MainWindow : Window
 
     public void PersistState()
     {
-        S.PositionLeft = Position.X;
-        S.PositionTop = Position.Y;
-        S.MainWindowWidth = (int)Width;
-        S.MainWindowHeight = (int)Height;
+        // Minimiert oder maximiert liefern Position und Groesse Werte, die
+        // beim naechsten Start nicht wiederhergestellt werden duerfen.
+        if (WindowState == WindowState.Normal)
+        {
+            S.PositionLeft = Position.X;
+            S.PositionTop = Position.Y;
+
+            if (IsUsableSize(Width, Height))
+            {
+                S.MainWindowWidth = (int)Width;
+                S.MainWindowHeight = (int)Height;
+            }
+        }
+
         _settingsManager.Save();
     }
+
+    private const int DefaultWidth = 386;
+    private const int DefaultHeight = 315;
+    private const int MaxWindowHeight = 4000;
+
+    private bool IsUsableSize(double width, double height) =>
+        width >= MinWidth && height >= MinHeight && height <= MaxWindowHeight;
 
     // ------------------------------------------------------------- Bild laden
 
@@ -288,8 +332,8 @@ public partial class MainWindow : Window
 
         ShowImage.Source = bitmap;
         BackgroundImageBox.Source = bitmap;
-        BackgroundImageBox.Opacity = S.OpacityOfAmbiFrame / 100d;
-        BackgroundImageBox.IsVisible = S.WithAmbiFrame;
+        BackgroundImageBox.Opacity = AmbiOpacity;
+        BackgroundImageBox.IsVisible = AmbiVisible || ControlsBackgroundGrid.Opacity > 0;
 
         // Speicher der Vorgaengerbilder freigeben - WPF erledigte das ueber den
         // Finalizer der BitmapImage, Avalonia-Bitmaps halten native Ressourcen.
@@ -450,15 +494,15 @@ public partial class MainWindow : Window
         _hideControlsTimer.Stop();
         ControlsBackgroundGrid.Opacity = 0.9;
         BackgroundImageBox.IsVisible = true;
-        BackgroundImageBox.Opacity = S.OpacityOfAmbiFrame / 100d;
+        BackgroundImageBox.Opacity = AmbiOpacity;
         ApplyClipHeight(true);
     }
 
     private void HideControls()
     {
         ControlsBackgroundGrid.Opacity = 0;
-        BackgroundImageBox.Opacity = S.OpacityOfAmbiFrame / 100d;
-        BackgroundImageBox.IsVisible = S.WithAmbiFrame;
+        BackgroundImageBox.Opacity = AmbiOpacity;
+        BackgroundImageBox.IsVisible = AmbiVisible;
         ApplyClipHeight(false);
     }
 
@@ -496,11 +540,11 @@ public partial class MainWindow : Window
 
     private void ZoomWindow(int delta)
     {
-        const double aspect = 386.0 / 315.0;
+        const double aspect = (double)DefaultWidth / DefaultHeight;
 
         var newHeight = Height + delta;
-        if (newHeight * aspect < 357) return;   // Mindestgroesse
-        if (newHeight > 4000) return;           // Obergrenze gegen Ausreisser
+        if (newHeight * aspect < 357) return;        // Mindestgroesse
+        if (newHeight > MaxWindowHeight) return;     // Obergrenze gegen Ausreisser
 
         Height = newHeight;
         Width = newHeight * aspect;
@@ -665,15 +709,127 @@ public partial class MainWindow : Window
         e.Handled = true;
 
         var window = new SettingsWindow(_settingsManager);
-        await window.ShowDialog(this);
+        window.PreviewChanged += PreviewDisplay;
 
-        if (!window.SettingsSaved) return;
+        // Waehrend eingestellt wird, bleibt das Bild stehen - sonst wechselt
+        // die Diaschau mitten im Vergleichen auf ein anderes Motiv.
+        var slideShowWasRunning = _slideShowTimer.IsEnabled;
+        _slideShowTimer.Stop();
+
+        try
+        {
+            await window.ShowDialog(this);
+        }
+        finally
+        {
+            window.PreviewChanged -= PreviewDisplay;
+        }
+
+        var previewWasActive = EndPreview();
+
+        if (!window.SettingsSaved)
+        {
+            if (previewWasActive) RestoreAfterPreview();
+            if (slideShowWasRunning) _slideShowTimer.Start();
+            return;
+        }
 
         SetSlideShowInterval(S.ImageChangeIntervalSeconds);
         LoadImage(WhichImage.LastLoadedFile, rescanFolders: true, allowRandom: false);
         ToggleSlideShowTimer(S.ActivateSlideShow ? TimerToggle.Start : TimerToggle.Stop);
         PlatformServices.Current.SleepInhibitor.SetKeepAwake(S.DisplayAlwaysOn);
     }
+
+    // -------------------------------------------------------- Live-Vorschau
+
+    /// <summary>
+    /// Zeigt Darstellungswerte aus dem Einstellungsfenster sofort an, ohne sie
+    /// zu speichern. AmbiFrame wird direkt umgesetzt, das Schaerfen gedrosselt
+    /// ueber <see cref="_previewTimer"/>.
+    /// </summary>
+    public void PreviewDisplay(DisplayPreview preview)
+    {
+        if (_preview is null)
+            _renderedSharpening = Sharpening(S.SharpImages, S.SharpenValue, S.QuietSharpen, S.SharpenThreshold);
+
+        _preview = preview;
+
+        BackgroundImageBox.Opacity = AmbiOpacity;
+        BackgroundImageBox.IsVisible = AmbiVisible || ControlsBackgroundGrid.Opacity > 0;
+
+        if (PreviewSharpening() != _renderedSharpening && !_previewTimer.IsEnabled)
+            _previewTimer.Start();
+    }
+
+    private void PreviewTimer_Tick(object? sender, EventArgs e)
+    {
+        _previewTimer.Stop();
+        if (_preview is null) return;
+
+        var wanted = PreviewSharpening();
+        if (wanted == _renderedSharpening) return;
+
+        // Einmal dekodieren und skalieren, danach nur noch schaerfen.
+        if (_previewSource is null && !_previewSourceFailed)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(_currentFile) && File.Exists(_currentFile))
+                    _previewSource = ImageProcessing.LoadResized(_currentFile, (int)Width, (int)Height);
+                else
+                    _previewSourceFailed = true;   // Standardbild: keine Schaerfe-Vorschau
+            }
+            catch (Exception ex)
+            {
+                _previewSourceFailed = true;
+                Debug.WriteLine($"Vorschau konnte nicht geladen werden: {ex.Message}");
+            }
+        }
+
+        if (_previewSource is null) return;
+
+        ApplyBitmap(ImageProcessing.Render(_previewSource, wanted.Sharpen, wanted.Value, wanted.Threshold));
+        _renderedSharpening = wanted;
+    }
+
+    /// <summary>Beendet die Vorschau; liefert true, wenn eine aktiv war.</summary>
+    private bool EndPreview()
+    {
+        _previewTimer.Stop();
+
+        var wasActive = _preview is not null;
+        _preview = null;
+
+        _previewSource?.Dispose();
+        _previewSource = null;
+        _previewSourceFailed = false;
+
+        return wasActive;
+    }
+
+    /// <summary>Nach "Abbrechen": wieder so darstellen, wie es gespeichert ist.</summary>
+    private void RestoreAfterPreview()
+    {
+        var saved = Sharpening(S.SharpImages, S.SharpenValue, S.QuietSharpen, S.SharpenThreshold);
+        if (saved != _renderedSharpening)
+        {
+            LoadImage(WhichImage.LastLoadedFile, rescanFolders: false, allowRandom: false);
+            return;
+        }
+
+        BackgroundImageBox.Opacity = AmbiOpacity;
+        BackgroundImageBox.IsVisible = AmbiVisible || ControlsBackgroundGrid.Opacity > 0;
+    }
+
+    private (bool Sharpen, int Value, int Threshold) PreviewSharpening() =>
+        _preview is { } p
+            ? Sharpening(p.Sharpen, p.SharpenValue, p.QuietSharpen, p.SharpenThreshold)
+            : Sharpening(S.SharpImages, S.SharpenValue, S.QuietSharpen, S.SharpenThreshold);
+
+    /// <summary>Normalisiert die Schaerfe-Parameter so, wie LoadImage sie anwendet.</summary>
+    private static (bool Sharpen, int Value, int Threshold) Sharpening(
+        bool sharpen, int value, bool quiet, int threshold) =>
+        sharpen && value > 0 ? (true, value, quiet ? threshold : 0) : (false, 0, 0);
 
     private void Close_PointerPressed(object? sender, PointerPressedEventArgs e)
     {

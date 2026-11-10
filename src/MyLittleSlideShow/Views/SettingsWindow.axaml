@@ -2,110 +2,467 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="MyLittleSlideShow.Views.SettingsWindow"
         Title="MyLittleSlideShow Einstellungen"
-        Width="820" Height="560"
+        Width="560"
+        SizeToContent="Height"
+        MaxHeight="900"
         WindowStartupLocation="CenterOwner"
         CanResize="False"
+        FontSize="12"
+        Background="{DynamicResource Fine.WindowBackground}"
+        Foreground="{DynamicResource Fine.TextPrimary}"
         Icon="/Assets/My_Icon.ico">
 
-  <Panel>
-    <!-- Hintergrundbild wie im Original, jetzt aber abgedunkelt fuer Lesbarkeit -->
-    <Image Source="/Assets/Images/Gear.jpg" Stretch="UniformToFill" Opacity="0.25" />
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="Fine.WindowBackground" Color="#F4F5F7" />
+          <SolidColorBrush x:Key="Fine.CardBackground" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="Fine.CardBorder" Color="#E2E4E8" />
+          <SolidColorBrush x:Key="Fine.Divider" Color="#EDEFF2" />
+          <SolidColorBrush x:Key="Fine.Inset" Color="#F6F7F9" />
+          <SolidColorBrush x:Key="Fine.TextPrimary" Color="#1F2328" />
+          <SolidColorBrush x:Key="Fine.TextSecondary" Color="#6E7681" />
+          <SolidColorBrush x:Key="Fine.BoxBorder" Color="#B3B9C2" />
+          <SolidColorBrush x:Key="Fine.BoxBackground" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="Fine.Accent" Color="#33557F" />
+          <SolidColorBrush x:Key="Fine.AccentHover" Color="#28466B" />
+          <SolidColorBrush x:Key="Fine.AccentPressed" Color="#1F3854" />
+          <SolidColorBrush x:Key="Fine.OnAccent" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="Fine.SubtleHover" Color="#EBEDF0" />
+          <SolidColorBrush x:Key="Fine.Warning" Color="#8A3B00" />
+          <SolidColorBrush x:Key="Fine.Track" Color="#DCE0E5" />
+          <SolidColorBrush x:Key="Fine.Thumb" Color="#FFFFFF" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="Fine.WindowBackground" Color="#1B1C1F" />
+          <SolidColorBrush x:Key="Fine.CardBackground" Color="#24262A" />
+          <SolidColorBrush x:Key="Fine.CardBorder" Color="#33363C" />
+          <SolidColorBrush x:Key="Fine.Divider" Color="#2E3035" />
+          <SolidColorBrush x:Key="Fine.Inset" Color="#1F2023" />
+          <SolidColorBrush x:Key="Fine.TextPrimary" Color="#E6E8EB" />
+          <SolidColorBrush x:Key="Fine.TextSecondary" Color="#9097A0" />
+          <SolidColorBrush x:Key="Fine.BoxBorder" Color="#5C626B" />
+          <SolidColorBrush x:Key="Fine.BoxBackground" Color="#1F2023" />
+          <SolidColorBrush x:Key="Fine.Accent" Color="#7FA3D1" />
+          <SolidColorBrush x:Key="Fine.AccentHover" Color="#93B3DB" />
+          <SolidColorBrush x:Key="Fine.AccentPressed" Color="#6B8FBD" />
+          <SolidColorBrush x:Key="Fine.OnAccent" Color="#14161A" />
+          <SolidColorBrush x:Key="Fine.SubtleHover" Color="#2E3035" />
+          <SolidColorBrush x:Key="Fine.Warning" Color="#E0A468" />
+          <SolidColorBrush x:Key="Fine.Track" Color="#3A3D43" />
+          <SolidColorBrush x:Key="Fine.Thumb" Color="#E6E8EB" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
 
-    <DockPanel Margin="16">
+      <!-- Kompakte Masse fuer die Fluent-Controls, nur in diesem Fenster.
+           Entspricht im Kern Fluents DensityStyle="Compact". -->
+      <x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
+      <x:Double x:Key="ContentControlFontSize">12</x:Double>
+      <x:Double x:Key="TextControlThemeMinHeight">24</x:Double>
+      <Thickness x:Key="TextControlThemePadding">6,3,6,2</Thickness>
+      <x:Double x:Key="ComboBoxMinHeight">24</x:Double>
+      <Thickness x:Key="ComboBoxPadding">10,1,0,2</Thickness>
+      <Thickness x:Key="ButtonPadding">14,4,14,5</Thickness>
 
-      <!-- Fusszeile -->
-      <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
-        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-          <Button Content="Spenden" Click="Donate_Click" />
-          <Button Content="Infos" Click="Info_Click" />
-          <Button Content="Speichern" Click="Save_Click" IsDefault="True" MinWidth="100" />
-        </StackPanel>
+      <!-- Dezenter Regler: 3 px Schiene, gefuellter Teil in Akzentfarbe,
+           kleiner runder Knopf mit leichtem Schatten. Ein Klick irgendwo auf
+           die Schiene setzt den Wert direkt dorthin. -->
+      <ControlTheme x:Key="FineSlider" TargetType="Slider">
+        <Setter Property="Width" Value="170" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="IsSnapToTickEnabled" Value="True" />
+        <Setter Property="TickFrequency" Value="1" />
+        <Setter Property="SmallChange" Value="1" />
+        <Setter Property="LargeChange" Value="5" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Grid Background="Transparent">
+              <Border Height="3" CornerRadius="1.5" Margin="1,0"
+                      VerticalAlignment="Center"
+                      Background="{DynamicResource Fine.Track}" />
+              <Track x:Name="PART_Track"
+                     Orientation="Horizontal"
+                     Minimum="{TemplateBinding Minimum}"
+                     Maximum="{TemplateBinding Maximum}"
+                     Value="{TemplateBinding Value, Mode=TwoWay}"
+                     IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                <Track.DecreaseButton>
+                  <RepeatButton x:Name="PART_DecreaseButton" Focusable="False"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                Background="{DynamicResource Fine.Accent}">
+                    <RepeatButton.Template>
+                      <ControlTemplate>
+                        <Grid Background="Transparent">
+                          <Border Height="3" CornerRadius="1.5" Margin="1,0,-6,0"
+                                  VerticalAlignment="Center"
+                                  Background="{TemplateBinding Background}" />
+                        </Grid>
+                      </ControlTemplate>
+                    </RepeatButton.Template>
+                  </RepeatButton>
+                </Track.DecreaseButton>
+                <Track.IncreaseButton>
+                  <RepeatButton x:Name="PART_IncreaseButton" Focusable="False"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <RepeatButton.Template>
+                      <ControlTemplate>
+                        <Grid Background="Transparent" />
+                      </ControlTemplate>
+                    </RepeatButton.Template>
+                  </RepeatButton>
+                </Track.IncreaseButton>
+                <!-- Farbiger Knopf mit feinem hellen Ring, damit er sich auch
+                     vom gefuellten Teil der Schiene abhebt. -->
+                <Thumb x:Name="thumb"
+                       Width="15" Height="15"
+                       Background="{DynamicResource Fine.Accent}"
+                       BorderBrush="{DynamicResource Fine.Thumb}"
+                       BorderThickness="2">
+                  <Thumb.Template>
+                    <ControlTemplate>
+                      <Border Background="{TemplateBinding Background}"
+                              BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="{TemplateBinding BorderThickness}"
+                              CornerRadius="7.5"
+                              BoxShadow="0 1 3 0 #40000000" />
+                    </ControlTemplate>
+                  </Thumb.Template>
+                </Thumb>
+              </Track>
+            </Grid>
+          </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Thumb#thumb">
+          <Setter Property="Background" Value="{DynamicResource Fine.AccentHover}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Thumb#thumb">
+          <Setter Property="Background" Value="{DynamicResource Fine.AccentPressed}" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Thumb#thumb">
+          <Setter Property="BorderThickness" Value="1.5" />
+          <Setter Property="BorderBrush" Value="{DynamicResource Fine.AccentHover}" />
+        </Style>
+        <Style Selector="^:disabled">
+          <Setter Property="Opacity" Value="0.35" />
+        </Style>
+      </ControlTheme>
+
+      <!-- Feine Checkbox: 15 px Kaestchen, Akzentfarbe statt Systemblau -->
+      <ControlTheme x:Key="FineCheckBox" TargetType="CheckBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource Fine.TextPrimary}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+          <ControlTemplate>
+            <Grid ColumnDefinitions="Auto,*" Background="{TemplateBinding Background}">
+              <Border x:Name="Box"
+                      Width="15" Height="15"
+                      CornerRadius="3.5"
+                      BorderThickness="1"
+                      BorderBrush="{DynamicResource Fine.BoxBorder}"
+                      Background="{DynamicResource Fine.BoxBackground}"
+                      VerticalAlignment="Center">
+                <Path x:Name="Glyph"
+                      Data="M 2.8,6.6 L 5.4,9.1 L 10.2,3.9"
+                      Stroke="{DynamicResource Fine.OnAccent}"
+                      StrokeThickness="1.6"
+                      StrokeLineCap="Round"
+                      StrokeJoin="Round"
+                      IsVisible="False" />
+              </Border>
+              <ContentPresenter x:Name="PART_ContentPresenter"
+                                Grid.Column="1"
+                                Margin="9,0,0,0"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Foreground="{TemplateBinding Foreground}" />
+            </Grid>
+          </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#Box">
+          <Setter Property="BorderBrush" Value="{DynamicResource Fine.Accent}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#Box">
+          <Setter Property="Background" Value="{DynamicResource Fine.Accent}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource Fine.Accent}" />
+        </Style>
+        <Style Selector="^:checked:pointerover /template/ Border#Box">
+          <Setter Property="Background" Value="{DynamicResource Fine.AccentHover}" />
+          <Setter Property="BorderBrush" Value="{DynamicResource Fine.AccentHover}" />
+        </Style>
+        <Style Selector="^:checked /template/ Path#Glyph">
+          <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+          <Setter Property="Opacity" Value="0.45" />
+        </Style>
+      </ControlTheme>
+    </ResourceDictionary>
+  </Window.Resources>
+
+  <Window.Styles>
+    <Style Selector="CheckBox">
+      <Setter Property="Theme" Value="{StaticResource FineCheckBox}" />
+    </Style>
+
+    <!-- Karten und Zeilen -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{DynamicResource Fine.CardBackground}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource Fine.CardBorder}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="14,2" />
+    </Style>
+    <Style Selector="Border.divider">
+      <Setter Property="Height" Value="1" />
+      <Setter Property="Background" Value="{DynamicResource Fine.Divider}" />
+    </Style>
+    <Style Selector="Grid.row">
+      <Setter Property="MinHeight" Value="34" />
+    </Style>
+    <Style Selector="Grid.row > :is(Control)">
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- Typografie -->
+    <Style Selector="TextBlock.section">
+      <Setter Property="FontSize" Value="10.5" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.TextSecondary}" />
+      <Setter Property="Margin" Value="2,0,0,6" />
+    </Style>
+    <Style Selector="TextBlock.hint">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.TextSecondary}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="Slider">
+      <Setter Property="Theme" Value="{StaticResource FineSlider}" />
+    </Style>
+
+    <!-- Wertanzeige rechts neben einem Regler -->
+    <Style Selector="TextBlock.value">
+      <Setter Property="Width" Value="48" />
+      <Setter Property="TextAlignment" Value="Right" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="FontSize" Value="11.5" />
+      <Setter Property="FontFeatures" Value="+tnum" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.TextSecondary}" />
+    </Style>
+
+    <Style Selector="ComboBox">
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Schaltflaechen -->
+    <Style Selector="Button">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="CornerRadius" Value="5" />
+      <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="{DynamicResource Fine.Accent}" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.OnAccent}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource Fine.AccentHover}" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.OnAccent}" />
+    </Style>
+    <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource Fine.AccentPressed}" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.OnAccent}" />
+    </Style>
+    <Style Selector="Button.subtle">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.TextSecondary}" />
+      <Setter Property="Padding" Value="8,4" />
+    </Style>
+    <Style Selector="Button.subtle:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource Fine.SubtleHover}" />
+      <Setter Property="Foreground" Value="{DynamicResource Fine.TextPrimary}" />
+    </Style>
+  </Window.Styles>
+
+  <DockPanel>
+
+    <!-- Kopfzeile -->
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="24,16,24,8">
+      <Image Source="/Assets/Images/MyIcon.png" Width="30" Height="30"
+             VerticalAlignment="Center"
+             RenderOptions.BitmapInterpolationMode="HighQuality" />
+      <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" Spacing="1">
+        <TextBlock Text="Einstellungen" FontSize="16" FontWeight="SemiBold" />
+        <TextBlock Text="MyLittleSlideShow" Classes="hint" />
+      </StackPanel>
+    </Grid>
+
+    <!-- Fusszeile -->
+    <Border DockPanel.Dock="Bottom"
+            BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource Fine.CardBorder}"
+            Background="{DynamicResource Fine.CardBackground}"
+            Padding="18,12,24,12">
+      <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+        <Button Grid.Column="0" Classes="subtle" Content="Spenden" Click="Donate_Click" />
+        <Button Grid.Column="1" Classes="subtle" Content="Infos" Click="Info_Click" />
+        <Button Grid.Column="3" Content="Abbrechen" Click="Cancel_Click"
+                IsCancel="True" Margin="0,0,8,0" />
+        <Button Grid.Column="4" Classes="primary" Content="Speichern" Click="Save_Click"
+                IsDefault="True" MinWidth="96" />
       </Grid>
+    </Border>
 
-      <ScrollViewer>
-        <StackPanel Spacing="12">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="14" Margin="24,4,24,18">
 
-          <TextBlock Text="Allgemein" FontWeight="Bold" />
-
-          <CheckBox x:Name="Autostart_CheckBox"
-                    Content="Automatisch beim Anmelden starten" />
-
-          <CheckBox x:Name="DisplayAlwaysOn_CheckBox"
-                    Content="Bildschirm nicht abschalten, solange die Diaschau läuft" />
-
-          <Separator />
-          <TextBlock Text="Darstellung" FontWeight="Bold" />
-
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <CheckBox x:Name="Sharpen_CheckBox" Content="Bilder schärfen" Width="220" />
-            <NumericUpDown x:Name="SharpenValue_Box" Minimum="0" Maximum="99"
-                           Increment="1" FormatString="0" Width="110" />
-            <TextBlock Text="(0-99, Standard: 25)" VerticalAlignment="Center" />
-          </StackPanel>
-
-          <StackPanel Orientation="Horizontal" Spacing="8" Margin="32,0,0,0">
-            <CheckBox x:Name="QuietSharpen_CheckBox" Content="Ruhiges Schärfen ab Schwelle" Width="188" />
-            <NumericUpDown x:Name="SharpenThreshold_Box" Minimum="0" Maximum="64"
-                           Increment="1" FormatString="0" Width="110" />
-            <TextBlock Text="(0-64, Standard: 6)" VerticalAlignment="Center" />
-          </StackPanel>
-          <TextBlock Text="Unterdrückt die Rauschverstärkung in glatten Flächen wie Himmel oder Hauttönen."
-                     Margin="32,-6,0,0" TextWrapping="Wrap" Opacity="0.7" FontSize="11" />
-
-          <CheckBox x:Name="StretchWhileZooming_CheckBox"
-                    Content="Während des Zoomens strecken (Neuberechnung erst nach dem Zoomen)" />
-
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <CheckBox x:Name="AmbiFrame_CheckBox" Content="AmbiFrame anzeigen, Deckkraft" Width="220" />
-            <NumericUpDown x:Name="AmbiFrameOpacity_Box" Minimum="0" Maximum="99"
-                           Increment="5" FormatString="0" Width="110" />
-            <TextBlock Text="(0-99, Standard: 90)" VerticalAlignment="Center" />
-          </StackPanel>
-
-          <Separator />
-          <TextBlock Text="Diaschau" FontWeight="Bold" />
-
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <CheckBox x:Name="SlideShow_CheckBox" Content="Bildwechsel in Sekunden" Width="220" />
-            <NumericUpDown x:Name="Interval_Box" Minimum="1" Maximum="86400"
-                           Increment="10" FormatString="0" Width="110" />
-          </StackPanel>
-
-          <CheckBox x:Name="Random_CheckBox" Content="Bilder in zufälliger Reihenfolge" />
-
-          <Separator />
-          <TextBlock Text="Desktophintergrund" FontWeight="Bold" />
-
-          <CheckBox x:Name="EveryImageAsWallpaper_CheckBox"
-                    Content="Jedes Bild beim Wechsel auch als Hintergrundbild verwenden" />
-
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <TextBlock Text="Style:" VerticalAlignment="Center" Width="60" />
-            <ComboBox x:Name="WallpaperStyle_ComboBox" Width="180" />
-          </StackPanel>
-
-          <TextBlock x:Name="WallpaperHint"
-                     Text=""
-                     TextWrapping="Wrap"
-                     Foreground="#8a3b00"
-                     IsVisible="False" />
-
-          <Separator />
-          <TextBlock Text="Pfad der Bilder" FontWeight="Bold" />
-
-          <TextBlock x:Name="FolderPath_Label" TextWrapping="Wrap" MinHeight="36" />
-
-          <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button Content="Neuen Pfad wählen" Click="SelectFolder_Click" />
-            <Button Content="Pfad zurücksetzen" Click="ResetPath_Click" />
-            <CheckBox x:Name="Recursive_CheckBox" Content="Rekursiv scannen"
-                      VerticalAlignment="Center" />
-          </StackPanel>
-
-          <TextBlock Text="Unterstützte Formate: jpg, jpeg, png, gif, tif, tiff, bmp, webp"
-                     FontSize="11" Opacity="0.8" />
+        <!-- Allgemein -->
+        <StackPanel>
+          <TextBlock Classes="section" Text="ALLGEMEIN" />
+          <Border Classes="card">
+            <StackPanel>
+              <Grid Classes="row">
+                <CheckBox x:Name="Autostart_CheckBox"
+                          Content="Automatisch beim Anmelden starten" />
+              </Grid>
+              <Border Classes="divider" />
+              <Grid Classes="row">
+                <CheckBox x:Name="DisplayAlwaysOn_CheckBox"
+                          Content="Bildschirm nicht abschalten, solange die Diaschau läuft" />
+              </Grid>
+            </StackPanel>
+          </Border>
         </StackPanel>
-      </ScrollViewer>
-    </DockPanel>
-  </Panel>
+
+        <!-- Darstellung -->
+        <StackPanel>
+          <TextBlock Classes="section" Text="DARSTELLUNG" />
+          <Border Classes="card">
+            <StackPanel>
+              <!-- Alle Regler wirken sofort als Vorschau im Hauptfenster. -->
+              <Grid Classes="row" ColumnDefinitions="*,Auto,Auto">
+                <CheckBox x:Name="Sharpen_CheckBox" Content="Bilder schärfen" />
+                <Slider Grid.Column="1" x:Name="SharpenValue_Slider" Minimum="0" Maximum="99"
+                        ToolTip.Tip="Stärke 0–99 · Standard 25" />
+                <TextBlock Grid.Column="2" x:Name="SharpenValue_Label" Classes="value" />
+              </Grid>
+              <Border Classes="divider" />
+              <!-- Hinweis bewusst ausserhalb des Grids: ein umbrechender Text in
+                   der *-Spalte neben einer Auto-Spalte laesst die Zeile breiter
+                   werden als die Karte. -->
+              <Grid Classes="row" ColumnDefinitions="*,Auto,Auto" Margin="24,0,0,0">
+                <CheckBox x:Name="QuietSharpen_CheckBox" Content="Ruhiges Schärfen ab Schwelle" />
+                <Slider Grid.Column="1" x:Name="SharpenThreshold_Slider" Minimum="0" Maximum="64"
+                        ToolTip.Tip="Schwelle 0–64 · Standard 6" />
+                <TextBlock Grid.Column="2" x:Name="SharpenThreshold_Label" Classes="value" />
+              </Grid>
+              <TextBlock Classes="hint" Margin="48,-8,0,9"
+                         Text="Verstärkt kein Rauschen in glatten Flächen wie Himmel oder Haut." />
+              <Border Classes="divider" />
+              <Grid Classes="row">
+                <StackPanel Margin="0,6">
+                  <CheckBox x:Name="StretchWhileZooming_CheckBox" Content="Beim Zoomen mitstrecken" />
+                  <TextBlock Classes="hint" Margin="24,3,0,0"
+                             Text="Neu berechnet und geschärft wird erst, wenn das Mausrad steht." />
+                </StackPanel>
+              </Grid>
+              <Border Classes="divider" />
+              <Grid Classes="row" ColumnDefinitions="*,Auto,Auto">
+                <CheckBox x:Name="AmbiFrame_CheckBox" Content="AmbiFrame anzeigen" />
+                <Slider Grid.Column="1" x:Name="AmbiFrameOpacity_Slider" Minimum="0" Maximum="99"
+                        ToolTip.Tip="Deckkraft 0–99 · Standard 90" />
+                <TextBlock Grid.Column="2" x:Name="AmbiFrameOpacity_Label" Classes="value" />
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Diaschau -->
+        <StackPanel>
+          <TextBlock Classes="section" Text="DIASCHAU" />
+          <Border Classes="card">
+            <StackPanel>
+              <Grid Classes="row" ColumnDefinitions="*,Auto,Auto">
+                <CheckBox x:Name="SlideShow_CheckBox" Content="Bilder automatisch wechseln" />
+                <Slider Grid.Column="1" x:Name="Interval_Slider" Minimum="0" Maximum="20"
+                        LargeChange="3"
+                        ToolTip.Tip="Zeit bis zum nächsten Bild, 5 Sekunden bis 24 Stunden" />
+                <TextBlock Grid.Column="2" x:Name="Interval_Label" Classes="value" />
+              </Grid>
+              <Border Classes="divider" />
+              <Grid Classes="row">
+                <CheckBox x:Name="Random_CheckBox" Content="Zufällige Reihenfolge" />
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Desktophintergrund -->
+        <StackPanel>
+          <TextBlock Classes="section" Text="DESKTOPHINTERGRUND" />
+          <Border Classes="card">
+            <StackPanel>
+              <Grid Classes="row">
+                <CheckBox x:Name="EveryImageAsWallpaper_CheckBox"
+                          Content="Jedes Bild beim Wechsel auch als Hintergrund setzen" />
+              </Grid>
+              <Border Classes="divider" />
+              <Grid Classes="row" ColumnDefinitions="*,Auto">
+                <TextBlock Text="Anordnung" Margin="24,0,0,0" />
+                <ComboBox Grid.Column="1" x:Name="WallpaperStyle_ComboBox" Width="160" />
+              </Grid>
+              <TextBlock x:Name="WallpaperHint"
+                         Classes="hint"
+                         Foreground="{DynamicResource Fine.Warning}"
+                         Margin="0,0,0,10"
+                         IsVisible="False" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Bilderordner -->
+        <StackPanel>
+          <TextBlock Classes="section" Text="BILDERORDNER" />
+          <Border Classes="card" Padding="14,12">
+            <StackPanel Spacing="10">
+              <Border Background="{DynamicResource Fine.Inset}"
+                      BorderBrush="{DynamicResource Fine.Divider}"
+                      BorderThickness="1"
+                      CornerRadius="5"
+                      Padding="10,7">
+                <Grid ColumnDefinitions="Auto,*">
+                  <Image Source="/Assets/Images/folder.png" Width="16" Height="16"
+                         VerticalAlignment="Top" Margin="0,0,9,0"
+                         RenderOptions.BitmapInterpolationMode="HighQuality" />
+                  <TextBlock Grid.Column="1" x:Name="FolderPath_Label"
+                             FontSize="11.5" TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+
+              <Grid ColumnDefinitions="*,Auto,Auto">
+                <CheckBox x:Name="Recursive_CheckBox" Content="Unterordner einbeziehen" />
+                <Button Grid.Column="1" Classes="subtle" Content="Zurücksetzen"
+                        Click="ResetPath_Click" Margin="0,0,6,0" />
+                <Button Grid.Column="2" Content="Ordner wählen …" Click="SelectFolder_Click" />
+              </Grid>
+
+              <TextBlock Classes="hint"
+                         Text="Unterstützte Formate: jpg, jpeg, png, gif, tif, tiff, bmp, webp" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
 </Window>
