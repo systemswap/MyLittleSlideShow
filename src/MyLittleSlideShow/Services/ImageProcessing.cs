@@ -1,8 +1,6 @@
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using MetadataExtractor;
-using MetadataExtractor.Formats.Exif;
 using SkiaSharp;
 
 namespace MyLittleSlideShow.Services;
@@ -15,8 +13,8 @@ public enum Rotation
 
 /// <summary>
 /// Bildfunktionen fuer die Oberflaeche. Gerechnet wird mit SkiaSharp (siehe
-/// <see cref="SkiaImaging"/>), EXIF liest MetadataExtractor. Beides laeuft
-/// identisch unter Windows und Linux.
+/// <see cref="SkiaImaging"/>), Metadaten liest <see cref="ImageMetadataReader"/>.
+/// Beides laeuft identisch unter Windows und Linux.
 /// </summary>
 public static class ImageProcessing
 {
@@ -29,14 +27,18 @@ public static class ImageProcessing
 
     /// <summary>
     /// Laedt ein Bild von der Platte, richtet es anhand der EXIF-Orientierung aus,
-    /// skaliert es auf die Zielgroesse und schaerft es optional.
+    /// rechnet die Farben nach sRGB um, skaliert es auf die Zielgroesse und
+    /// schaerft es optional.
     /// </summary>
+    /// <param name="maxWidth">Zielbreite in physischen Bildschirmpixeln.</param>
+    /// <param name="maxHeight">Zielhoehe in physischen Bildschirmpixeln.</param>
+    /// <param name="scaling">Bildschirmskalierung (1 = 100 %, 1.5 = 150 %).</param>
     public static Bitmap LoadForDisplay(string path, int maxWidth, int maxHeight,
                                         bool sharpen, int sharpenValue,
-                                        int sharpenThreshold = 0)
+                                        int sharpenThreshold = 0, double scaling = 1)
     {
         using var resized = LoadResized(path, maxWidth, maxHeight);
-        return Render(resized, sharpen, sharpenValue, sharpenThreshold);
+        return Render(resized, sharpen, sharpenValue, sharpenThreshold, scaling);
     }
 
     /// <summary>
@@ -53,10 +55,14 @@ public static class ImageProcessing
             return SkiaImaging.LoadFitted(codec, maxWidth, maxHeight);
     }
 
-    /// <summary>Kopiert das skalierte Bild in eine Avalonia-Bitmap und schaerft es dort.</summary>
+    /// <summary>
+    /// Kopiert das skalierte Bild in eine Avalonia-Bitmap und schaerft es dort.
+    /// Die Bitmap bekommt 96 dpi x Skalierung: so zeigt Avalonia jedes Pixel
+    /// auf genau einem Bildschirmpixel, auch bei 125 % oder 150 %.
+    /// </summary>
     public static Bitmap Render(SKBitmap resized, bool sharpen, int sharpenValue,
-                                int sharpenThreshold = 0)
-        => ToAvaloniaBitmap(resized, sharpen ? sharpenValue : 0, sharpenThreshold);
+                                int sharpenThreshold = 0, double scaling = 1)
+        => ToAvaloniaBitmap(resized, sharpen ? sharpenValue : 0, sharpenThreshold, scaling);
 
     /// <summary>Bild aus den eingebetteten Avalonia-Ressourcen laden.</summary>
     public static Bitmap LoadAsset(string assetPath)
@@ -69,7 +75,7 @@ public static class ImageProcessing
     /// <summary>Eingebettete Ressource laden, skalieren und schaerfen (Standardhintergrund).</summary>
     public static Bitmap LoadAssetProcessed(string assetPath, int maxWidth, int maxHeight,
                                             bool sharpen, int sharpenValue,
-                                            int sharpenThreshold = 0)
+                                            int sharpenThreshold = 0, double scaling = 1)
     {
         using var stream = AssetLoader.Open(AssetUri(assetPath));
         using var buffer = new MemoryStream();
@@ -79,7 +85,7 @@ public static class ImageProcessing
         using (data)
         using (codec)
         using (var resized = SkiaImaging.LoadFitted(codec, maxWidth, maxHeight))
-            return Render(resized, sharpen, sharpenValue, sharpenThreshold);
+            return Render(resized, sharpen, sharpenValue, sharpenThreshold, scaling);
     }
 
     private static Uri AssetUri(string assetPath) =>
@@ -108,7 +114,8 @@ public static class ImageProcessing
             // Erst die bisherige EXIF-Orientierung in die Pixel uebernehmen,
             // dann um 90 Grad drehen. So ist das Ergebnis immer genau eine
             // Vierteldrehung gegenueber dem, was der Nutzer gesehen hat.
-            using var oriented = SkiaImaging.DecodeOriented(codec);
+            // Ohne Farbumrechnung: das ICC-Profil wird unveraendert mit uebernommen.
+            using var oriented = SkiaImaging.DecodeOriented(codec, toSrgb: false);
             using var rotated = SkiaImaging.Transform(oriented,
                 rotation == Rotation.Right ? SKEncodedOrigin.RightTop : SKEncodedOrigin.LeftBottom);
 
@@ -158,66 +165,18 @@ public static class ImageProcessing
         using (var oriented = SkiaImaging.DecodeOriented(codec))
         using (var flat = SkiaImaging.FlattenOnWhite(oriented))
         {
-            System.IO.Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
+            Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
             File.WriteAllBytes(targetPath, SkiaImaging.EncodeJpeg(flat, quality: 95, fullChroma: false));
         }
         return targetPath;
-    }
-
-    /// <summary>Alle EXIF-Felder als lesbare "Name: Wert"-Zeilen.</summary>
-    public static IReadOnlyList<string> ReadExif(string path)
-    {
-        var lines = new List<string>();
-
-        try
-        {
-            var (codec, data) = SkiaImaging.Open(File.ReadAllBytes(path));
-            using (data)
-            using (codec)
-            {
-                var swap = SkiaImaging.SwapsAxes(codec.EncodedOrigin);
-                var width = swap ? codec.Info.Height : codec.Info.Width;
-                var height = swap ? codec.Info.Width : codec.Info.Height;
-                lines.Add($"Abmessungen: {width} x {height} Pixel");
-            }
-        }
-        catch
-        {
-            // Abmessungen sind nur eine Zugabe.
-        }
-
-        try
-        {
-            // Nur die eigentlichen EXIF-Verzeichnisse (Kamera, Aufnahme, GPS).
-            // Herstellerspezifische MakerNotes und das Vorschaubild bleiben
-            // aussen vor, wie zuvor.
-            var tags = ImageMetadataReader.ReadMetadata(path)
-                .Where(d => d is ExifIfd0Directory or ExifSubIfdDirectory or GpsDirectory)
-                .SelectMany(d => d.Tags)
-                .Where(t => !t.Name.Contains("MakerNote", StringComparison.OrdinalIgnoreCase)
-                            && !string.IsNullOrWhiteSpace(t.Description))
-                .Select(t => $"{t.Name}: {t.Description}")
-                .OrderBy(line => line, StringComparer.Ordinal)
-                .ToList();
-
-            if (tags.Count == 0)
-                lines.Add("Es konnten keine Exif Daten eingelesen werden.");
-            else
-                lines.AddRange(tags);
-        }
-        catch
-        {
-            lines.Add("Es konnten keine Exif Daten eingelesen werden.");
-        }
-
-        return lines;
     }
 
     /// <summary>
     /// Kopiert die Skia-Pixel ohne Umweg ueber PNG direkt in eine
     /// Avalonia-Bitmap und schaerft dort im Speicher.
     /// </summary>
-    private static unsafe Bitmap ToAvaloniaBitmap(SKBitmap source, int sharpenValue, int sharpenThreshold)
+    private static unsafe Bitmap ToAvaloniaBitmap(SKBitmap source, int sharpenValue, int sharpenThreshold,
+                                                  double scaling)
     {
         var converted = source.ColorType == SkiaImaging.ColorType && source.AlphaType == SkiaImaging.AlphaType
             ? null
@@ -228,7 +187,7 @@ public static class ImageProcessing
         {
             var writeable = new WriteableBitmap(
                 new PixelSize(pixels.Width, pixels.Height),
-                new Vector(96, 96),
+                new Vector(96 * scaling, 96 * scaling),
                 PixelFormat.Bgra8888,
                 AlphaFormat.Premul);
 

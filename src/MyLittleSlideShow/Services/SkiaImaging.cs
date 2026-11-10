@@ -57,7 +57,14 @@ internal static class SkiaImaging
     /// aber nie kleiner als das Doppelte des Ziels - die eigentliche
     /// Verkleinerung macht danach <see cref="ResizeToFit"/> in guter Qualitaet.
     /// </summary>
-    public static SKBitmap DecodeOriented(SKCodec codec, int boxWidth = 0, int boxHeight = 0)
+    /// <param name="toSrgb">
+    /// Farben anhand des eingebetteten ICC-Profils nach sRGB umrechnen. Noetig
+    /// fuer die Anzeige: Fotos in Display P3 (iPhone) oder Adobe RGB wirken
+    /// sonst blass. Beim Drehen aus bleiben, weil dort das Originalprofil
+    /// wieder in die Datei geschrieben wird.
+    /// </param>
+    public static SKBitmap DecodeOriented(SKCodec codec, int boxWidth = 0, int boxHeight = 0,
+                                          bool toSrgb = true)
     {
         var info = codec.Info;
         var origin = codec.EncodedOrigin;
@@ -95,7 +102,12 @@ internal static class SkiaImaging
             throw new OutOfMemoryException($"Kein Speicher für {size.Width} x {size.Height} Pixel.");
         }
 
-        var result = codec.GetPixels(target, bitmap.GetPixels());
+        // Die Bitmap selbst bleibt ohne Farbraum ("sRGB angenommen"), damit
+        // spaeteres Zeichnen und Skalieren nichts mehr umrechnet. Nur dem
+        // Dekoder wird sRGB als Ziel genannt - er rechnet vom eingebetteten
+        // Profil um; Dateien ohne Profil gelten als sRGB und bleiben gleich.
+        var decodeInfo = toSrgb ? target.WithColorSpace(SKColorSpace.CreateSrgb()) : target;
+        var result = codec.GetPixels(decodeInfo, bitmap.GetPixels());
 
         // Abgeschnittene Dateien zeigen, was lesbar ist - wie ein Bildbetrachter.
         if (result is not (SKCodecResult.Success or SKCodecResult.IncompleteInput))
