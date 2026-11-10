@@ -15,9 +15,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
 
-    <Version>2.1.0.0</Version>
-    <FileVersion>2.1.0.0</FileVersion>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <Version>2.1.1.0</Version>
+    <FileVersion>2.1.1.0</FileVersion>
+    <AssemblyVersion>2.1.1.0</AssemblyVersion>
     <Company>MTS-Solutions.de</Company>
     <Product>MyLittleSlideShow</Product>
 
@@ -38,8 +38,14 @@
          GHSA-xrw6-gwf8-vvr9. Explizit setzen hebt die transitive Version an. -->
     <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
 
-    <!-- Ersetzt System.Drawing.Common komplett (Resize, Schaerfen, EXIF, Format-Erkennung) -->
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <!-- Bildverarbeitung (Dekodieren, Skalieren, Drehen, Kodieren). SkiaSharp
+         kommt ohnehin mit Avalonia.Skia; die Version muss exakt der von
+         Avalonia entsprechen, sonst passen verwaltete und native Teile nicht
+         zusammen. Bei einem Avalonia-Update hier mitziehen. MIT-Lizenz. -->
+    <PackageReference Include="SkiaSharp" Version="2.88.9" />
+
+    <!-- EXIF-Anzeige im Info-Fenster. Apache-2.0 (XmpCore: BSD-3). -->
+    <PackageReference Include="MetadataExtractor" Version="2.9.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,20 +59,16 @@
 
   <!--
     Beim Single-File-Publish wandert normalerweise alles in die eine EXE.
-    Mit -p:KeepExternalLibsSeparate=true bleiben Fremdbibliotheken (aktuell
-    nur ImageSharp) als eigene DLL daneben liegen, damit sie z.B. wegen der
-    Lizenz separat austauschbar sind. Die Publish-Skripte setzen das.
+    Mit -p:KeepExternalLibsSeparate=true bleiben die Fremdbibliotheken fuer
+    EXIF (MetadataExtractor, XmpCore) als eigene DLLs daneben liegen, damit
+    sie separat austauschbar sind. Die Publish-Skripte setzen das.
   -->
-  <ItemGroup>
-    <ExternalLibraryPrefix Include="SixLabors" />
-  </ItemGroup>
-
   <Target Name="KeepExternalLibsOutOfBundle"
           AfterTargets="ComputeResolvedFilesToPublishList"
           Condition="'$(KeepExternalLibsSeparate)' == 'true'">
     <ItemGroup>
       <ResolvedFileToPublish Update="@(ResolvedFileToPublish)">
-        <ExcludeFromSingleFile Condition="$([System.String]::Copy('%(Filename)').StartsWith('SixLabors'))">true</ExcludeFromSingleFile>
+        <ExcludeFromSingleFile Condition="'%(Filename)' == 'MetadataExtractor' or '%(Filename)' == 'XmpCore'">true</ExcludeFromSingleFile>
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>

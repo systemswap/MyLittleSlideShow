@@ -35,7 +35,7 @@ public partial class InfoWindow : Window
         items.Add("Exif-Daten");
 
         // Die frueheren Dateien ExifReader.cs und ExifTags.cs (zusammen rund
-        // 1300 Zeilen) sind entfallen - ImageSharp liefert die Metadaten direkt.
+        // 1300 Zeilen) sind entfallen - MetadataExtractor liefert die Metadaten.
         items.AddRange(ImageProcessing.ReadExif(_fileName));
 
         InfoLB.ItemsSource = items;

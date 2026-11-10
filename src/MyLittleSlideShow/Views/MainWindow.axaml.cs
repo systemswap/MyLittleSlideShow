@@ -9,7 +9,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using MyLittleSlideShow.Platform;
 using MyLittleSlideShow.Services;
-using PreviewSource = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Bgra32>;
+using PreviewSource = SkiaSharp.SKBitmap;
 
 namespace MyLittleSlideShow.Views;
 
@@ -695,7 +695,8 @@ public partial class MainWindow : Window
 
         try
         {
-            ImageProcessing.RotateAndSaveImageFile(_currentFile, rotation);
+            // GIF kann nicht zurueckgeschrieben werden - dann bleibt alles, wie es ist.
+            if (!ImageProcessing.RotateAndSaveImageFile(_currentFile, rotation)) return;
             LoadImage(WhichImage.LastLoadedFile, rescanFolders: false, allowRandom: false);
         }
         catch (Exception ex)

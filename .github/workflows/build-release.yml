@@ -2,7 +2,7 @@ name: Build & Release
 
 # Push auf master  -> nur bauen, Artefakte haengen am Workflow-Lauf (Testlauf)
 # Push eines Tags  -> bauen und ein GitHub-Release mit den Dateien anlegen
-#   git tag v2.1.0 && git push origin v2.1.0
+#   git tag v2.1.1 && git push origin v2.1.1
 on:
   push:
     branches: [master]
@@ -34,7 +34,8 @@ jobs:
       - name: Publish
         shell: pwsh
         # Choice 2 = win-x64 standalone. KeepExternalLibsSeparate:$false packt
-        # auch ImageSharp mit in die EXE, damit wirklich nur eine Datei entsteht.
+        # auch MetadataExtractor/XmpCore mit in die EXE, damit wirklich nur eine
+        # Datei entsteht.
         run: ./publish.ps1 -Choice 2 -KeepExternalLibsSeparate:$false
 
       - name: Ergebnis pruefen

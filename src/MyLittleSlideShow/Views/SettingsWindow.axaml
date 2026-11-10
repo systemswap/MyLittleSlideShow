@@ -457,7 +457,7 @@
               </Grid>
 
               <TextBlock Classes="hint"
-                         Text="Unterstützte Formate: jpg, jpeg, png, gif, tif, tiff, bmp, webp" />
+                         Text="Unterstützte Formate: jpg, jpeg, png, gif, bmp, webp" />
             </StackPanel>
           </Border>
         </StackPanel>
