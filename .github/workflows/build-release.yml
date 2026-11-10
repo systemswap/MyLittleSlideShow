@@ -45,15 +45,13 @@ jobs:
         shell: pwsh
         run: |
           $out = 'publish/win-x64-standalone'
-          $files = Get-ChildItem $out -File
-          $files | ForEach-Object { '{0,10:N0} KB  {1}' -f ($_.Length / 1KB), $_.Name }
-          if ($files.Count -ne 1) {
-            throw "Erwartet wurde genau eine Datei, gefunden: $($files.Count)"
+          Get-ChildItem $out -File | ForEach-Object { '{0,10:N0} KB  {1}' -f ($_.Length / 1KB), $_.Name }
+          # Neben der EXE liegen nur die Lizenztexte; Bibliotheken muessen in der EXE stecken.
+          $binaries = Get-ChildItem $out -File | Where-Object { $_.Extension -in '.exe', '.dll' }
+          if ($binaries.Count -ne 1 -or $binaries[0].Name -ne 'MyLittleSlideShow.exe') {
+            throw "Erwartet wurde genau MyLittleSlideShow.exe, gefunden: $($binaries.Name -join ', ')"
           }
-          if ($files[0].Name -ne 'MyLittleSlideShow.exe') {
-            throw "Unerwarteter Dateiname: $($files[0].Name)"
-          }
-          Copy-Item $files[0].FullName 'MyLittleSlideShow-win-x64.exe'
+          Copy-Item $binaries[0].FullName 'MyLittleSlideShow-win-x64.exe'
 
       - uses: actions/upload-artifact@v4
         with:
@@ -113,15 +111,36 @@ jobs:
           path: MyLittleSlideShow-x86_64.AppImage
           if-no-files-found: error
 
+  # --------------------------------------------------------------- Lizenzen
+  licenses:
+    name: Lizenzen pruefen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Pakete laden
+        run: dotnet restore src/MyLittleSlideShow/MyLittleSlideShow.csproj
+
+      - name: Nur freigegebene Lizenzen
+        # Faellt ein Paket (oder ein Update) auf eine nicht freigegebene oder
+        # unbekannte Lizenz, schlaegt der Build fehl - siehe tools/check-licenses.py.
+        run: python3 tools/check-licenses.py
+
   # ---------------------------------------------------------------- Release
   release:
     name: Release veroeffentlichen
-    needs: [windows, linux]
+    needs: [windows, linux, licenses]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           path: dist
@@ -136,6 +155,10 @@ jobs:
           version="${TAG#v}"
           mv dist/MyLittleSlideShow-win-x64.exe "dist/MyLittleSlideShow-${version}-win-x64.exe"
           mv dist/MyLittleSlideShow-x86_64.AppImage "dist/MyLittleSlideShow-${version}-x86_64.AppImage"
+
+          # Lizenztexte als eigenes Paket (stehen auch im Programm unter Infos > Lizenzen)
+          mkdir -p lic && cp LICENSE lic/LICENSE.txt && cp THIRD-PARTY-NOTICES.md lic/ && cp -r licenses lic/
+          (cd lic && zip -qr "../dist/MyLittleSlideShow-${version}-Lizenzen.zip" .)
           ls -lh dist
 
           cat > notes.md <<EOF
@@ -147,6 +170,9 @@ jobs:
           | Linux x64 | \`MyLittleSlideShow-${version}-x86_64.AppImage\` | Nach dem Download ausfuehrbar machen: \`chmod +x\`, dann starten. |
 
           Beide Varianten sind self-contained, eine installierte .NET-Laufzeit ist nicht noetig.
+
+          Lizenz: MIT. Verwendete Fremdbestandteile und ihre Lizenzen stehen im Programm unter
+          Einstellungen > Infos > Lizenzen und in \`MyLittleSlideShow-${version}-Lizenzen.zip\`.
           EOF
 
           gh release create "$TAG" dist/* \

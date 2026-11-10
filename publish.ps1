@@ -97,6 +97,12 @@ function Invoke-Publish {
     Get-ChildItem $outDir -Include *.pdb, *.xml -Recurse -File -ErrorAction SilentlyContinue |
         Remove-Item -Force -ErrorAction SilentlyContinue
 
+    # Lizenztexte gehoeren zur Weitergabe dazu (Apache-2.0 verlangt es fuer
+    # MetadataExtractor). Im Programm stehen sie zusaetzlich unter Infos > Lizenzen.
+    Copy-Item (Join-Path $Root 'LICENSE') (Join-Path $outDir 'LICENSE.txt') -Force
+    Copy-Item (Join-Path $Root 'THIRD-PARTY-NOTICES.md') $outDir -Force
+    Copy-Item (Join-Path $Root 'licenses') $outDir -Recurse -Force
+
     $files = Get-ChildItem $outDir -File
     $size  = [math]::Round((($files | Measure-Object Length -Sum).Sum) / 1MB, 1)
 

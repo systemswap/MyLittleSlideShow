@@ -75,6 +75,7 @@ src/MyLittleSlideShow/
 │   ├── SettingsManager.cs     JSON-Einstellungen + Migration
 │   ├── ImageProcessing.cs     Laden, Skalieren, Schärfen, Drehen, EXIF
 │   ├── SkiaImaging.cs         Bildkern auf SkiaSharp (ohne Avalonia)
+│   ├── ImageMetadataReader.cs Dateiinfos (EXIF, IPTC, XMP, ICC) wie im ImageConverter
 │   ├── JpegMetadata.cs        EXIF/ICC beim Drehen übernehmen
 │   └── Donation.cs            PayPal-Link
 └── Platform/
@@ -83,5 +84,29 @@ src/MyLittleSlideShow/
     ├── LinuxServices.cs       gsettings, gio, systemd-inhibit, XDG
     └── ShellService.cs        Öffnen von Dateien/URLs + Fallbacks
 ```
+
+## Lizenz
+
+MyLittleSlideShow steht unter der [MIT-Lizenz](LICENSE). Alle Fremdbestandteile
+stehen ebenfalls unter freien Lizenzen ohne Nutzungsgebühr (MIT, Apache-2.0,
+BSD-3-Clause, OFL-1.1) – Übersicht in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md),
+im Programm unter *Einstellungen › Infos › Lizenzen*.
+
+`tools/check-licenses.py` prüft bei jedem Build im Workflow alle NuGet-Pakete
+gegen eine Positivliste. Ändert ein Paket seine Lizenz (wie ImageSharp mit 3.2),
+schlägt der Build fehl. Dependabot schlägt wöchentlich Updates vor
+(`.github/dependabot.yml`).
+
+## Telemetrie
+
+Das Programm sendet nichts. Beim Bauen ist Telemetrie ebenfalls aus:
+
+- **Avalonia**: `Avalonia.BuildServices` würde bei jedem Build Nutzungsdaten
+  senden; im csproj per `ExcludeAssets="all"` ausgeschaltet.
+- **.NET-CLI und MSBuild**: `publish.ps1`, `publish.sh` und der Workflow setzen
+  `DOTNET_CLI_TELEMETRY_OPTOUT=1` und `MSBUILD_TELEMETRY_OPTOUT=1`. Für
+  eigene `dotnet`-Aufrufe und die IDE einmalig dauerhaft setzen:
+  `setx DOTNET_CLI_TELEMETRY_OPTOUT 1` und `setx MSBUILD_TELEMETRY_OPTOUT 1`
+  (Linux: `export …` in `~/.profile`).
 
 Details zur Umstellung siehe [MIGRATION.md](MIGRATION.md).

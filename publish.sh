@@ -87,6 +87,12 @@ do_publish() {
     dotnet "${args[@]}"
 
     find "$out" \( -name '*.pdb' -o -name '*.xml' \) -delete 2>/dev/null || true
+
+    # Lizenztexte gehoeren zur Weitergabe dazu (Apache-2.0 verlangt es fuer
+    # MetadataExtractor). Im Programm stehen sie zusaetzlich unter Infos > Lizenzen.
+    cp "$ROOT/LICENSE" "$out/LICENSE.txt"
+    cp "$ROOT/THIRD-PARTY-NOTICES.md" "$out/"
+    cp -r "$ROOT/licenses" "$out/"
     chmod +x "$out/$APP_NAME" 2>/dev/null || true
 
     local count size

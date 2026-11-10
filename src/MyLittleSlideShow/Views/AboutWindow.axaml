@@ -17,6 +17,9 @@
       <TabItem Header="Changelog">
         <ListBox x:Name="ChangeLogText_ListBox" />
       </TabItem>
+      <TabItem Header="Lizenzen">
+        <ListBox x:Name="Licenses_ListBox" />
+      </TabItem>
     </TabControl>
   </DockPanel>
 </Window>
