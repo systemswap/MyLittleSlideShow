@@ -92,6 +92,13 @@ public partial class MainWindow : Window
         _previewTimer.Tick += PreviewTimer_Tick;
 
         Loaded += OnLoaded;
+
+        // Wandert das Fenster auf einen Monitor mit anderer Skalierung, passt
+        // die berechnete Bitmap nicht mehr 1:1 - neu berechnen.
+        ScalingChanged += (_, _) =>
+        {
+            if (IsLoaded) LoadImage(WhichImage.LastLoadedFile, rescanFolders: false, allowRandom: false);
+        };
         Closing += OnClosing;
 
         PointerPressed += OnWindowPointerPressed;
@@ -262,13 +269,15 @@ public partial class MainWindow : Window
             S.LastLoadedFile = _currentFile;
             _settingsManager.Save();
 
+            var target = ImageTargetSize();
             var bitmap = ImageProcessing.LoadForDisplay(
                 path,
-                (int)Width,
-                (int)Height,
+                target.Width,
+                target.Height,
                 S.SharpImages,
                 S.SharpenValue,
-                S.QuietSharpen ? S.SharpenThreshold : 0);
+                S.QuietSharpen ? S.SharpenThreshold : 0,
+                RenderScaling);
 
             ApplyBitmap(bitmap);
 
@@ -344,9 +353,33 @@ public partial class MainWindow : Window
 
     private void LoadDefaultBackground()
     {
+        var target = ImageTargetSize();
         var bitmap = ImageProcessing.LoadAssetProcessed(
-            "Images/Buch.png", (int)Width, (int)Height, sharpen: true, sharpenValue: 40);
+            "Images/Buch.png", target.Width, target.Height, sharpen: true, sharpenValue: 40,
+            scaling: RenderScaling);
         ApplyBitmap(bitmap);
+    }
+
+    /// <summary>
+    /// Die Flaeche, in der ShowImage das Bild zeigt, in physischen Pixeln:
+    /// Fenster minus Bedienleiste minus Rand des Bilds, mal Bildschirmskalierung.
+    /// Frueher wurde fuer das ganze Fenster gerechnet und Avalonia hat das Bild
+    /// beim Anzeigen ein zweites Mal verkleinert - das kostete Schaerfe und
+    /// schwaechte die Unschaerfemaskierung ab. Jetzt landet jedes berechnete
+    /// Pixel auf genau einem Bildschirmpixel.
+    /// </summary>
+    private PixelSize ImageTargetSize()
+    {
+        var margin = ShowImage.Margin;
+        var controlsHeight = MainGrid.RowDefinitions.Count > 1 ? MainGrid.RowDefinitions[1].Height.Value : 0;
+
+        var width = Width - margin.Left - margin.Right;
+        var height = Height - controlsHeight - margin.Top - margin.Bottom;
+        var scaling = RenderScaling;
+
+        // Abrunden: lieber ein Pixel kleiner als eine Nachskalierung.
+        return new PixelSize(Math.Max(1, (int)Math.Floor(width * scaling)),
+                             Math.Max(1, (int)Math.Floor(height * scaling)));
     }
 
     private static string[] GetFilesFrom(string searchFolder, bool isRecursive)
@@ -776,7 +809,10 @@ public partial class MainWindow : Window
             try
             {
                 if (!string.IsNullOrEmpty(_currentFile) && File.Exists(_currentFile))
-                    _previewSource = ImageProcessing.LoadResized(_currentFile, (int)Width, (int)Height);
+                {
+                    var target = ImageTargetSize();
+                    _previewSource = ImageProcessing.LoadResized(_currentFile, target.Width, target.Height);
+                }
                 else
                     _previewSourceFailed = true;   // Standardbild: keine Schaerfe-Vorschau
             }
@@ -789,7 +825,8 @@ public partial class MainWindow : Window
 
         if (_previewSource is null) return;
 
-        ApplyBitmap(ImageProcessing.Render(_previewSource, wanted.Sharpen, wanted.Value, wanted.Threshold));
+        ApplyBitmap(ImageProcessing.Render(_previewSource, wanted.Sharpen, wanted.Value, wanted.Threshold,
+                                           RenderScaling));
         _renderedSharpening = wanted;
     }
 

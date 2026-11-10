@@ -2,25 +2,65 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="MyLittleSlideShow.Views.InfoWindow"
         Title="Dateiinfos"
-        Width="420" Height="460"
+        Width="560" Height="680"
+        MinWidth="420" MinHeight="360"
         WindowStartupLocation="CenterOwner"
         CanResize="True"
+        FontSize="12"
+        Background="{DynamicResource Fine.WindowBackground}"
+        Foreground="{DynamicResource Fine.TextPrimary}"
         Icon="/Assets/My_Icon.ico">
 
-  <DockPanel Margin="10">
-    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal"
-                HorizontalAlignment="Right" Spacing="8" Margin="0,10,0,0">
-      <Button Content="Verzeichnis öffnen" Click="OpenDirectory_Click" />
-      <Button Content="Schließen" Click="Close_Click" IsCancel="True" />
-    </StackPanel>
+  <Window.Styles>
+    <StyleInclude Source="/Themes/FineTheme.axaml" />
 
-    <ListBox x:Name="InfoLB" SelectionMode="Single">
-      <ListBox.Styles>
-        <Style Selector="ListBoxItem">
-          <Setter Property="Padding" Value="6,2" />
-          <Setter Property="MinHeight" Value="0" />
-        </Style>
-      </ListBox.Styles>
-    </ListBox>
+    <!-- Zeilen der Karten: Beschriftung links, Wert rechts (markier- und kopierbar) -->
+    <Style Selector="TextBlock.label">
+      <Setter Property="Foreground" Value="{DynamicResource Fine.TextSecondary}" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="Margin" Value="0,9,12,9" />
+    </Style>
+    <Style Selector="SelectableTextBlock.value">
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="Margin" Value="0,9,0,9" />
+    </Style>
+    <Style Selector="SelectableTextBlock.raw">
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="Margin" Value="0,4" />
+    </Style>
+  </Window.Styles>
+
+  <DockPanel>
+
+    <!-- Kopfzeile -->
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="24,16,24,8">
+      <Image Source="/Assets/Images/Info.png" Width="28" Height="28"
+             VerticalAlignment="Center"
+             RenderOptions.BitmapInterpolationMode="HighQuality" />
+      <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" Spacing="1">
+        <TextBlock Text="Dateiinfos" FontSize="16" FontWeight="SemiBold" />
+        <TextBlock x:Name="FileNameText" Classes="hint" TextTrimming="CharacterEllipsis" />
+      </StackPanel>
+    </Grid>
+
+    <!-- Fusszeile -->
+    <Border DockPanel.Dock="Bottom"
+            BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource Fine.CardBorder}"
+            Background="{DynamicResource Fine.CardBackground}"
+            Padding="18,12,24,12">
+      <Grid ColumnDefinitions="Auto,*,Auto">
+        <Button Grid.Column="0" Classes="subtle" Content="Verzeichnis öffnen" Click="OpenDirectory_Click" />
+        <Button Grid.Column="2" Classes="primary" Content="Schließen" Click="Close_Click"
+                IsCancel="True" IsDefault="True" MinWidth="96" />
+      </Grid>
+    </Border>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+      <!-- Abschnitte werden im Code aus ImageMetadata aufgebaut -->
+      <StackPanel x:Name="SectionsPanel" Spacing="14" Margin="24,4,24,18" />
+    </ScrollViewer>
   </DockPanel>
 </Window>
