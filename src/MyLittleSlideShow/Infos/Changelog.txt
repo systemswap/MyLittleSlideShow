@@ -166,3 +166,6 @@
 
 2.3.3-beta
 	#Fixed - Bilder wurden bei Bildschirmskalierung (z. B. 4K mit 150 %) nur als Ausschnitt angezeigt
+
+2.3.4-beta
+	#Fixed - Doppelklick auf das Bild öffnet es wieder im Standard-Bildbetrachter, auch wenn Ordner- oder Dateiname Leerzeichen enthält (Linux)

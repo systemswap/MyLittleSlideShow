@@ -49,13 +49,13 @@ public sealed class ShellService : IShellService
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Process.Start(new ProcessStartInfo("xdg-open", target) { UseShellExecute = false });
+                Process.Start(SingleArgument("xdg-open", target));
                 return;
             }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Process.Start(new ProcessStartInfo("open", target) { UseShellExecute = false });
+                Process.Start(SingleArgument("open", target));
                 return;
             }
 
@@ -66,6 +66,18 @@ public sealed class ShellService : IShellService
         {
             // Bewusst still: das Oeffnen eines Links darf die App nicht abbrechen.
         }
+    }
+
+    /// <summary>
+    /// Uebergibt den Pfad als genau ein Argument. Ein Argument-Text wuerde an
+    /// Leerzeichen zerlegt - Bilder in Ordnern wie "Meine Bilder" oeffneten
+    /// sich dann nicht (docs/FEHLERGEDAECHTNIS.md, "Doppelklick oeffnet das Bild nicht").
+    /// </summary>
+    private static ProcessStartInfo SingleArgument(string fileName, string argument)
+    {
+        var psi = new ProcessStartInfo(fileName) { UseShellExecute = false };
+        psi.ArgumentList.Add(argument);
+        return psi;
     }
 }
 
