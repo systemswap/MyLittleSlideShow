@@ -159,3 +159,29 @@ Commit-Kennungen gibt es hier nicht. Was davon heute gilt, steht im Eintrag
 - **Test:** kein automatischer. Von Hand: Testbild mit farbigen Ecken in einen
   eigenen Ordner, Programm mit eigenem `XDG_CONFIG_HOME` starten, Fenster mit
   `xwd -id <fenster>` aufnehmen – alle vier Ecken und der Rand müssen zu sehen sein.
+
+## Doppelklick öffnet das Bild nicht (Pfad mit Leerzeichen an xdg-open)
+
+- **Entdeckt:** 2.3.3-beta (Commit `175eeaf`), vom Benutzer bemerkt.
+  **Eingeführt:** mit der Linux-Fassung (Commit `d6adb93`). **Behoben:** 2.3.4-beta.
+- **Wie bemerkt:** Doppelklick auf das Bild öffnete unter Linux nicht den
+  Standard-Bildbetrachter. Die Bilder des Benutzers liegen in einem Ordner mit
+  Leerzeichen im Namen.
+- **Was / warum:** `ShellService.OpenWithDefaultHandler` startete
+  `new ProcessStartInfo("xdg-open", pfad)`. Der zweite Parameter ist ein
+  Argument-Text, den .NET an Leerzeichen zerlegt: aus
+  `/tmp/Ordner mit Leerzeichen/Bild 1.jpg` wurden vier Argumente, `xdg-open` fand
+  keine Datei. Betroffen auch „Verzeichnis öffnen“, wenn kein bekannter
+  Dateimanager da ist (gleicher Weg), und `open` unter macOS. Unter Windows
+  (`UseShellExecute`) trat es nicht auf.
+- **Lösung:** Pfad über `ProcessStartInfo.ArgumentList` als genau ein Argument
+  übergeben (`ShellService.SingleArgument`) – so wie `ProcessRunner.Run` es schon
+  tat. Verworfen: den Pfad in Anführungszeichen setzen – bricht bei Pfaden, die
+  selbst Anführungszeichen enthalten.
+- **Nicht tun:** Pfade oder andere Werte von außen in den Argument-Text von
+  `ProcessStartInfo` einbauen; immer `ArgumentList`.
+- **Wo im Code:** `Platform/ShellService.cs`.
+- **Test:** kein automatischer. Geprüft mit einem Testprogramm, das den echten
+  `ShellService.OpenFile` für eine Datei in einem Ordner mit Leerzeichen aufruft;
+  davor im `PATH` ein Ersatz-`xdg-open`, das seine Argumente aufschreibt: vorher
+  vier Bruchstücke, jetzt genau ein vollständiger Pfad.
