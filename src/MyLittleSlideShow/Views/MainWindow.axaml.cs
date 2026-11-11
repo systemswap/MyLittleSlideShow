@@ -365,8 +365,7 @@ public partial class MainWindow : Window
                 target.Height,
                 S.SharpImages,
                 S.SharpenValue,
-                S.QuietSharpen ? S.SharpenThreshold : 0,
-                RenderScaling);
+                S.QuietSharpen ? S.SharpenThreshold : 0);
 
             ApplyBitmap(bitmap);
 
@@ -444,8 +443,7 @@ public partial class MainWindow : Window
     {
         var target = ImageTargetSize();
         var bitmap = ImageProcessing.LoadAssetProcessed(
-            "Images/Buch.png", target.Width, target.Height, sharpen: true, sharpenValue: 40,
-            scaling: RenderScaling);
+            "Images/Buch.png", target.Width, target.Height, sharpen: true, sharpenValue: 40);
         ApplyBitmap(bitmap);
     }
 
@@ -914,8 +912,7 @@ public partial class MainWindow : Window
 
         if (_previewSource is null) return;
 
-        ApplyBitmap(ImageProcessing.Render(_previewSource, wanted.Sharpen, wanted.Value, wanted.Threshold,
-                                           RenderScaling));
+        ApplyBitmap(ImageProcessing.Render(_previewSource, wanted.Sharpen, wanted.Value, wanted.Threshold));
         _renderedSharpening = wanted;
     }
 
