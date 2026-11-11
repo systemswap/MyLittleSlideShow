@@ -18,8 +18,7 @@
     <!-- Die einzige Stelle mit der Versionsnummer. Datei- und Assembly-Version
          leitet .NET daraus ab (2.3.0 -> 2.3.0.0), publish.sh liest sie hier aus,
          das Release bekommt sie aus dem Git-Tag (v2.3.0). -->
-    <Version>2.3.0</Version>
-    <Company>MTS-Solutions.de</Company>
+    <Version>2.3.1-beta</Version>
     <Product>MyLittleSlideShow</Product>
 
     <!-- Kein RuntimeIdentifier hier fest verdrahten: wird beim publish uebergeben -->
@@ -65,7 +64,7 @@
          EXE alles mitbringt, was die Lizenzen der Fremdbestandteile verlangen. -->
     <EmbeddedResource Include="..\..\LICENSE" LogicalName="MyLittleSlideShow.Licenses.LICENSE" />
     <EmbeddedResource Include="..\..\THIRD-PARTY-NOTICES.md" LogicalName="MyLittleSlideShow.Licenses.THIRD-PARTY-NOTICES.md" />
-    <EmbeddedResource Include="..\..\licenses\*.txt" LogicalName="MyLittleSlideShow.Licenses.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\..\packaging\licenses\*.txt" LogicalName="MyLittleSlideShow.Licenses.%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

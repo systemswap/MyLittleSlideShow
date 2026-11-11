@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=MyLittleSlideShow
+GenericName=Diashow
+Comment=Kleine Diashow für den Desktop
+Exec=MyLittleSlideShow
+Icon=mylittleslideshow
+Categories=Graphics;Viewer;
+Keywords=Diashow;Bilder;Fotos;Hintergrund;
+Terminal=false
+StartupWMClass=MyLittleSlideShow

@@ -1,7 +1,5 @@
 namespace MyLittleSlideShow.Services;
 
-// Aufbau uebernommen aus ImageConverter (ImageConverter.Core/Metadata).
-
 /// <summary>Abschnitte der Zusammenfassung, in Anzeigereihenfolge.</summary>
 public enum MetadataSection
 {

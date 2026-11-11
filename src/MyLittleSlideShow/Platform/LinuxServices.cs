@@ -149,9 +149,8 @@ public sealed class LinuxAutostartService : IAutostartService
 
     private static string FilePath => Path.Combine(AutostartDir, FileName);
 
-    private static string ExecutablePath =>
-        Environment.ProcessPath
-        ?? Path.Combine(AppContext.BaseDirectory, "MyLittleSlideShow");
+    // Bei einer AppImage die .AppImage-Datei, nicht das Innere unter /tmp/.mount_...
+    private static string ExecutablePath => AppLocations.LaunchPath;
 
     public bool IsSupported => true;
 

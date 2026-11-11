@@ -18,7 +18,6 @@ public partial class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         SettingsManager = new SettingsManager();
-        SettingsManager.MigrateFromLegacyIfNeeded();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -53,7 +52,9 @@ public partial class App : Application
 
     private void Tray_Restart_Click(object? sender, EventArgs e)
     {
-        var path = Environment.ProcessPath;
+        // Bei einer AppImage die .AppImage-Datei: das Innere unter /tmp/.mount_... wird
+        // ausgehaengt, sobald dieses Programm endet - der neue Prozess verloere seine Dateien.
+        var path = AppLocations.LaunchPath;
         if (!string.IsNullOrEmpty(path))
         {
             try

@@ -15,10 +15,19 @@ dotnet run --project src/MyLittleSlideShow
 
 | System | Befehl | Ergebnis |
 |---|---|---|
-| Windows | `.\publish.ps1` | `publish\windows-x64\MyLittleSlideShow.exe` – eine Datei, .NET enthalten |
-| Linux | `./publish.sh` | `publish/linux-x64/MyLittleSlideShow-<Version>-x86_64.AppImage` |
+| Linux | `./publish.sh linux` | `published/linux-x64/MyLittleSlideShow-x86_64.AppImage` – eine Datei, .NET und Avalonia enthalten |
+| Windows (unter Linux gebaut) | `./publish.sh windows` | `published/windows-x64/MyLittleSlideShow.exe` – eine Datei |
+| Windows (unter Windows gebaut) | `.\publish.ps1` | `published\windows-x64\MyLittleSlideShow.exe` |
 
-Neben dem Programm liegen jeweils `LICENSE.txt`, `THIRD-PARTY-NOTICES.md` und `licenses/`.
+`./publish.sh` ohne Argumente fragt nach Paketform (eine Datei oder alle
+Bibliotheken einzeln) und Ziel (Linux, Windows, beides). Neben dem Programm
+liegen jeweils `LICENSE.txt`, `THIRD-PARTY-NOTICES.md` und `licenses/`, daneben
+die Archive `published/MyLittleSlideShow-<Version>-linux-x64.tar.gz` bzw.
+`-windows-x64.zip`. Die Programmdatei trägt keine Versionsnummer, damit
+Menü- und Autostart-Eintrag nach dem nächsten Bau weiter stimmen.
+
+Unter Linux trägt `publish.sh` das Programm danach ins Anwendungsmenü ein
+(`published/linux-x64/einrichten.sh`, rückgängig mit `entfernen.sh`).
 
 ## Release auf GitHub
 
@@ -66,11 +75,13 @@ src/MyLittleSlideShow/
 │   ├── SkiaImaging.cs          Bildkern: dekodieren, skalieren, schärfen, kodieren
 │   ├── ImageProcessing.cs      Bildfunktionen für die Oberfläche
 │   ├── JpegMetadata.cs         EXIF/ICC beim Drehen übernehmen
-│   ├── ImageMetadataReader.cs  Dateiinfos (wie im ImageConverter)
+│   ├── ImageMetadataReader.cs  Dateiinfos (EXIF, IPTC, XMP, ICC)
 │   └── SettingsManager.cs      JSON-Einstellungen
 └── Platform/                   Windows/Linux: Hintergrund, Autostart, Papierkorb, Standby
+packaging/linux/                Menüeintrag, Symbol, einrichten.sh / entfernen.sh
+packaging/licenses/             Lizenztexte der Fremdbestandteile
 tools/check-licenses.py         Lizenzprüfung im Workflow
-licenses/                       Lizenztexte der Fremdbestandteile
+docs/                           Fehlergedächtnis, Arbeitsregeln
 ```
 
 ## Lizenz und Telemetrie
@@ -87,4 +98,5 @@ Build-Telemetrie im csproj, .NET-CLI und MSBuild über
 im Workflow. Für eigene `dotnet`-Aufrufe einmalig dauerhaft setzen:
 `setx DOTNET_CLI_TELEMETRY_OPTOUT 1` und `setx MSBUILD_TELEMETRY_OPTOUT 1`.
 
-Hinweise zum Weiterentwickeln: [ENTWICKLUNG.md](ENTWICKLUNG.md).
+Hinweise zum Weiterentwickeln: [ENTWICKLUNG.md](ENTWICKLUNG.md), Regeln für die
+Arbeit am Projekt: [docs/ARBEITSREGELN.md](docs/ARBEITSREGELN.md).

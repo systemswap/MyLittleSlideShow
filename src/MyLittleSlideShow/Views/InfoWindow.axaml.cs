@@ -8,7 +8,7 @@ using MyLittleSlideShow.Services;
 namespace MyLittleSlideShow.Views;
 
 /// <summary>
-/// Zeigt die Metadaten eines Bilds wie im ImageConverter: eine Zusammenfassung
+/// Zeigt die Metadaten eines Bilds: eine Zusammenfassung
 /// in Abschnitten (Datei, Kamera, Aufnahme, Ort, Urheber, Farbprofil) und auf
 /// Wunsch die vollstaendige Liste aller Eintraege.
 /// </summary>

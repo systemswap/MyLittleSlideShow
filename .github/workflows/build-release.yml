@@ -41,7 +41,7 @@ jobs:
       - name: Ergebnis pruefen
         shell: pwsh
         run: |
-          $out = 'publish/windows-x64'
+          $out = 'published/windows-x64'
           Get-ChildItem $out -File | ForEach-Object { '{0,10:N0} KB  {1}' -f ($_.Length / 1KB), $_.Name }
           # Neben der EXE liegen nur die Lizenztexte; Bibliotheken muessen in der EXE stecken.
           $binaries = Get-ChildItem $out -File | Where-Object { $_.Extension -in '.exe', '.dll' }
@@ -75,26 +75,19 @@ jobs:
           sudo apt-get install -y -qq desktop-file-utils zsync
           sudo apt-get install -y -qq libfuse2t64 || sudo apt-get install -y -qq libfuse2
 
-      - name: appimagetool bereitstellen
-        # publish.sh wuerde es sonst selbst laden; so ist es im Log getrennt sichtbar.
-        run: |
-          mkdir -p .tools
-          curl -fLsS -o .tools/appimagetool-x86_64.AppImage \
-            https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
-          chmod +x .tools/appimagetool-x86_64.AppImage
-
       - name: AppImage bauen
         env:
           APPIMAGE_EXTRACT_AND_RUN: '1'
-        run: bash publish.sh
+        # Mit Ziel aufrufen, sonst fragt das Skript nach; appimagetool laedt es selbst.
+        run: bash publish.sh linux
 
       - name: Ergebnis pruefen
         run: |
           shopt -s nullglob
-          files=(publish/linux-x64/*.AppImage)
+          files=(published/linux-x64/*.AppImage)
           if [ ${#files[@]} -ne 1 ]; then
             echo "Erwartet wurde genau eine AppImage, gefunden: ${#files[@]}"
-            ls -lR publish/linux-x64 || true
+            ls -lR published/linux-x64 || true
             exit 1
           fi
           ls -lh "${files[0]}"

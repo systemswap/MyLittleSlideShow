@@ -3,11 +3,14 @@
     Baut MyLittleSlideShow fuer Windows - Pendant zu publish.sh (Linux/AppImage).
 
 .DESCRIPTION
-    Ergebnis in publish\windows-x64\:
+    Ergebnis in published\windows-x64\:
         MyLittleSlideShow.exe     eine einzige Datei: Programm, .NET und alle Bibliotheken
         LICENSE.txt               eigene Lizenz (MIT)
         THIRD-PARTY-NOTICES.md    verwendete Fremdbestandteile
         licenses\                 deren Lizenztexte
+    dazu published\MyLittleSlideShow-<Version>-windows-x64.zip (aeltere Archive werden ersetzt).
+    Die EXE traegt keine Versionsnummer im Namen, damit ein Autostart-Eintrag nach dem
+    naechsten Bau weiter stimmt.
 
     Die Versionsnummer steht nur im csproj (<Version>).
 
@@ -26,11 +29,14 @@ $ErrorActionPreference = 'Stop'
 # Avalonias Build-Telemetrie ist im csproj abgeschaltet.
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $env:MSBUILD_TELEMETRY_OPTOUT    = '1'
+$env:AVALONIA_TELEMETRY_OPTOUT  = '1'
+$env:DO_NOT_TRACK               = '1'
 $env:DOTNET_NOLOGO               = '1'
 
 $Root    = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Project = Join-Path $Root 'src\MyLittleSlideShow\MyLittleSlideShow.csproj'
-$OutDir  = Join-Path $Root 'publish\windows-x64'
+$Published = Join-Path $Root 'published'
+$OutDir  = Join-Path $Published 'windows-x64'
 
 if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
     throw 'Das .NET SDK wurde nicht gefunden. Bitte SDK 10 installieren: https://dotnet.microsoft.com/download'
@@ -60,10 +66,14 @@ Get-ChildItem $OutDir -Filter *.pdb -File | Remove-Item -Force
 # Im Programm stehen sie zusaetzlich unter Einstellungen > Infos > Lizenzen.
 Copy-Item (Join-Path $Root 'LICENSE') (Join-Path $OutDir 'LICENSE.txt') -Force
 Copy-Item (Join-Path $Root 'THIRD-PARTY-NOTICES.md') $OutDir -Force
-Copy-Item (Join-Path $Root 'licenses') $OutDir -Recurse -Force
+Copy-Item (Join-Path $Root 'packaging\licenses') (Join-Path $OutDir 'licenses') -Recurse -Force
+
+Get-ChildItem $Published -Filter 'MyLittleSlideShow-*-windows-x64.zip' -File | Remove-Item -Force
+$archive = Join-Path $Published "MyLittleSlideShow-$version-windows-x64.zip"
+Compress-Archive -Path $OutDir -DestinationPath $archive
 
 Write-Host ''
 Get-ChildItem $OutDir -File | Sort-Object Length -Descending |
     ForEach-Object { '  {0,10:N0} KB  {1}' -f ($_.Length / 1KB), $_.Name }
 Write-Host ''
-Write-Host "Fertig: $OutDir\MyLittleSlideShow.exe" -ForegroundColor Green
+Write-Host "Fertig: $OutDir\MyLittleSlideShow.exe, $archive" -ForegroundColor Green
