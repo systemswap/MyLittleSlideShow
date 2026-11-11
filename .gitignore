@@ -5,8 +5,6 @@ obj/
 .vs/
 .idea/
 .vscode/
-publish/
+published/
 artifacts/
 *.nupkg
-publish/
-.tools/

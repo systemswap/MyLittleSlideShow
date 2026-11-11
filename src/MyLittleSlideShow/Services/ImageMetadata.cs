@@ -1,6 +1,5 @@
 namespace MyLittleSlideShow.Services;
 
-
 /// <summary>Abschnitte der Zusammenfassung, in Anzeigereihenfolge.</summary>
 public enum MetadataSection
 {

@@ -17,7 +17,7 @@ Git-Historie und im Changelog (`src/MyLittleSlideShow/Infos/Changelog.txt`).
   nur mit einem von Hand geprüften Eintrag für genau ihre Version erlaubt. Bringt
   ein Avalonia-Update eine neue ANGLE-Version mit, schlägt die Prüfung an: Lizenz
   in der `LICENSE` des Pakets ansehen, Eintrag in `REVIEWED` anpassen und
-  `licenses/` bzw. `THIRD-PARTY-NOTICES.md` nachziehen.
+  `packaging/licenses/` bzw. `THIRD-PARTY-NOTICES.md` nachziehen.
 
 ## Bilder
 

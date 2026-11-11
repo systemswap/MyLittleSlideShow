@@ -15,10 +15,7 @@ namespace MyLittleSlideShow.Services;
 /// Liest die Metadaten einer Bilddatei fuer das Info-Fenster: EXIF (mit GPS
 /// und Herstellerdaten), IPTC, XMP und das ICC-Profil. Einzige Stelle, die
 /// MetadataExtractor benutzt; der Rest der App arbeitet mit <see cref="ImageMetadata"/>.
-///
-///
-/// Deutsche Texte direkt, Bildmasse
-/// ueber Skia statt ImageMagick.
+/// Bildmasse kommen ueber Skia.
 /// </summary>
 /// <remarks>
 /// Metadaten stammen aus Dateien unbekannter Herkunft, deshalb ist das Ergebnis
