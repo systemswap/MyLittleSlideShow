@@ -27,8 +27,10 @@ Git-Historie und im Changelog (`src/MyLittleSlideShow/Infos/Changelog.txt`).
   beim Drehen nicht – dort wird das Originalprofil wieder ins JPEG geschrieben
   (`JpegMetadata.cs`, samt EXIF mit Orientierung 1).
 - Das Bild wird für genau die sichtbare Fläche in physischen Pixeln berechnet
-  (`MainWindow.ImageTargetSize`, Bitmap mit 96 dpi × Skalierung) – so wird es 1:1
-  angezeigt und die Schärfung nicht durch Nachskalieren abgeschwächt.
+  (`MainWindow.ImageTargetSize`); `ShowImage` verkleinert es um die
+  Bildschirmskalierung – so wird es 1:1 angezeigt und die Schärfung nicht durch
+  Nachskalieren abgeschwächt. Die Bitmap hat immer 96 dpi: mit 96 dpi ×
+  Skalierung zeichnet Avalonia 12 nur einen Ausschnitt (`docs/FEHLERGEDAECHTNIS.md`).
 - Formate: jpg, png, gif, bmp, webp. Kein TIFF (Skia dekodiert es nicht), GIF
   lässt sich nicht drehen (kein Encoder).
 - Dekodiert wird synchron auf dem UI-Thread; bei sehr großen Bildern wäre

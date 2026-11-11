@@ -32,13 +32,12 @@ public static class ImageProcessing
     /// </summary>
     /// <param name="maxWidth">Zielbreite in physischen Bildschirmpixeln.</param>
     /// <param name="maxHeight">Zielhoehe in physischen Bildschirmpixeln.</param>
-    /// <param name="scaling">Bildschirmskalierung (1 = 100 %, 1.5 = 150 %).</param>
     public static Bitmap LoadForDisplay(string path, int maxWidth, int maxHeight,
                                         bool sharpen, int sharpenValue,
-                                        int sharpenThreshold = 0, double scaling = 1)
+                                        int sharpenThreshold = 0)
     {
         using var resized = LoadResized(path, maxWidth, maxHeight);
-        return Render(resized, sharpen, sharpenValue, sharpenThreshold, scaling);
+        return Render(resized, sharpen, sharpenValue, sharpenThreshold);
     }
 
     /// <summary>
@@ -57,12 +56,10 @@ public static class ImageProcessing
 
     /// <summary>
     /// Kopiert das skalierte Bild in eine Avalonia-Bitmap und schaerft es dort.
-    /// Die Bitmap bekommt 96 dpi x Skalierung: so zeigt Avalonia jedes Pixel
-    /// auf genau einem Bildschirmpixel, auch bei 125 % oder 150 %.
     /// </summary>
     public static Bitmap Render(SKBitmap resized, bool sharpen, int sharpenValue,
-                                int sharpenThreshold = 0, double scaling = 1)
-        => ToAvaloniaBitmap(resized, sharpen ? sharpenValue : 0, sharpenThreshold, scaling);
+                                int sharpenThreshold = 0)
+        => ToAvaloniaBitmap(resized, sharpen ? sharpenValue : 0, sharpenThreshold);
 
     /// <summary>Bild aus den eingebetteten Avalonia-Ressourcen laden.</summary>
     public static Bitmap LoadAsset(string assetPath)
@@ -75,7 +72,7 @@ public static class ImageProcessing
     /// <summary>Eingebettete Ressource laden, skalieren und schaerfen (Standardhintergrund).</summary>
     public static Bitmap LoadAssetProcessed(string assetPath, int maxWidth, int maxHeight,
                                             bool sharpen, int sharpenValue,
-                                            int sharpenThreshold = 0, double scaling = 1)
+                                            int sharpenThreshold = 0)
     {
         using var stream = AssetLoader.Open(AssetUri(assetPath));
         using var buffer = new MemoryStream();
@@ -85,7 +82,7 @@ public static class ImageProcessing
         using (data)
         using (codec)
         using (var resized = SkiaImaging.LoadFitted(codec, maxWidth, maxHeight))
-            return Render(resized, sharpen, sharpenValue, sharpenThreshold, scaling);
+            return Render(resized, sharpen, sharpenValue, sharpenThreshold);
     }
 
     private static Uri AssetUri(string assetPath) =>
@@ -175,8 +172,15 @@ public static class ImageProcessing
     /// Kopiert die Skia-Pixel ohne Umweg ueber PNG direkt in eine
     /// Avalonia-Bitmap und schaerft dort im Speicher.
     /// </summary>
-    private static unsafe Bitmap ToAvaloniaBitmap(SKBitmap source, int sharpenValue, int sharpenThreshold,
-                                                  double scaling)
+    /// <remarks>
+    /// Immer 96 dpi, auch bei Bildschirmskalierung: Das Bild ist schon in
+    /// physischen Pixeln berechnet, ShowImage (Stretch Uniform) verkleinert es um
+    /// die Skalierung und zeigt so jedes Pixel auf einem Bildschirmpixel. Eine
+    /// Bitmap mit 96 dpi x Skalierung zeichnet Avalonia 12 nur zum Teil - es
+    /// erschien nur der linke obere Ausschnitt (docs/FEHLERGEDAECHTNIS.md,
+    /// "Bild nur als Ausschnitt").
+    /// </remarks>
+    private static unsafe Bitmap ToAvaloniaBitmap(SKBitmap source, int sharpenValue, int sharpenThreshold)
     {
         var converted = source.ColorType == SkiaImaging.ColorType && source.AlphaType == SkiaImaging.AlphaType
             ? null
@@ -187,7 +191,7 @@ public static class ImageProcessing
         {
             var writeable = new WriteableBitmap(
                 new PixelSize(pixels.Width, pixels.Height),
-                new Vector(96 * scaling, 96 * scaling),
+                new Vector(96, 96),
                 PixelFormat.Bgra8888,
                 AlphaFormat.Premul);
 

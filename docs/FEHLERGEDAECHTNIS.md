@@ -127,3 +127,35 @@ Commit-Kennungen gibt es hier nicht. Was davon heute gilt, steht im Eintrag
   `…/published/linux-x64/MyLittleSlideShow-x86_64.AppImage`; Autostart in der
   AppImage einschalten, dann muss `Exec` in
   `~/.config/autostart/mylittleslideshow.desktop` auf dieselbe Datei zeigen.
+
+## Bild nur als Ausschnitt (Bitmap mit 96 dpi × Skalierung)
+
+- **Entdeckt:** 2.3.2-beta (Commit `dd91f47`), vom Benutzer bemerkt.
+  **Eingeführt:** mit der Berechnung in physischen Pixeln (Commit `ab3958c`,
+  Fassung 2.2.0, damals Avalonia 11); ob es schon unter Avalonia 11 auftrat oder
+  erst mit Avalonia 12 (Commit `da326b3`), ist nicht geprüft. **Behoben:** 2.3.3-beta.
+- **Wie bemerkt:** Der Benutzer sah nur einen Ausschnitt der Bilder. Nachgestellt
+  mit einem erzeugten Testbild (roter Rand, vier verschiedenfarbige Ecken) und
+  einer Aufnahme des Fensters mit `xwd`: Zu sehen war nur das linke obere Viertel,
+  auch im unscharfen Hintergrund.
+- **Wo:** Linux unter GNOME/Wayland über XWayland, 4K-Bildschirm mit 150 % und ein
+  zweiter mit 100 %; XWayland meldet `Xft.dpi: 192`, Avalonia rechnet daher mit
+  Skalierung 2. Unter Windows mit 125 % oder 150 % ist dasselbe zu erwarten (dort
+  nicht geprüft). Unabhängig von Fenstergröße und Zoom.
+- **Was / warum:** Das Bild wird für die sichtbare Fläche in physischen Pixeln
+  berechnet und bekam als Auflösung 96 dpi × Skalierung, damit Avalonia es 1:1
+  zeigt. Avalonia 12 legt zwar die Größe des Image-Elements richtig aus
+  (Pixel ÷ Skalierung), zeichnet aus der Bitmap aber nur den Teil, der dieser
+  Größe in Pixeln entspricht – bei Skalierung 2 die Hälfte je Richtung.
+- **Lösung:** Die Bitmap bekommt immer 96 dpi. Sie ist weiter in physischen
+  Pixeln berechnet; `ShowImage` (Stretch Uniform) verkleinert sie um die
+  Skalierung, damit landet weiter jedes Pixel auf einem Bildschirmpixel. Der
+  Parameter `scaling` von `ImageProcessing.LoadForDisplay`/`Render`/
+  `LoadAssetProcessed` fiel weg. Verworfen: Breite und Höhe von `ShowImage`
+  ausdrücklich setzen – das hätte das Vergrößern beim Zoomen gestört.
+- **Nicht tun:** Bitmaps für die Anzeige eine andere Auflösung als 96 dpi geben.
+- **Wo im Code:** `Services/ImageProcessing.cs` (`ToAvaloniaBitmap`),
+  Aufrufer in `Views/MainWindow.axaml.cs`.
+- **Test:** kein automatischer. Von Hand: Testbild mit farbigen Ecken in einen
+  eigenen Ordner, Programm mit eigenem `XDG_CONFIG_HOME` starten, Fenster mit
+  `xwd -id <fenster>` aufnehmen – alle vier Ecken und der Rand müssen zu sehen sein.

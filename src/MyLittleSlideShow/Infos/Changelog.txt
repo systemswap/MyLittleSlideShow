@@ -163,3 +163,6 @@
 2.3.2-beta
 	#Changed - Infos-Fenster: die Reiter Versteckte Optionen, Changelog und Lizenzen stehen klein nebeneinander, der gewählte ist farbig hervorgehoben; lange Zeilen brechen um
 	#Fixed - Autostart und Neu starten im Tray zeigen bei der AppImage auf die AppImage-Datei selbst
+
+2.3.3-beta
+	#Fixed - Bilder wurden bei Bildschirmskalierung (z. B. 4K mit 150 %) nur als Ausschnitt angezeigt
