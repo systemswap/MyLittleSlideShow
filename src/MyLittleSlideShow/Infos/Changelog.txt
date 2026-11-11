@@ -159,3 +159,7 @@
 	#New - Einstellungen zweispaltig und deutlich niedriger; alle Dialoge passen auch auf kleine Laptop-Bildschirme (höchstens 85 % der Bildschirmhöhe)
 	#New - noch etwas schärfere Verkleinerung (Catmull-Rom statt Mitchell)
 	#Changed - Avalonia 12.1.6 und SkiaSharp 3.119.4
+
+2.3.2-beta
+	#Changed - Infos-Fenster: die Reiter Versteckte Optionen, Changelog und Lizenzen stehen klein nebeneinander, der gewählte ist farbig hervorgehoben; lange Zeilen brechen um
+	#Fixed - Autostart und Neu starten im Tray zeigen bei der AppImage auf die AppImage-Datei selbst
