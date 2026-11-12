@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Entfernt den Menüeintrag und das Symbol von ./einrichten.sh. Die AppImage,
-# die Bibliotheken in Tools/ und die Einstellungen (~/.config/MyLittleSlideShow)
+# Entfernt den Menüeintrag und das Symbol von ./einrichten.sh. Die AppImage
+# und die Einstellungen (~/.config/MyLittleSlideShow)
 # bleiben unberührt; einen Autostart-Eintrag schaltet man im Programm selbst aus.
 set -euo pipefail
 

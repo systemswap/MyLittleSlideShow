@@ -169,3 +169,6 @@
 
 2.3.4-beta
 	#Fixed - Doppelklick auf das Bild öffnet es wieder im Standard-Bildbetrachter, auch wenn Ordner- oder Dateiname Leerzeichen enthält (Linux)
+
+2.3.5-beta
+	#Changed - nicht mehr verwendete Bilder entfernt, die Programmdatei wird etwas kleiner
