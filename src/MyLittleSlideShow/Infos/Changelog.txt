@@ -172,3 +172,6 @@
 
 2.3.5-beta
 	#Changed - nicht mehr verwendete Bilder entfernt, die Programmdatei wird etwas kleiner
+
+2.4.0.0
+	#New - freigegebener Stand mit allen Änderungen aus 2.3.2-beta bis 2.3.5-beta
