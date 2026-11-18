@@ -185,3 +185,30 @@ Commit-Kennungen gibt es hier nicht. Was davon heute gilt, steht im Eintrag
   `ShellService.OpenFile` für eine Datei in einem Ordner mit Leerzeichen aufruft;
   davor im `PATH` ein Ersatz-`xdg-open`, das seine Argumente aufschreibt: vorher
   vier Bruchstücke, jetzt genau ein vollständiger Pfad.
+
+## Historie: Mitautor-Zeilen, persönliche Angaben und automatische Abläufe
+
+- **Entdeckt:** 2.4.1-beta, vom Benutzer bemerkt: GitHub zeigte neben dem eigenen
+  Konto zwei weitere Contributors – ein KI-Werkzeug und Dependabot.
+  **Bereinigt:** 2.4.2-beta (Historie umgeschrieben am 19.11.2026).
+- **Was:** 15 ältere Commits trugen Mitautor-Zeilen eines KI-Werkzeugs, vier
+  Commits stammten von Dependabot (übernommene Aktualisierungen der
+  Workflow-Bausteine) – GitHub zählt beides als Contributor. Außerdem trugen
+  44 ältere Commits persönliche Autorenangaben, die Programmdateien der WPF-Fassung
+  Name und Firma, die ältesten Stände der Spendenfunktion eine frühere
+  E-Mail-Adresse, und einige Kommentare und Nachrichten nannten ein anderes Projekt.
+- **Warum:** Die Commits entstanden, bevor die Arbeitsregeln (`docs/ARBEITSREGELN.md`)
+  galten, teils auf einem anderen Rechner.
+- **Lösung:** Historie aller Zweige und Tags mit `git filter-branch` umgeschrieben:
+  Mitautor-Zeilen entfernt, Autor und Committer aller Commits neutral
+  (`MyLittleSlideShow <mylittleslideshow@localhost>`), Name und Firma entfernt,
+  frühere Spendenadresse durch die heutige ersetzt, Verweise auf das andere Projekt
+  gestrichen. Nachweis: Dateibaum des aktuellen Stands unverändert, jeder alte
+  Commit mit seinem neuen verglichen – geändert sind nur Zeilen mit den ersetzten
+  Begriffen. Eine Sicherung der alten Historie liegt als Bundle im lokalen
+  Testordner. Zugleich Dependabot-Hinweise und die Lizenzprüfung im Workflow
+  entfernt; der Workflow baut nur noch Linux und Windows und legt beim Tag das
+  Release an.
+- **Nicht tun:** Mitautor-Zeilen von Werkzeugen in Commit-Nachrichten übernehmen;
+  mit persönlicher Git-Identität committen; Dependabot wieder einschalten.
+- **Folge:** Jeder andere Klon muss nach dem Hochladen neu geklont werden.
