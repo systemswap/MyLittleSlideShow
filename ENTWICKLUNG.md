@@ -59,3 +59,49 @@ werden ausgeblendet.
 | Papierkorb | `SHFileOperation` | `gio trash`, sonst freedesktop-Trash-Spec |
 
 Unter Linux hängt die Transparenz des rahmenlosen Fensters vom Compositor ab.
+
+## Release auf GitHub
+
+1. `<Version>` in `src/MyLittleSlideShow/MyLittleSlideShow.csproj` anheben –
+   die einzige Stelle mit der Versionsnummer – und `Infos/Changelog.txt` ergänzen.
+2. Committen und auf `main` pushen. Der Workflow baut Windows und Linux zur Probe
+   und prüft die Lizenzen.
+3. Nur bei einem abgenommenen Meilenstein (Version ohne `-beta`, siehe
+   `docs/ARBEITSREGELN.md`): `git tag vX.Y.Z && git push origin vX.Y.Z` – der
+   Workflow baut erneut und legt das Release mit EXE und AppImage an. Passt das
+   Tag nicht zur Version im csproj, bricht er ab.
+
+Sicherheitsupdates für Pakete schlägt Dependabot automatisch als Pull Request vor.
+
+## Projektstruktur
+
+```
+src/MyLittleSlideShow/
+├── Program.cs, App.axaml       Start, Tray-Icon
+├── Views/
+│   ├── MainWindow              Diaschau-Fenster, Platzierung auf dem Bildschirm
+│   ├── SettingsWindow          Einstellungen mit Live-Vorschau
+│   ├── InfoWindow              Dateiinfos (EXIF, IPTC, XMP, ICC)
+│   ├── AboutWindow             Changelog, versteckte Optionen, Lizenzen
+│   ├── MyMessageBox            Ja/Nein-Dialog
+│   └── ScreenFit.cs            Dialoge passen immer auf den Bildschirm
+├── Themes/FineTheme.axaml      gemeinsames Design der Dialoge
+├── Services/
+│   ├── SkiaImaging.cs          Bildkern: dekodieren, skalieren, schärfen, kodieren
+│   ├── ImageProcessing.cs      Bildfunktionen für die Oberfläche
+│   ├── JpegMetadata.cs         EXIF/ICC beim Drehen übernehmen
+│   ├── ImageMetadataReader.cs  Dateiinfos (EXIF, IPTC, XMP, ICC)
+│   └── SettingsManager.cs      JSON-Einstellungen
+└── Platform/                   Windows/Linux: Hintergrund, Autostart, Papierkorb, Standby
+packaging/linux/                Menüeintrag, Symbol, einrichten.sh / entfernen.sh
+packaging/licenses/             Lizenztexte der Fremdbestandteile
+tools/check-licenses.py         Lizenzprüfung im Workflow
+docs/                           Fehlergedächtnis, Arbeitsregeln
+```
+
+## Bilder der Startseite
+
+`docs/bilder/readme/` enthält Banner, Höhepunkte und Fensteraufnahmen für die
+README. Sie sind unsichtbar mit Avalonia Headless gerendert, die Beispielmotive
+selbst gezeichnet – keine echten Fotos, keine persönlichen Pfade (im
+Einstellungsfenster steht ein neutraler Beispielpfad).

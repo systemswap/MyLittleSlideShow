@@ -1,102 +1,147 @@
-# MyLittleSlideShow
+<p align="center">
+  <img src="docs/bilder/readme/banner.png" width="100%" alt="MyLittleSlideShow – Ihre Fotos verdienen mehr als einen Ordner. Eine kleine Diashow für den Desktop, scharf, farbtreu und ganz nebenbei. Für Linux und Windows, ohne Telemetrie.">
+</p>
 
-Kleine Diaschau für den Desktop – .NET 10 und Avalonia 12, läuft auf
-**Windows** und **Linux** aus derselben Codebasis.
+<p align="center">
+  <img src="https://img.shields.io/badge/Linux%20%7C%20Windows-1f232b?style=flat-square" alt="Linux und Windows">
+  <img src="https://img.shields.io/badge/UI-Avalonia-1f232b?style=flat-square" alt="Oberfläche: Avalonia">
+  <img src="https://img.shields.io/badge/.NET-10-1f232b?style=flat-square" alt=".NET 10">
+  <img src="https://img.shields.io/badge/Telemetrie-keine-1f232b?style=flat-square" alt="Keine Telemetrie">
+  <img src="https://img.shields.io/badge/Lizenz-MIT-1f232b?style=flat-square" alt="Lizenz: MIT">
+</p>
 
-## Bauen und starten
+<h3 align="center">Tausende Fotos auf der Platte – und wann haben Sie sie zuletzt angesehen?</h3>
 
-Voraussetzung: .NET 10 SDK.
+<p align="center">
+  MyLittleSlideShow holt sie zurück auf den Desktop: ein kleines Fenster, das Bild für Bild durch Ihren Ordner blättert.<br>
+  Unaufdringlich, wunderschön scharf – und so einfach, dass man es nach einer Minute vergisst. Bis das nächste Lieblingsfoto kommt.
+</p>
 
-```bash
-dotnet run --project src/MyLittleSlideShow
-```
+---
 
-## Veröffentlichen
+## Ein Fenster voller Erinnerungen
 
-| System | Befehl | Ergebnis |
-|---|---|---|
-| Linux | `./publish.sh linux` | `published/linux-x64/MyLittleSlideShow-x86_64.AppImage` – eine Datei, .NET und Avalonia enthalten |
-| Windows (unter Linux gebaut) | `./publish.sh windows` | `published/windows-x64/MyLittleSlideShow.exe` – eine Datei |
-| Windows (unter Windows gebaut) | `.\publish.ps1` | `published\windows-x64\MyLittleSlideShow.exe` |
+<p align="center">
+  <img src="docs/bilder/readme/hauptfenster.png" width="860" alt="Das Diashow-Fenster mit einem Abendrot über einem See, rechts und links der weiche Lichtrahmen, unten die eingeblendete Bedienleiste">
+</p>
 
-`./publish.sh` ohne Argumente fragt nach Paketform (eine Datei oder alle
-Bibliotheken einzeln) und Ziel (Linux, Windows, beides). Neben dem Programm
-liegen jeweils `LICENSE.txt`, `THIRD-PARTY-NOTICES.md` und `licenses/`, daneben
-die Archive `published/MyLittleSlideShow-<Version>-linux-x64.tar.gz` bzw.
-`-windows-x64.zip`. Die Programmdatei trägt keine Versionsnummer, damit
-Menü- und Autostart-Eintrag nach dem nächsten Bau weiter stimmen.
+**Was Sie sehen:** das Diashow-Fenster, ganz ohne Rahmen und Titelleiste. Rechts und links schimmert der AmbiFrame – ein
+weicher Schein in den Farben des Bildes. Die Bedienleiste erscheint nur, solange die Maus über dem Fenster ist: vor,
+zurück, anhalten, Dateiinfos, als Hintergrund setzen, löschen, drehen, Einstellungen.
 
-Unter Linux trägt `publish.sh` das Programm danach ins Anwendungsmenü ein
-(`published/linux-x64/einrichten.sh`, rückgängig mit `entfernen.sh`).
+---
 
-## Release auf GitHub
+> **Warum es MyLittleSlideShow gibt.** Unter Windows 7 gab es sie noch: die kleinen Minianwendungen auf dem Desktop,
+> darunter eine Diashow, die still in der Ecke lief. Ab und zu fiel der Blick darauf – und plötzlich war er wieder da,
+> der Sommerurlaub von vor zehn Jahren, der erste Schnee im Garten, ein Lachen, das man fast vergessen hatte. Mit
+> Windows 10 verschwanden die Minianwendungen, und mit ihnen diese kleinen Momente.
+>
+> Dabei sind es genau die Fotos, die man sonst nie wieder ansieht. Sie liegen gut sortiert in Ordnern, Jahr für Jahr,
+> und warten. MyLittleSlideShow holt sie dort heraus und schenkt ihnen wieder einen Platz auf dem Desktop – heute für
+> Windows und Linux, schärfer und farbtreuer als je zuvor. Schauen Sie zwischendurch einfach hin. Es lohnt sich.
 
-1. `<Version>` in `src/MyLittleSlideShow/MyLittleSlideShow.csproj` anheben –
-   die einzige Stelle mit der Versionsnummer – und `Infos/Changelog.txt` ergänzen.
-2. Committen und auf `main` pushen. Der Workflow baut Windows und Linux zur Probe
-   und prüft die Lizenzen.
-3. `git tag vX.Y.Z && git push origin vX.Y.Z` – der Workflow baut erneut und
-   legt das Release mit EXE und AppImage an. Passt das Tag nicht zur Version im
-   csproj, bricht er ab.
+---
 
-Sicherheitsupdates für Pakete schlägt Dependabot automatisch als Pull Request vor.
+## Höhepunkte
 
-## Laufzeitabhängigkeiten unter Linux
+<p align="center">
+  <img src="docs/bilder/readme/hoehepunkte.png" width="100%" alt="Sechs Höhepunkte: Läuft einfach nebenher. Schärfer als nur verkleinert. Farbtreu statt blass. Ein Rahmen aus Licht. Auch als Desktophintergrund. Bleibt bei Ihnen.">
+</p>
+
+**Warum die Bilder so gut aussehen:** Ein Foto einfach auf die Fenstergröße zu schrumpfen, kostet Schärfe.
+MyLittleSlideShow rechnet jedes Bild genau für die sichtbare Fläche in echten Bildschirmpixeln, auch bei
+125 % oder 150 % Skalierung, und schärft es danach behutsam nach. Fotos mit Farbprofil werden richtig umgerechnet, statt
+blass zu wirken.
+
+---
+
+## So einfach geht's
+
+1. **Ordner wählen** – in den Einstellungen, auf Wunsch mit allen Unterordnern.
+2. **Tempo festlegen** – von 5 Sekunden bis 24 Stunden, der Reihe nach oder zufällig.
+3. **Zurücklehnen.** Fertig. Auf Wunsch startet die Diashow beim Anmelden von selbst.
+
+<p align="center">
+  <img src="docs/bilder/readme/einstellungen.png" width="860" alt="Das Einstellungsfenster im dunklen Design: Allgemein, Darstellung mit Schärfe und AmbiFrame, Diaschau, Desktophintergrund und Bilderordner">
+</p>
+
+Alles auf einer Seite – und mit Live-Vorschau: Wer am Regler für Schärfe oder Lichtrahmen dreht, sieht das Ergebnis sofort
+im Diashow-Fenster.
+
+### Kleine Handgriffe
+
+| Sie tun | Es passiert |
+|---|---|
+| Mausrad über dem Bild | nächstes oder vorheriges Bild |
+| Strg + Mausrad oder rechte Maustaste + Mausrad | Fenster größer oder kleiner |
+| Doppelklick auf das Bild | das Original öffnet sich im Standard-Bildbetrachter |
+| Fenster mit der Maus ziehen | an eine andere Stelle schieben |
+
+Für Strg + Mausrad muss das Fenster einmal angeklickt sein. Das Fenster bleibt immer ganz sichtbar – auch wenn der zweite
+Bildschirm abgezogen wird.
+
+### Und alles, was man nebenbei braucht
+
+- **Symbol in der Leiste** zum Anzeigen, Minimieren, Neustarten und Beenden.
+- **Bildschirm bleibt an**, solange die Diashow läuft – auf Wunsch.
+- **Drehen um 90°** direkt in der Datei; bei JPEG bleiben EXIF-Daten und Farbprofil erhalten.
+- **In den Papierkorb** statt endgültig löschen.
+- **Dateiinfos** zu jedem Bild: Kamera, Aufnahme, Ort, Urheber und Farbprofil aus EXIF, IPTC und XMP.
+- **Formate:** JPEG, PNG, GIF, BMP und WebP.
+
+---
+
+## Loslegen
+
+Fertige Programme stehen unter [Releases](../../releases):
+
+- **Linux:** `MyLittleSlideShow-<Version>-x86_64.AppImage` herunterladen, ausführbar machen (`chmod +x`) und starten.
+  AppImages brauchen FUSE 2 (Debian/Ubuntu: `sudo apt install libfuse2t64`, Fedora: `sudo dnf install fuse-libs`).
+- **Windows:** `MyLittleSlideShow-<Version>-win-x64.exe` starten.
+
+Keine Installation, kein Konto: Beides ist eine einzige Datei, .NET ist schon enthalten.
+
+<details>
+<summary><b>Selbst bauen</b></summary>
+
+    ./publish.sh            # fragt nach Paketform und Ziel
+    ./publish.sh linux      # ohne Rückfrage, danach steht das Programm im Anwendungsmenü
+
+Unter Windows: `.\publish.ps1`. Benötigt das .NET SDK 10; die fertigen Programme liegen danach in `published/`.
+Zum Ausprobieren ohne Paket: `dotnet run --project src/MyLittleSlideShow`.
+</details>
+
+<details>
+<summary><b>Was unter Linux gebraucht wird</b></summary>
 
 | Funktion | Benötigt | Fällt zurück auf |
 |---|---|---|
-| Hintergrundbild | `gsettings` (GNOME/Cinnamon/MATE), `plasma-apply-wallpaperimage` (KDE), `xfconf-query` (XFCE) | `feh` |
+| Hintergrundbild | `gsettings` (GNOME, Cinnamon, MATE), `plasma-apply-wallpaperimage` (KDE), `xfconf-query` (Xfce) | `feh` |
 | Papierkorb | `gio` (glib2) | `trash-put`, sonst eigene Umsetzung der freedesktop-Trash-Spec |
-| Standby verhindern | `systemd-inhibit` | `xdg-screensaver reset` |
-| Datei/Ordner öffnen | `xdg-open` (xdg-utils) | – |
-| Tray-Icon | StatusNotifierItem; unter GNOME die Erweiterung *AppIndicator and KStatusNotifierItem Support* | – |
+| Bildschirm an lassen | `systemd-inhibit` | `xdg-screensaver reset` |
+| Datei oder Ordner öffnen | `xdg-open` (xdg-utils) | – |
+| Symbol in der Leiste | StatusNotifierItem; unter GNOME die Erweiterung *AppIndicator and KStatusNotifierItem Support* | – |
 
-Fehlt ein Werkzeug, wird die betroffene Schaltfläche ausgeblendet – die App startet trotzdem.
+Fehlt ein Werkzeug, wird nur der betroffene Knopf ausgeblendet – die Diashow startet trotzdem.
 
-## Einstellungen
+Die Einstellungen liegen unter `~/.config/MyLittleSlideShow/settings.json` (Windows: `%APPDATA%\MyLittleSlideShow\settings.json`).
+</details>
 
-- Windows: `%APPDATA%\MyLittleSlideShow\settings.json`
-- Linux: `~/.config/MyLittleSlideShow/settings.json`
+---
 
-## Projektstruktur
+## Lizenz
 
-```
-src/MyLittleSlideShow/
-├── Program.cs, App.axaml       Start, Tray-Icon
-├── Views/
-│   ├── MainWindow              Diaschau-Fenster, Platzierung auf dem Bildschirm
-│   ├── SettingsWindow          Einstellungen mit Live-Vorschau
-│   ├── InfoWindow              Dateiinfos (EXIF, IPTC, XMP, ICC)
-│   ├── AboutWindow             Changelog, versteckte Optionen, Lizenzen
-│   ├── MyMessageBox            Ja/Nein-Dialog
-│   └── ScreenFit.cs            Dialoge passen immer auf den Bildschirm
-├── Themes/FineTheme.axaml      gemeinsames Design der Dialoge
-├── Services/
-│   ├── SkiaImaging.cs          Bildkern: dekodieren, skalieren, schärfen, kodieren
-│   ├── ImageProcessing.cs      Bildfunktionen für die Oberfläche
-│   ├── JpegMetadata.cs         EXIF/ICC beim Drehen übernehmen
-│   ├── ImageMetadataReader.cs  Dateiinfos (EXIF, IPTC, XMP, ICC)
-│   └── SettingsManager.cs      JSON-Einstellungen
-└── Platform/                   Windows/Linux: Hintergrund, Autostart, Papierkorb, Standby
-packaging/linux/                Menüeintrag, Symbol, einrichten.sh / entfernen.sh
-packaging/licenses/             Lizenztexte der Fremdbestandteile
-tools/check-licenses.py         Lizenzprüfung im Workflow
-docs/                           Fehlergedächtnis, Arbeitsregeln
-```
+MyLittleSlideShow steht unter der [MIT-Lizenz](LICENSE): frei nutzen, weitergeben und verändern. Alle fremden Bestandteile
+stehen unter freien Lizenzen – Übersicht in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), im Programm unter
+*Einstellungen › Infos › Lizenzen*.
 
-## Lizenz und Telemetrie
+Das Programm sendet nichts – keine Nutzungsdaten, keine Absturzberichte. Auch beim Bauen ist die Telemetrie von .NET,
+MSBuild und Avalonia abgeschaltet.
 
-MyLittleSlideShow steht unter der [MIT-Lizenz](LICENSE). Alle Fremdbestandteile
-stehen unter freien Lizenzen (MIT, Apache-2.0, BSD-3-Clause, OFL-1.1) – Übersicht
-in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), im Programm unter
-*Einstellungen › Infos › Lizenzen*. Ändert ein Paket seine Lizenz, schlägt der
-Build fehl (`tools/check-licenses.py`).
+Gefällt Ihnen MyLittleSlideShow, freut sich der Entwickler über eine Spende – der Knopf „Spenden“ unten links in den
+Einstellungen.
 
-Das Programm sendet nichts. Beim Bauen ist Telemetrie ebenfalls aus: Avalonias
-Build-Telemetrie im csproj, .NET-CLI und MSBuild über
-`DOTNET_CLI_TELEMETRY_OPTOUT` / `MSBUILD_TELEMETRY_OPTOUT` in den Skripten und
-im Workflow. Für eigene `dotnet`-Aufrufe einmalig dauerhaft setzen:
-`setx DOTNET_CLI_TELEMETRY_OPTOUT 1` und `setx MSBUILD_TELEMETRY_OPTOUT 1`.
+Hinweise zum Weiterentwickeln: [ENTWICKLUNG.md](ENTWICKLUNG.md), Regeln für die Arbeit am Projekt:
+[docs/ARBEITSREGELN.md](docs/ARBEITSREGELN.md).
 
-Hinweise zum Weiterentwickeln: [ENTWICKLUNG.md](ENTWICKLUNG.md), Regeln für die
-Arbeit am Projekt: [docs/ARBEITSREGELN.md](docs/ARBEITSREGELN.md).
+<sub>Alle Bilder zeigen selbst gezeichnete Beispielmotive. Schrift der Grafiken: Inter (SIL Open Font License).</sub>
