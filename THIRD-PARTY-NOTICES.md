@@ -5,10 +5,7 @@ Programm werden Bestandteile anderer Projekte weitergegeben; ihre Rechte
 liegen bei den jeweiligen Autoren. Hier steht, was dabei ist, unter welcher
 Lizenz es steht und wo der Lizenztext liegt.
 
-Alle Bestandteile stehen unter freien Lizenzen ohne Nutzungsgebühr. Der
-Workflow prüft das bei jedem Build (`tools/check-licenses.py`): kommt ein Paket
-mit einer anderen Lizenz hinzu oder ändert ein Paket seine Lizenz, schlägt der
-Build fehl.
+Alle Bestandteile stehen unter freien Lizenzen ohne Nutzungsgebühr.
 
 ## Im Programm (MyLittleSlideShow.exe bzw. AppImage)
 

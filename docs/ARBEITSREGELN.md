@@ -94,7 +94,7 @@ Repository, aus Foren oder Artikeln, fremde Daten oder Schriften):
 
 Vorher die Lizenz prüfen. GPL/AGPL, „nur privat“, „nicht kommerziell“,
 CC BY-SA (z. B. Stack Overflow) oder unklar: erst klären, nicht einbauen.
-`tools/check-licenses.py` prüft die Pakete im Workflow.
+Bei jedem Paket-Update die Lizenzen der neuen Versionen von Hand ansehen.
 
 ## Bauen
 

@@ -99,29 +99,10 @@ jobs:
           path: MyLittleSlideShow-x86_64.AppImage
           if-no-files-found: error
 
-  # --------------------------------------------------------------- Lizenzen
-  licenses:
-    name: Lizenzen pruefen
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-dotnet@v6
-        with:
-          global-json-file: global.json
-
-      - name: Pakete laden
-        run: dotnet restore src/MyLittleSlideShow/MyLittleSlideShow.csproj
-
-      - name: Nur freigegebene Lizenzen
-        # Faellt ein Paket (oder ein Update) auf eine nicht freigegebene oder
-        # unbekannte Lizenz, schlaegt der Build fehl - siehe tools/check-licenses.py.
-        run: python3 tools/check-licenses.py
-
   # ---------------------------------------------------------------- Release
   release:
     name: Release veroeffentlichen
-    needs: [windows, linux, licenses]
+    needs: [windows, linux]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:

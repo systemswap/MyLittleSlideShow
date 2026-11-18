@@ -13,11 +13,10 @@ Git-Historie und im Changelog (`src/MyLittleSlideShow/Infos/Changelog.txt`).
 - **Avalonia.BuildServices** steht nur im csproj, um Avalonias Build-Telemetrie
   per `ExcludeAssets="all"` abzuschalten. Die Version muss der von Avalonia
   geforderten entsprechen, sonst bricht `restore` mit NU1605 ab.
-- **Lizenzprüfung** (`tools/check-licenses.py`): Pakete ohne SPDX-Kennung sind
-  nur mit einem von Hand geprüften Eintrag für genau ihre Version erlaubt. Bringt
-  ein Avalonia-Update eine neue ANGLE-Version mit, schlägt die Prüfung an: Lizenz
-  in der `LICENSE` des Pakets ansehen, Eintrag in `REVIEWED` anpassen und
-  `packaging/licenses/` bzw. `THIRD-PARTY-NOTICES.md` nachziehen.
+- **Lizenzen bei jedem Update von Hand prüfen:** Neue oder geänderte Pakete
+  (auch indirekt mitkommende wie ANGLE mit Avalonia) in ihrer `.nuspec` bzw.
+  `LICENSE` ansehen und `packaging/licenses/` sowie `THIRD-PARTY-NOTICES.md`
+  nachziehen.
 
 ## Bilder
 
@@ -64,14 +63,11 @@ Unter Linux hängt die Transparenz des rahmenlosen Fensters vom Compositor ab.
 
 1. `<Version>` in `src/MyLittleSlideShow/MyLittleSlideShow.csproj` anheben –
    die einzige Stelle mit der Versionsnummer – und `Infos/Changelog.txt` ergänzen.
-2. Committen und auf `main` pushen. Der Workflow baut Windows und Linux zur Probe
-   und prüft die Lizenzen.
+2. Committen und auf `main` pushen. Der Workflow baut Windows und Linux zur Probe.
 3. Nur bei einem abgenommenen Meilenstein (Version ohne `-beta`, siehe
    `docs/ARBEITSREGELN.md`): `git tag vX.Y.Z && git push origin vX.Y.Z` – der
    Workflow baut erneut und legt das Release mit EXE und AppImage an. Passt das
    Tag nicht zur Version im csproj, bricht er ab.
-
-Sicherheitsupdates für Pakete schlägt Dependabot automatisch als Pull Request vor.
 
 ## Projektstruktur
 
@@ -95,7 +91,6 @@ src/MyLittleSlideShow/
 └── Platform/                   Windows/Linux: Hintergrund, Autostart, Papierkorb, Standby
 packaging/linux/                Menüeintrag, Symbol, einrichten.sh / entfernen.sh
 packaging/licenses/             Lizenztexte der Fremdbestandteile
-tools/check-licenses.py         Lizenzprüfung im Workflow
 docs/                           Fehlergedächtnis, Arbeitsregeln
 ```
 
