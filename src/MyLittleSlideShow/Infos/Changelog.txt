@@ -184,3 +184,6 @@
 	#New - mehrsprachig: Deutsch und Englisch eingebaut, Auswahl mit Flaggen in den Einstellungen unter Sprache; die Sprache wechselt sofort
 	#New - weitere Sprachen als Datei im Ordner languages neben dem Programm; Beispieldatei mit allen Texten per Knopfdruck
 	#Changed - Spenden-Knopf im Hauptfenster als kleine goldene Pille nur mit Herz (Text im Tooltip)
+
+2.5.0.0
+	#New - freigegebener Stand mit allen Änderungen aus 2.4.1-beta und 2.4.2-beta
