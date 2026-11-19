@@ -244,7 +244,7 @@ public partial class SettingsWindow : Window
     private void Cancel_Click(object? sender, RoutedEventArgs e) => Close();
 
     private void Donate_Click(object? sender, RoutedEventArgs e)
-        => PlatformServices.Current.Shell.OpenUrl(Donation.BuildPayPalUrl(Donation.Language.De));
+        => PlatformServices.Current.Shell.OpenUrl(Donation.Address);
 
     private void Info_Click(object? sender, RoutedEventArgs e)
         => new AboutWindow().ShowDialog(this);

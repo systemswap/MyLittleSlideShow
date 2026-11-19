@@ -39,8 +39,8 @@ Testdaten, Screenshots oder gebaute Programme:
 - Bilder, die ins Repository kommen, auf Metadaten (EXIF, Autor) und sichtbare
   Pfade prüfen.
 
-**Ausnahme:** Die PayPal-Empfängeradresse in `Services/Donation.cs` gehört zur
-Spendenfunktion und bleibt.
+**Ausnahme:** Die Ko-fi-Adresse der Spendenseite in `Services/Donation.cs`
+gehört zur Spendenfunktion und bleibt.
 
 Ältere Commits auf GitHub tragen noch persönliche Autorenangaben. Die Historie
 wird nur auf ausdrücklichen Wunsch umgeschrieben (Force-Push).

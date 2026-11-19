@@ -53,7 +53,7 @@ Copyright-Vermerk des Projekts:
 ## Netzzugriffe
 
 MyLittleSlideShow sendet keine Nutzungsdaten und baut selbst keine
-Netzverbindung auf. Nur der Knopf „Spenden“ öffnet die PayPal-Seite im
+Netzverbindung auf. Nur der Knopf „Spenden“ öffnet die Spendenseite auf Ko-fi im
 Browser. Auch beim Bauen ist Telemetrie abgeschaltet: .NET-CLI und MSBuild
 über `DOTNET_CLI_TELEMETRY_OPTOUT` / `MSBUILD_TELEMETRY_OPTOUT` in den
 Publish-Skripten und im Workflow, Avalonia wie oben beschrieben.

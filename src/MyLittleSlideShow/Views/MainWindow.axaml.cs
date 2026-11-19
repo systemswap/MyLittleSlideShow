@@ -104,6 +104,29 @@ public partial class MainWindow : Window
         PointerPressed += OnWindowPointerPressed;
         PointerMoved += OnWindowPointerMoved;
         PointerExited += OnWindowPointerExited;
+
+        DonateHost.SizeChanged += (_, e) => UpdateDonateButton(e.NewSize.Width);
+    }
+
+    // ---------------------------------------------------------------- Spenden
+
+    private void Donate_Click(object? sender, RoutedEventArgs e)
+        => PlatformServices.Current.Shell.OpenUrl(Donation.Address);
+
+    /// <summary>
+    /// Der freie Raum zwischen "naechstes Bild" und Lupe waechst mit der Fensterbreite.
+    /// Mit Beschriftung, wenn sie passt, sonst nur das Herz; passt nicht einmal das,
+    /// bleibt der Knopf weg statt die Nachbarn zu ueberdecken.
+    /// </summary>
+    private void UpdateDonateButton(double hostWidth)
+    {
+        // Feste Breiten der Pille (mit Beschriftung / nur Herz) statt Messen
+        // waehrend des Layouts - damit verschwand der Knopf, obwohl Platz war.
+        const double gap = 6, withLabel = 70, heartOnly = 30;
+        var available = hostWidth - 2 * gap;
+
+        DonateLabel.IsVisible = available >= withLabel;
+        DonateButton.IsVisible = available >= heartOnly;
     }
 
     // ------------------------------------------------------------------ Start

@@ -76,6 +76,21 @@
                  PointerPressed="Next_PointerPressed"
                  PointerWheelChanged="Next_PointerWheelChanged" />
 
+          <!-- Spenden als Pille, mittig im freien Raum zwischen "naechstes Bild" und
+               Lupe. Reicht der Platz nicht fuer die Beschriftung, bleibt nur das Herz
+               (UpdateDonateButton). -->
+          <Panel x:Name="DonateHost" Grid.Column="4">
+            <Button x:Name="DonateButton" Classes="donate"
+                    Height="20" MinHeight="0" FontSize="10" Padding="8,0" CornerRadius="10"
+                    HorizontalAlignment="Center"
+                    Click="Donate_Click">
+              <StackPanel Orientation="Horizontal" Spacing="3">
+                <TextBlock Classes="heart" FontSize="13" />
+                <TextBlock x:Name="DonateLabel" Classes="label" />
+              </StackPanel>
+            </Button>
+          </Panel>
+
           <Image x:Name="ZoomImage" Grid.Column="5" Classes="toolButton"
                  ToolTip.Tip="Größe ändern: links = größer, rechts = kleiner"
                  PointerPressed="Zoom_PointerPressed" />
@@ -132,6 +147,8 @@
   </Border>
 
   <Window.Styles>
+    <StyleInclude Source="/Themes/DonateButton.axaml" />
+
     <Style Selector="Image.toolButton">
       <Setter Property="Width" Value="22" />
       <Setter Property="Height" Value="22" />

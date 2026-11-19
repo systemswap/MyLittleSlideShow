@@ -13,6 +13,7 @@
 
   <Window.Styles>
     <StyleInclude Source="/Themes/FineTheme.axaml" />
+    <StyleInclude Source="/Themes/DonateButton.axaml" />
 
     <!-- In der schmaleren Spalte etwas kuerzere Regler -->
     <Style Selector="Slider">
@@ -40,7 +41,13 @@
             Background="{DynamicResource Fine.CardBackground}"
             Padding="18,12,24,12">
       <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
-        <Button Grid.Column="0" Classes="subtle" Content="Spenden" Click="Donate_Click" />
+        <Button Grid.Column="0" Classes="donate" Padding="12,0" Height="28" Margin="0,0,8,0"
+                Click="Donate_Click">
+          <StackPanel Orientation="Horizontal" Spacing="5">
+            <TextBlock Classes="heart" FontSize="17" />
+            <TextBlock Classes="label" />
+          </StackPanel>
+        </Button>
         <Button Grid.Column="1" Classes="subtle" Content="Infos" Click="Info_Click" />
         <Button Grid.Column="3" Content="Abbrechen" Click="Cancel_Click"
                 IsCancel="True" Margin="0,0,8,0" />

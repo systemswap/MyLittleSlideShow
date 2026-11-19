@@ -175,3 +175,7 @@
 
 2.4.0.0
 	#New - freigegebener Stand mit allen Änderungen aus 2.3.2-beta bis 2.3.5-beta
+
+2.4.1-beta
+	#New - goldener Spenden-Knopf im Hauptfenster (mittig zwischen „nächstes Bild“ und Lupe; bei schmalem Fenster nur das Herz) und links in den Einstellungen
+	#Changed - Spenden über Ko-fi statt PayPal

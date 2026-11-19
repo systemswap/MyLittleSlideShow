@@ -1,0 +1,61 @@
+<!-- Spenden-Knopf (Hauptfenster und Einstellungen): goldener Glasknopf. Die harte
+     Farbstufe in der Mitte macht den Glanz - oben hell, darunter dunkler und nach
+     unten wieder heller wie eine gewoelbte Flaeche. Schrift schwarz, Herz rot
+     (zwei TextBlocks, ein Button hat nur eine Schriftfarbe); in hellem und dunklem
+     Design gleich. -->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style Selector="Button.donate">
+    <Setter Property="Foreground" Value="Black" />
+    <Setter Property="BorderBrush" Value="#C8940B" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="ToolTip.Tip" Value="MyLittleSlideShow unterstützen – öffnet die Spendenseite auf Ko-fi im Browser" />
+  </Style>
+  <Style Selector="Button.donate /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="BorderBrush" Value="#C8940B" />
+    <Setter Property="Background">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#FFF3BE" />
+        <GradientStop Offset="0.48" Color="#FFD256" />
+        <GradientStop Offset="0.52" Color="#F7B300" />
+        <GradientStop Offset="1" Color="#FFDE7C" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+  <Style Selector="Button.donate:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="BorderBrush" Value="#C8940B" />
+    <Setter Property="Background">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#FFFAD8" />
+        <GradientStop Offset="0.48" Color="#FFE083" />
+        <GradientStop Offset="0.52" Color="#FFC02A" />
+        <GradientStop Offset="1" Color="#FFEBA8" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+  <Style Selector="Button.donate:pressed /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="Background">
+      <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#E5A400" />
+        <GradientStop Offset="1" Color="#FFD256" />
+      </LinearGradientBrush>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.donate TextBlock.heart">
+    <Setter Property="Text" Value="♥" />
+    <Setter Property="Foreground" Value="#D62B3A" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Button.donate TextBlock.label">
+    <Setter Property="Text" Value="Spenden" />
+    <Setter Property="Foreground" Value="Black" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+</Styles>
