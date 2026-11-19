@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using MyLittleSlideShow.Platform;
 using MyLittleSlideShow.Services;
+using MyLittleSlideShow.Localization;
 
 namespace MyLittleSlideShow.Views;
 
@@ -34,7 +35,7 @@ public partial class InfoWindow : Window
 
         if (metadata.Problem is { } problem)
         {
-            var warning = new TextBlock { Text = "Nicht alles war lesbar: " + problem, Classes = { "hint" } };
+            var warning = new TextBlock { Text = Tr.T("Nicht alles war lesbar: {0}", problem), Classes = { "hint" } };
             warning.Bind(TextBlock.ForegroundProperty, warning.GetResourceObservable("Fine.Warning"));
             SectionsPanel.Children.Add(warning);
         }
@@ -86,7 +87,7 @@ public partial class InfoWindow : Window
         var count = metadata.Tags.Count + (metadata.Truncated ? "+" : string.Empty);
         var toggle = new Button
         {
-            Content = $"Alle Einträge anzeigen ({count})",
+            Content = Tr.T("Alle Einträge anzeigen ({0})", count),
             Classes = { "subtle" },
             HorizontalAlignment = HorizontalAlignment.Left,
             Margin = new Thickness(-8, 0, 0, 0)
@@ -119,7 +120,7 @@ public partial class InfoWindow : Window
                 if (metadata.Truncated)
                     list.Children.Add(new TextBlock
                     {
-                        Text = $"… weitere Einträge ausgelassen (mehr als {ImageMetadataReader.MaxTags}).",
+                        Text = Tr.T("… weitere Einträge ausgelassen (mehr als {0}).", ImageMetadataReader.MaxTags),
                         Classes = { "hint" }
                     });
 
@@ -131,7 +132,7 @@ public partial class InfoWindow : Window
                 card.IsVisible = !card.IsVisible;
             }
 
-            toggle.Content = card.IsVisible ? "Alle Einträge ausblenden" : $"Alle Einträge anzeigen ({count})";
+            toggle.Content = card.IsVisible ? Tr.T("Alle Einträge ausblenden") : Tr.T("Alle Einträge anzeigen ({0})", count);
         };
 
         return holder;

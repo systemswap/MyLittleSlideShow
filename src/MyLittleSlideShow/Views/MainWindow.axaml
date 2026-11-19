@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MyLittleSlideShow.Localization"
         x:Class="MyLittleSlideShow.Views.MainWindow"
         x:Name="Main_Window"
         Title="MyLittleSlideShow"
@@ -63,65 +64,62 @@
               ColumnDefinitions="8,30,30,30,*,30,30,30,30,30,30,30,30,8">
 
           <Image x:Name="Prev_Button" Grid.Column="1" Classes="toolButton"
-                 ToolTip.Tip="vorheriges Bild"
+                 ToolTip.Tip="{l:T 'vorheriges Bild'}"
                  PointerPressed="Prev_PointerPressed"
                  PointerWheelChanged="Prev_PointerWheelChanged" />
 
           <Image x:Name="PlayStopImage" Grid.Column="2" Classes="toolButton"
-                 ToolTip.Tip="DiaShow Start/Stop"
+                 ToolTip.Tip="{l:T 'DiaShow Start/Stop'}"
                  PointerPressed="PlayStop_PointerPressed" />
 
           <Image x:Name="Next_Button" Grid.Column="3" Classes="toolButton"
-                 ToolTip.Tip="nächstes Bild"
+                 ToolTip.Tip="{l:T 'nächstes Bild'}"
                  PointerPressed="Next_PointerPressed"
                  PointerWheelChanged="Next_PointerWheelChanged" />
 
-          <!-- Spenden als Pille, mittig im freien Raum zwischen "naechstes Bild" und
-               Lupe. Reicht der Platz nicht fuer die Beschriftung, bleibt nur das Herz
-               (UpdateDonateButton). -->
+          <!-- Spenden: kleine goldene Pille nur mit Herz, mittig im freien Raum
+               zwischen "naechstes Bild" und Lupe; der Text steht im Tooltip.
+               Ohne Platz wird sie ausgeblendet (UpdateDonateButton). -->
           <Panel x:Name="DonateHost" Grid.Column="4">
             <Button x:Name="DonateButton" Classes="donate"
-                    Height="20" MinHeight="0" FontSize="10" Padding="8,0" CornerRadius="10"
+                    Height="20" MinHeight="0" Padding="8,0" CornerRadius="10"
                     HorizontalAlignment="Center"
                     Click="Donate_Click">
-              <StackPanel Orientation="Horizontal" Spacing="3">
-                <TextBlock Classes="heart" FontSize="13" />
-                <TextBlock x:Name="DonateLabel" Classes="label" />
-              </StackPanel>
+              <TextBlock Classes="heart" FontSize="13" />
             </Button>
           </Panel>
 
           <Image x:Name="ZoomImage" Grid.Column="5" Classes="toolButton"
-                 ToolTip.Tip="Größe ändern: links = größer, rechts = kleiner"
+                 ToolTip.Tip="{l:T 'Größe ändern: links = größer, rechts = kleiner'}"
                  PointerPressed="Zoom_PointerPressed" />
 
           <Image x:Name="InfoImage" Grid.Column="6" Classes="toolButton"
-                 ToolTip.Tip="Exif Daten"
+                 ToolTip.Tip="{l:T 'Exif Daten'}"
                  PointerPressed="Info_PointerPressed" />
 
           <Image x:Name="ChangeWallpaperImageButton" Grid.Column="7" Classes="toolButton"
-                 ToolTip.Tip="Aktuelles Bild als Desktophintergrund verwenden"
+                 ToolTip.Tip="{l:T 'Aktuelles Bild als Desktophintergrund verwenden'}"
                  PointerPressed="ChangeWallpaper_PointerPressed" />
 
           <Image x:Name="DeleteImageButton" Grid.Column="8" Classes="toolButton"
-                 ToolTip.Tip="Bild in den Papierkorb verschieben"
+                 ToolTip.Tip="{l:T 'Bild in den Papierkorb verschieben'}"
                  PointerPressed="Delete_PointerPressed" />
 
           <Image x:Name="RotateLeftImage" Grid.Column="9" Classes="toolButton"
-                 ToolTip.Tip="90° gegen Uhrzeigersinn drehen"
+                 ToolTip.Tip="{l:T '90° gegen Uhrzeigersinn drehen'}"
                  RenderTransform="scaleX(-1)"
                  PointerPressed="RotateLeft_PointerPressed" />
 
           <Image x:Name="RotateRightImage" Grid.Column="10" Classes="toolButton"
-                 ToolTip.Tip="90° im Uhrzeigersinn drehen"
+                 ToolTip.Tip="{l:T '90° im Uhrzeigersinn drehen'}"
                  PointerPressed="RotateRight_PointerPressed" />
 
           <Image x:Name="SettingsImageButton" Grid.Column="11" Classes="toolButton"
-                 ToolTip.Tip="Einstellungen"
+                 ToolTip.Tip="{l:T 'Einstellungen'}"
                  PointerPressed="Settings_PointerPressed" />
 
           <Image x:Name="CloseImageButton" Grid.Column="12" Classes="toolButton"
-                 ToolTip.Tip="MyLittleSlideShow beenden"
+                 ToolTip.Tip="{l:T 'MyLittleSlideShow beenden'}"
                  PointerPressed="Close_PointerPressed" />
         </Grid>
 
@@ -132,12 +130,12 @@
           <TextBlock x:Name="LoadedFilesLabel" Grid.Column="1" Text="Datei: 0 / 0"
                      Classes="statusText" />
 
-          <TextBlock x:Name="LoadTime_Label" Grid.Column="3" Text="Ladezeit [ms]:"
+          <TextBlock x:Name="LoadTime_Label" Grid.Column="3" Text="{l:T 'Ladezeit [ms]:'}"
                      Classes="statusText" HorizontalAlignment="Right" />
           <TextBlock x:Name="LoadTimeValue_Label" Grid.Column="4" Text="..."
                      Classes="statusText" />
 
-          <TextBlock x:Name="RestTime_Label" Grid.Column="5" Text="Timer:"
+          <TextBlock x:Name="RestTime_Label" Grid.Column="5" Text="{l:T 'Timer:'}"
                      Classes="statusText" HorizontalAlignment="Right" />
           <TextBlock x:Name="RestTimeValue_Label" Grid.Column="6" Text="angehalten"
                      Classes="statusText" />

@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using MyLittleSlideShow.Localization;
 using MyLittleSlideShow.Platform;
 using MyLittleSlideShow.Services;
 using PreviewSource = SkiaSharp.SKBitmap;
@@ -106,6 +107,13 @@ public partial class MainWindow : Window
         PointerExited += OnWindowPointerExited;
 
         DonateHost.SizeChanged += (_, e) => UpdateDonateButton(e.NewSize.Width);
+
+        // Im Code gesetzte Texte der Statuszeile; die uebrigen wechseln ueber ihre Bindung.
+        Tr.LanguageChanged += () =>
+        {
+            ShowFileCounter();
+            if (!_slideShowTimer.IsEnabled) RestTimeValue_Label.Text = Tr.T("angehalten");
+        };
     }
 
     // ---------------------------------------------------------------- Spenden
@@ -115,18 +123,14 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// Der freie Raum zwischen "naechstes Bild" und Lupe waechst mit der Fensterbreite.
-    /// Mit Beschriftung, wenn sie passt, sonst nur das Herz; passt nicht einmal das,
-    /// bleibt der Knopf weg statt die Nachbarn zu ueberdecken.
+    /// Passt die Pille nicht hinein, bleibt sie weg statt die Nachbarn zu ueberdecken.
     /// </summary>
     private void UpdateDonateButton(double hostWidth)
     {
-        // Feste Breiten der Pille (mit Beschriftung / nur Herz) statt Messen
-        // waehrend des Layouts - damit verschwand der Knopf, obwohl Platz war.
-        const double gap = 6, withLabel = 70, heartOnly = 30;
-        var available = hostWidth - 2 * gap;
-
-        DonateLabel.IsVisible = available >= withLabel;
-        DonateButton.IsVisible = available >= heartOnly;
+        // Feste Breite statt Messen waehrend des Layouts - damit verschwand der Knopf,
+        // obwohl Platz war. Innenabstand 2 x 8, Rand 2, Herz etwa 12.
+        const double gap = 6, pill = 30;
+        DonateButton.IsVisible = hostWidth - 2 * gap >= pill;
     }
 
     // ------------------------------------------------------------------ Start
@@ -351,7 +355,7 @@ public partial class MainWindow : Window
 
         if (_files.Length == 0)
         {
-            LoadedFilesLabel.Text = "Datei: 0 / 0";
+            ShowFileCounter();
             ToggleSlideShowTimer(TimerToggle.Stop);
             _currentFile = string.Empty;
             LoadDefaultBackground();
@@ -362,7 +366,7 @@ public partial class MainWindow : Window
 
         DetermineNextIndex(which, allowRandom);
 
-        LoadedFilesLabel.Text = $"Datei: {_fileIndex + 1} / {_files.Length}";
+        ShowFileCounter();
 
         var path = _files[_fileIndex];
         if (!File.Exists(path))
@@ -536,8 +540,8 @@ public partial class MainWindow : Window
             if (askUser)
             {
                 var result = await MyMessageBox.ShowDialogAsync(
-                    "Desktophintergrund ändern",
-                    "Soll dieses Bild als Desktophintergrund genutzt werden?",
+                    Tr.T("Desktophintergrund ändern"),
+                    Tr.T("Soll dieses Bild als Desktophintergrund genutzt werden?"),
                     this);
                 if (!result) return;
             }
@@ -572,6 +576,11 @@ public partial class MainWindow : Window
         }
     }
 
+    private void ShowFileCounter() =>
+        LoadedFilesLabel.Text = _files.Length == 0
+            ? Tr.T("Datei: {0} / {1}", 0, 0)
+            : Tr.T("Datei: {0} / {1}", _fileIndex + 1, _files.Length);
+
     // ----------------------------------------------------------------- Timer
 
     public void SetSlideShowInterval(int seconds) => _remainingSeconds = seconds;
@@ -594,7 +603,7 @@ public partial class MainWindow : Window
         else
         {
             PlayStopImage.Source = ImageProcessing.LoadAsset("Images/Play.png");
-            RestTimeValue_Label.Text = "angehalten";
+            RestTimeValue_Label.Text = Tr.T("angehalten");
             _slideShowTimer.Stop();
         }
     }

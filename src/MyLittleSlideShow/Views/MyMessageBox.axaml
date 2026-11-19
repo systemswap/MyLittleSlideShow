@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MyLittleSlideShow.Localization"
         x:Class="MyLittleSlideShow.Views.MyMessageBox"
         Title="MyMessageBox"
         SizeToContent="WidthAndHeight"
@@ -12,8 +13,8 @@
   <StackPanel Margin="16" Spacing="16">
     <TextBlock x:Name="Message_Label" TextWrapping="Wrap" MaxWidth="420" />
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-      <Button x:Name="Yes_Button" Content="Ja" Width="80" Click="Yes_Click" IsDefault="True" />
-      <Button x:Name="No_Button" Content="Nein" Width="80" Click="No_Click" IsCancel="True" />
+      <Button x:Name="Yes_Button" Content="{l:T 'Ja'}" Width="80" Click="Yes_Click" IsDefault="True" />
+      <Button x:Name="No_Button" Content="{l:T 'Nein'}" Width="80" Click="No_Click" IsCancel="True" />
     </StackPanel>
   </StackPanel>
 </Window>

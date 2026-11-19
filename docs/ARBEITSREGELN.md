@@ -121,7 +121,7 @@ Test bzw. welche Prüfung es absichert.
 
 ## Fertig ist eine Änderung, wenn …
 
-1. sie ohne neue Warnungen baut;
+1. sie ohne neue Warnungen baut und `tools/check-translations.py` nichts meldet;
 2. sie ausprobiert ist (eine Testsuite gibt es nicht);
 3. Doku, Kommentare und Fehlergedächtnis stimmen;
 4. die Version erhöht ist;

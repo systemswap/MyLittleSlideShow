@@ -179,3 +179,8 @@
 2.4.1-beta
 	#New - goldener Spenden-Knopf im Hauptfenster (mittig zwischen „nächstes Bild“ und Lupe; bei schmalem Fenster nur das Herz) und links in den Einstellungen
 	#Changed - Spenden über Ko-fi statt PayPal
+
+2.4.2-beta
+	#New - mehrsprachig: Deutsch und Englisch eingebaut, Auswahl mit Flaggen in den Einstellungen unter Sprache; die Sprache wechselt sofort
+	#New - weitere Sprachen als Datei im Ordner languages neben dem Programm; Beispieldatei mit allen Texten per Knopfdruck
+	#Changed - Spenden-Knopf im Hauptfenster als kleine goldene Pille nur mit Herz (Text im Tooltip)

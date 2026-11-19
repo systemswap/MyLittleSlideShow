@@ -4,7 +4,8 @@
      (zwei TextBlocks, ein Button hat nur eine Schriftfarbe); in hellem und dunklem
      Design gleich. -->
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MyLittleSlideShow.Localization">
 
   <Style Selector="Button.donate">
     <Setter Property="Foreground" Value="Black" />
@@ -15,7 +16,7 @@
     <Setter Property="Cursor" Value="Hand" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
-    <Setter Property="ToolTip.Tip" Value="MyLittleSlideShow unterstützen – öffnet die Spendenseite auf Ko-fi im Browser" />
+    <Setter Property="ToolTip.Tip" Value="{l:T 'MyLittleSlideShow unterstützen – öffnet die Spendenseite auf Ko-fi im Browser'}" />
   </Style>
   <Style Selector="Button.donate /template/ ContentPresenter#PART_ContentPresenter">
     <Setter Property="BorderBrush" Value="#C8940B" />
@@ -54,7 +55,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
   <Style Selector="Button.donate TextBlock.label">
-    <Setter Property="Text" Value="Spenden" />
+    <Setter Property="Text" Value="{l:T 'Spenden'}" />
     <Setter Property="Foreground" Value="Black" />
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>

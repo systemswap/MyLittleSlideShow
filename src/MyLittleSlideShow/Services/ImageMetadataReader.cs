@@ -1,4 +1,5 @@
 using System.Globalization;
+using MyLittleSlideShow.Localization;
 using System.Text;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
@@ -32,7 +33,7 @@ public static class ImageMetadataReader
     /// <summary>Laengster angezeigter Wert; laengere enden mit Auslassungszeichen.</summary>
     public const int MaxValueLength = 400;
 
-    private static CultureInfo Culture => CultureInfo.CurrentCulture;
+    private static CultureInfo Culture => Tr.Culture;
 
     /// <summary>Liest alles Lesbare aus der Datei.</summary>
     public static ImageMetadata Read(string path)
@@ -65,46 +66,46 @@ public static class ImageMetadataReader
         var xmp = SafeXmp(directories.OfType<XmpDirectory>().FirstOrDefault());
         var icc = directories.OfType<IccDirectory>().FirstOrDefault();
 
-        Add(MetadataSection.File, "Datei", FileFields(path, directories, ifd0));
-        Add(MetadataSection.Camera, "Kamera",
+        Add(MetadataSection.File, Tr.T("Datei"), FileFields(path, directories, ifd0));
+        Add(MetadataSection.Camera, Tr.T("Kamera"),
         [
-            Field("Hersteller", Text(ifd0, ExifDirectoryBase.TagMake)),
-            Field("Modell", Text(ifd0, ExifDirectoryBase.TagModel)),
-            Field("Objektiv", Text(sub, ExifDirectoryBase.TagLensModel) ?? Text(sub, ExifDirectoryBase.TagLensMake)),
-            Field("Software", Text(ifd0, ExifDirectoryBase.TagSoftware) ?? Xmp(xmp, "xmp:CreatorTool")),
+            Field(Tr.T("Hersteller"), Text(ifd0, ExifDirectoryBase.TagMake)),
+            Field(Tr.T("Modell"), Text(ifd0, ExifDirectoryBase.TagModel)),
+            Field(Tr.T("Objektiv"), Text(sub, ExifDirectoryBase.TagLensModel) ?? Text(sub, ExifDirectoryBase.TagLensMake)),
+            Field(Tr.T("Software"), Text(ifd0, ExifDirectoryBase.TagSoftware) ?? Xmp(xmp, "xmp:CreatorTool")),
         ]);
-        Add(MetadataSection.Capture, "Aufnahme",
+        Add(MetadataSection.Capture, Tr.T("Aufnahme"),
         [
-            Field("Aufnahmedatum", CaptureDate(sub, ifd0)),
-            Field("Belichtungszeit", ExposureTime(sub)),
-            Field("Blende", Aperture(sub)),
+            Field(Tr.T("Aufnahmedatum"), CaptureDate(sub, ifd0)),
+            Field(Tr.T("Belichtungszeit"), ExposureTime(sub)),
+            Field(Tr.T("Blende"), Aperture(sub)),
             Field("ISO", Integer(sub, ExifDirectoryBase.TagIsoEquivalent)),
-            Field("Brennweite", FocalLength(sub)),
-            Field("Belichtungskorrektur", ExposureBias(sub)),
-            Field("Programm", ExposureProgram(sub)),
-            Field("Blitz", Flash(sub)),
-            Field("Weißabgleich", WhiteBalance(sub)),
+            Field(Tr.T("Brennweite"), FocalLength(sub)),
+            Field(Tr.T("Belichtungskorrektur"), ExposureBias(sub)),
+            Field(Tr.T("Programm"), ExposureProgram(sub)),
+            Field(Tr.T("Blitz"), Flash(sub)),
+            Field(Tr.T("Weißabgleich"), WhiteBalance(sub)),
         ]);
-        Add(MetadataSection.Location, "Ort",
+        Add(MetadataSection.Location, Tr.T("Ort"),
         [
-            Field("Koordinaten", Coordinates(gps)),
-            Field("Höhe", Altitude(gps)),
-            Field("Ort", Join(Text(iptc, IptcDirectory.TagCity), Text(iptc, IptcDirectory.TagCountryOrPrimaryLocationName))),
+            Field(Tr.T("Koordinaten"), Coordinates(gps)),
+            Field(Tr.T("Höhe"), Altitude(gps)),
+            Field(Tr.T("Ort"), Join(Text(iptc, IptcDirectory.TagCity), Text(iptc, IptcDirectory.TagCountryOrPrimaryLocationName))),
         ]);
-        Add(MetadataSection.Description, "Urheber und Beschreibung",
+        Add(MetadataSection.Description, Tr.T("Urheber und Beschreibung"),
         [
-            Field("Urheber", Text(ifd0, ExifDirectoryBase.TagArtist) ?? Text(iptc, IptcDirectory.TagByLine) ?? Xmp(xmp, "dc:creator[1]")),
-            Field("Copyright", Text(ifd0, ExifDirectoryBase.TagCopyright) ?? Text(iptc, IptcDirectory.TagCopyrightNotice)
+            Field(Tr.T("Urheber"), Text(ifd0, ExifDirectoryBase.TagArtist) ?? Text(iptc, IptcDirectory.TagByLine) ?? Xmp(xmp, "dc:creator[1]")),
+            Field(Tr.T("Copyright"), Text(ifd0, ExifDirectoryBase.TagCopyright) ?? Text(iptc, IptcDirectory.TagCopyrightNotice)
                                ?? Xmp(xmp, "dc:rights[1]")),
-            Field("Titel", Text(iptc, IptcDirectory.TagObjectName) ?? Xmp(xmp, "dc:title[1]")),
-            Field("Beschreibung", Text(ifd0, ExifDirectoryBase.TagImageDescription) ?? Text(iptc, IptcDirectory.TagCaption)
+            Field(Tr.T("Titel"), Text(iptc, IptcDirectory.TagObjectName) ?? Xmp(xmp, "dc:title[1]")),
+            Field(Tr.T("Beschreibung"), Text(ifd0, ExifDirectoryBase.TagImageDescription) ?? Text(iptc, IptcDirectory.TagCaption)
                                   ?? Xmp(xmp, "dc:description[1]")),
-            Field("Stichwörter", Keywords(iptc, xmp)),
-            Field("Bewertung", Rating(xmp)),
+            Field(Tr.T("Stichwörter"), Keywords(iptc, xmp)),
+            Field(Tr.T("Bewertung"), Rating(xmp)),
         ]);
-        Add(MetadataSection.ColourProfile, "Farbprofil",
+        Add(MetadataSection.ColourProfile, Tr.T("Farbprofil"),
         [
-            Field("Profil", Text(icc, IccDirectory.TagTagDesc) ?? Text(icc, IccDirectory.TagProfileClass)),
+            Field(Tr.T("Profil"), Text(icc, IccDirectory.TagTagDesc) ?? Text(icc, IccDirectory.TagProfileClass)),
         ]);
 
         var (tags, truncated) = AllTags(directories);
@@ -131,11 +132,11 @@ public static class ImageMetadataReader
             // Dateiangaben unbekannt
         }
 
-        yield return Field("Name", file?.Name);
-        yield return Field("Ordner", file?.DirectoryName);
+        yield return Field(Tr.T("Name"), file?.Name);
+        yield return Field(Tr.T("Ordner"), file?.DirectoryName);
 
         var type = directories.OfType<FileTypeDirectory>().FirstOrDefault();
-        yield return Field("Format", Text(type, FileTypeDirectory.TagDetectedFileTypeName));
+        yield return Field(Tr.T("Format"), Text(type, FileTypeDirectory.TagDetectedFileTypeName));
 
         long bytes = 0;
         try
@@ -146,15 +147,15 @@ public static class ImageMetadataReader
         {
             // Groesse unbekannt
         }
-        if (bytes > 0) yield return Field("Dateigröße", FormatBytes(bytes));
+        if (bytes > 0) yield return Field(Tr.T("Dateigröße"), FormatBytes(bytes));
 
         // Bildmasse so, wie die Diaschau das Bild zeigt (EXIF-Drehung beruecksichtigt)
         var size = PixelSize(path);
         if (size is { } s)
-            yield return Field("Bildmaße", string.Format(Culture, "{0} × {1} Pixel ({2:0.#} MP)", s.Width, s.Height,
+            yield return Field(Tr.T("Bildmaße"), string.Format(Culture, Tr.T("{0} × {1} Pixel ({2:0.#} MP)"), s.Width, s.Height,
                                                          s.Width * (double)s.Height / 1e6));
 
-        yield return Field("Auflösung", Resolution(ifd0));
+        yield return Field(Tr.T("Auflösung"), Resolution(ifd0));
 
         DateTime? created = null, modified = null;
         try
@@ -166,8 +167,8 @@ public static class ImageMetadataReader
         {
             // Datum unbekannt
         }
-        yield return Field("Erstellt", created?.ToString("G", Culture));
-        yield return Field("Geändert", modified?.ToString("G", Culture));
+        yield return Field(Tr.T("Erstellt"), created?.ToString("G", Culture));
+        yield return Field(Tr.T("Geändert"), modified?.ToString("G", Culture));
     }
 
     private static (int Width, int Height)? PixelSize(string path)
@@ -238,7 +239,7 @@ public static class ImageMetadataReader
             ? string.Format(Culture, "{0:0.#} mm", r.ToDouble())
             : null;
         string? kb = sub.TryGetInt32(ExifDirectoryBase.Tag35MMFilmEquivFocalLength, out var e) && e > 0
-            ? string.Format(Culture, "entspricht {0} mm Kleinbild", e)
+            ? string.Format(Culture, Tr.T("entspricht {0} mm Kleinbild"), e)
             : null;
         return mm is null ? kb : kb is null ? mm : $"{mm} ({kb})";
     }
@@ -252,26 +253,26 @@ public static class ImageMetadataReader
         sub is not null && sub.TryGetInt32(ExifDirectoryBase.TagExposureProgram, out var p)
             ? p switch
             {
-                1 => "Manuell",
-                2 => "Programmautomatik",
-                3 => "Zeitautomatik (Blende vorgewählt)",
-                4 => "Blendenautomatik (Zeit vorgewählt)",
-                5 => "Kreativprogramm (Schärfentiefe)",
-                6 => "Actionprogramm (kurze Zeit)",
-                7 => "Porträt",
-                8 => "Landschaft",
+                1 => Tr.T("Manuell"),
+                2 => Tr.T("Programmautomatik"),
+                3 => Tr.T("Zeitautomatik (Blende vorgewählt)"),
+                4 => Tr.T("Blendenautomatik (Zeit vorgewählt)"),
+                5 => Tr.T("Kreativprogramm (Schärfentiefe)"),
+                6 => Tr.T("Actionprogramm (kurze Zeit)"),
+                7 => Tr.T("Porträt"),
+                8 => Tr.T("Landschaft"),
                 _ => null,
             }
             : null;
 
     private static string? Flash(ExifSubIfdDirectory? sub) =>
         sub is not null && sub.TryGetInt32(ExifDirectoryBase.TagFlash, out var f)
-            ? (f & 1) != 0 ? "ausgelöst" : "nicht ausgelöst"
+            ? (f & 1) != 0 ? Tr.T("ausgelöst") : Tr.T("nicht ausgelöst")
             : null;
 
     private static string? WhiteBalance(ExifSubIfdDirectory? sub) =>
         sub is not null && sub.TryGetInt32(ExifDirectoryBase.TagWhiteBalanceMode, out var w)
-            ? w == 0 ? "automatisch" : w == 1 ? "manuell" : null
+            ? w == 0 ? Tr.T("automatisch") : w == 1 ? Tr.T("manuell") : null
             : null;
 
     // ------------------------------------------------------------ Ort
@@ -283,7 +284,7 @@ public static class ImageMetadataReader
             return null;
         return string.Format(Culture, "{0:0.00000}° {1}, {2:0.00000}° {3}",
             Math.Abs(g.Latitude), g.Latitude >= 0 ? "N" : "S",
-            Math.Abs(g.Longitude), g.Longitude >= 0 ? "O" : "W");
+            Math.Abs(g.Longitude), g.Longitude >= 0 ? Tr.T("O") : "W");   // O = Ost (englisch E)
     }
 
     private static string? Altitude(GpsDirectory? gps)

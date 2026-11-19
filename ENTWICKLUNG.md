@@ -44,6 +44,21 @@ Git-Historie und im Changelog (`src/MyLittleSlideShow/Infos/Changelog.txt`).
   des Arbeitsbereichs, Rahmen eingerechnet.
 - Avalonia-Dialoge sind nur asynchron (`await ShowDialog`).
 
+## Sprachen
+
+- Der deutsche Text ist zugleich der Schlüssel: im Code `Tr.T("…")`, in XAML
+  `{l:T '…'}` (`Localization/`). Im Code gesetzte Texte frischen ihre Fenster
+  über `Tr.LanguageChanged` auf.
+- Englisch steht in `Localization/English.cs`. Nach neuen oder geänderten Texten
+  `python3 tools/check-translations.py` laufen lassen – es meldet Texte ohne
+  englische Übersetzung und nicht mehr benutzte Einträge.
+- Weitere Sprachen: JSON-Dateien im Ordner `languages` neben dem Programm (bei
+  der AppImage neben der .AppImage-Datei). Aufbau in `Localization/Language.cs`;
+  Dateien mit `_` am Anfang (Beispieldatei) werden nicht geladen. Fehlt ein Text,
+  gilt der englische.
+- Jede Zeile von `Infos/HiddenOptions.txt` ist ein Schlüssel. Changelog und
+  Lizenztexte werden nicht übersetzt.
+
 ## Plattformen
 
 Alles Betriebssystemspezifische liegt in `Platform/` hinter Interfaces;
@@ -81,7 +96,8 @@ src/MyLittleSlideShow/
 │   ├── AboutWindow             Changelog, versteckte Optionen, Lizenzen
 │   ├── MyMessageBox            Ja/Nein-Dialog
 │   └── ScreenFit.cs            Dialoge passen immer auf den Bildschirm
-├── Themes/FineTheme.axaml      gemeinsames Design der Dialoge
+├── Themes/                     gemeinsames Design der Dialoge, Spenden-Knopf
+├── Localization/               Übersetzung: Tr, Englisch, Sprachdateien
 ├── Services/
 │   ├── SkiaImaging.cs          Bildkern: dekodieren, skalieren, schärfen, kodieren
 │   ├── ImageProcessing.cs      Bildfunktionen für die Oberfläche
@@ -91,6 +107,7 @@ src/MyLittleSlideShow/
 └── Platform/                   Windows/Linux: Hintergrund, Autostart, Papierkorb, Standby
 packaging/linux/                Menüeintrag, Symbol, einrichten.sh / entfernen.sh
 packaging/licenses/             Lizenztexte der Fremdbestandteile
+tools/check-translations.py     prüft die englische Übersetzung
 docs/                           Fehlergedächtnis, Arbeitsregeln
 ```
 

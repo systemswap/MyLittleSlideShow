@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using MyLittleSlideShow.Localization;
 using MyLittleSlideShow.Platform;
 using MyLittleSlideShow.Services;
 
@@ -40,6 +41,9 @@ public partial class SettingsWindow : Window
     // gewaehlter Wert wie 100 s wird so nicht still auf eine Stufe gerundet.
     private int _intervalSeconds;
 
+    // Sprache beim Oeffnen: "Abbrechen" (oder Schliessen ohne Speichern) stellt sie wieder her.
+    private readonly Language _languageAtOpen = Tr.Current;
+
     /// <summary>Meldet dem Hauptfenster, ob es sich neu laden muss.</summary>
     public bool SettingsSaved { get; private set; }
 
@@ -55,6 +59,12 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         ScreenFit.Attach(this);
         Loaded += OnLoaded;
+        Tr.LanguageChanged += RefreshCodeTexts;
+        Closed += (_, _) =>
+        {
+            Tr.LanguageChanged -= RefreshCodeTexts;
+            if (!SettingsSaved) Tr.Use(_languageAtOpen);
+        };
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -83,22 +93,25 @@ public partial class SettingsWindow : Window
         Random_CheckBox.IsChecked = S.RandomImages;
 
         EveryImageAsWallpaper_CheckBox.IsChecked = S.SetEveryImageAsWallpaper;
-        WallpaperStyle_ComboBox.ItemsSource = Enum.GetValues<WallpaperStyle>();
-        WallpaperStyle_ComboBox.SelectedItem = S.WallpaperStyle;
+        FillWallpaperStyles(S.WallpaperStyle);
 
         if (!platform.Wallpaper.IsSupported)
         {
             EveryImageAsWallpaper_CheckBox.IsEnabled = false;
             WallpaperStyle_ComboBox.IsEnabled = false;
-            WallpaperHint.Text = "Für diese Desktopumgebung ist kein Werkzeug zum Setzen des " +
-                                 "Hintergrundbilds verfügbar (erwartet werden gsettings, " +
-                                 "plasma-apply-wallpaperimage, xfconf-query oder feh).";
             WallpaperHint.IsVisible = true;
         }
 
         _folderPath = S.FolderPath;
-        FolderPath_Label.Text = string.IsNullOrEmpty(_folderPath) ? "(kein Pfad gewählt)" : _folderPath;
         Recursive_CheckBox.IsChecked = S.ScanFolderRecursive;
+
+        FillLanguages();
+        Language_ComboBox.SelectionChanged += (_, _) =>
+        {
+            if (Language_ComboBox.SelectedItem is Language language) Tr.Use(language);
+        };
+
+        RefreshCodeTexts();
 
         // Erst nach dem Befuellen anhaengen, sonst feuert jede Zuweisung oben
         // eine Vorschau mit halb gesetzten Werten.
@@ -183,7 +196,7 @@ public partial class SettingsWindow : Window
         // plattformunabhaengigen StorageProvider von Avalonia.
         var folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
-            Title = "Ordner mit Bildern wählen",
+            Title = Tr.T("Ordner mit Bildern wählen"),
             AllowMultiple = false
         });
 
@@ -194,14 +207,90 @@ public partial class SettingsWindow : Window
         if (string.IsNullOrEmpty(path)) return;
 
         _folderPath = path;
-        FolderPath_Label.Text = _folderPath;
+        RefreshCodeTexts();
     }
 
     private void ResetPath_Click(object? sender, RoutedEventArgs e)
     {
         _folderPath = string.Empty;
-        FolderPath_Label.Text = "(kein Pfad gewählt)";
+        RefreshCodeTexts();
         S.LastLoadedFile = string.Empty;
+    }
+
+    // ---------------------------------------------------------------- Sprache
+
+    /// <summary>Im Code gesetzte Texte; die XAML-Texte wechseln ueber ihre Bindung von selbst.</summary>
+    private void RefreshCodeTexts()
+    {
+        FolderPath_Label.Text = string.IsNullOrEmpty(_folderPath) ? Tr.T("(kein Pfad gewählt)") : _folderPath;
+        WallpaperHint.Text = Tr.T("Für diese Desktopumgebung ist kein Werkzeug zum Setzen des Hintergrundbilds " +
+                                  "verfügbar (erwartet werden gsettings, plasma-apply-wallpaperimage, xfconf-query oder feh).");
+        if (WallpaperStyle_ComboBox.SelectedItem is WallpaperChoice choice) FillWallpaperStyles(choice.Style);
+    }
+
+    /// <summary>Eintrag der Auswahl "Anordnung" mit uebersetztem Namen.</summary>
+    private sealed record WallpaperChoice(WallpaperStyle Style)
+    {
+        public override string ToString() => Style switch
+        {
+            WallpaperStyle.Zentriert => Tr.T("Zentriert"),
+            WallpaperStyle.Gestreckt => Tr.T("Gestreckt"),
+            _ => Tr.T("Angepasst"),
+        };
+    }
+
+    private void FillWallpaperStyles(WallpaperStyle selected)
+    {
+        var choices = Enum.GetValues<WallpaperStyle>().Select(s => new WallpaperChoice(s)).ToList();
+        WallpaperStyle_ComboBox.ItemsSource = choices;
+        WallpaperStyle_ComboBox.SelectedItem = choices.First(c => c.Style == selected);
+    }
+
+    private void FillLanguages(string? select = null)
+    {
+        var languages = Languages.All(out var problems);
+        Language_ComboBox.ItemsSource = languages;
+        var code = select ?? Tr.Current.Code;
+        Language_ComboBox.SelectedItem = languages.FirstOrDefault(l => l.Code == code) ?? languages[0];
+        ShowLanguageHint(problems.Count > 0 ? string.Join(Environment.NewLine, problems) : null, warning: true);
+    }
+
+    private void ShowLanguageHint(string? text, bool warning)
+    {
+        LanguageHint.Text = text;
+        LanguageHint.IsVisible = text is not null;
+        if (warning) LanguageHint.Bind(TextBlock.ForegroundProperty, LanguageHint.GetResourceObservable("Fine.Warning"));
+        else LanguageHint.ClearValue(TextBlock.ForegroundProperty);
+    }
+
+    private void CreateSampleLanguage_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var file = Languages.WriteSample();
+            ShowLanguageHint(Tr.T("Beispieldatei geschrieben: {0}", file), warning: false);
+            PlatformServices.Current.Shell.RevealInFileManager(file);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            ShowLanguageHint(Tr.T("Die Beispieldatei konnte nicht geschrieben werden: {0}", ex.Message), warning: true);
+        }
+    }
+
+    private void OpenLanguageFolder_Click(object? sender, RoutedEventArgs e)
+    {
+        var folder = Languages.Folder;
+        try
+        {
+            Directory.CreateDirectory(folder);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            ShowLanguageHint(Tr.T("Der Ordner {0} konnte nicht angelegt werden: {1}", folder, ex.Message), warning: true);
+            return;
+        }
+        // Neu hineinkopierte Dateien erscheinen beim naechsten Oeffnen der Einstellungen.
+        PlatformServices.Current.Shell.OpenFile(folder);
     }
 
     private void Save_Click(object? sender, RoutedEventArgs e)
@@ -230,8 +319,10 @@ public partial class SettingsWindow : Window
         S.RandomImages = Random_CheckBox.IsChecked == true;
 
         S.SetEveryImageAsWallpaper = EveryImageAsWallpaper_CheckBox.IsChecked == true;
-        if (WallpaperStyle_ComboBox.SelectedItem is WallpaperStyle style)
-            S.WallpaperStyle = style;
+        if (WallpaperStyle_ComboBox.SelectedItem is WallpaperChoice style)
+            S.WallpaperStyle = style.Style;
+
+        S.Language = Tr.Current.Code;
 
         S.FolderPath = _folderPath;
         S.ScanFolderRecursive = Recursive_CheckBox.IsChecked == true;

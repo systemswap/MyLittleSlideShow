@@ -1,7 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="using:MyLittleSlideShow.Localization"
         x:Class="MyLittleSlideShow.Views.AboutWindow"
-        Title="Infos"
+        Title="{l:T 'Infos'}"
         Width="460" Height="480"
         WindowStartupLocation="CenterOwner"
         FontSize="12"
@@ -80,7 +81,7 @@
             BorderBrush="{DynamicResource Fine.CardBorder}"
             Background="{DynamicResource Fine.CardBackground}"
             Padding="18,10,18,10">
-      <Button Classes="primary" Content="Schließen" HorizontalAlignment="Right"
+      <Button Classes="primary" Content="{l:T 'Schließen'}" HorizontalAlignment="Right"
               Click="Close_Click" IsCancel="True" IsDefault="True" MinWidth="96" />
     </Border>
 
@@ -90,17 +91,17 @@
           <StackPanel Orientation="Horizontal" Margin="0,0,0,10" />
         </ItemsPanelTemplate>
       </TabControl.ItemsPanel>
-      <TabItem Header="Versteckte Optionen">
+      <TabItem Header="{l:T 'Versteckte Optionen'}">
         <Border Classes="card" Padding="0,6">
           <ListBox x:Name="HiddenOptions" />
         </Border>
       </TabItem>
-      <TabItem Header="Changelog">
+      <TabItem Header="{l:T 'Changelog'}">
         <Border Classes="card" Padding="0,6">
           <ListBox x:Name="ChangeLogText_ListBox" />
         </Border>
       </TabItem>
-      <TabItem Header="Lizenzen">
+      <TabItem Header="{l:T 'Lizenzen'}">
         <Border Classes="card" Padding="0,6">
           <ListBox x:Name="Licenses_ListBox" />
         </Border>

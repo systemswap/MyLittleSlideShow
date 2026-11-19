@@ -12,6 +12,9 @@ namespace MyLittleSlideShow.Services;
 /// </summary>
 public sealed class AppSettings
 {
+    /// <summary>Sprachcode der Oberflaeche ("de", "en", "fr" ...); leer = Sprache des Systems.</summary>
+    public string Language { get; set; } = string.Empty;
+
     public bool Autostart { get; set; }
     public bool DisplayAlwaysOn { get; set; }
     public string LastPathOfApplication { get; set; } = string.Empty;

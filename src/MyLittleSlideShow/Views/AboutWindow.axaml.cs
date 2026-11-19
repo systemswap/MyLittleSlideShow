@@ -1,6 +1,7 @@
 using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using MyLittleSlideShow.Localization;
 
 namespace MyLittleSlideShow.Views;
 
@@ -14,7 +15,9 @@ public partial class AboutWindow : Window
     {
         InitializeComponent();
         ScreenFit.Attach(this);
-        HiddenOptions.ItemsSource = ReadEmbeddedLines("MyLittleSlideShow.Infos.HiddenOptions.txt");
+        // Jede Zeile der Hilfe ist ein Uebersetzungsschluessel (Leerzeilen bleiben leer).
+        HiddenOptions.ItemsSource = ReadEmbeddedLines("MyLittleSlideShow.Infos.HiddenOptions.txt")
+                                        .Select(line => line.Trim().Length == 0 ? line : Tr.T(line)).ToList();
         ChangeLogText_ListBox.ItemsSource = ReadEmbeddedLines("MyLittleSlideShow.Infos.Changelog.txt");
         Licenses_ListBox.ItemsSource = LicenseLines();
     }
@@ -57,7 +60,7 @@ public partial class AboutWindow : Window
         }
         catch
         {
-            lines.Add("Datei konnte nicht gelesen werden.");
+            lines.Add(Tr.T("Datei konnte nicht gelesen werden."));
         }
         return lines;
     }

@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using MyLittleSlideShow.Localization;
 using MyLittleSlideShow.Platform;
 using MyLittleSlideShow.Services;
 using MyLittleSlideShow.Views;
@@ -18,6 +19,7 @@ public partial class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         SettingsManager = new SettingsManager();
+        UseSavedLanguage(SettingsManager.Settings.Language);
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -35,6 +37,13 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    /// <summary>Gespeicherte Sprache, beim ersten Start (oder wenn ihre Datei fehlt) die des Systems.</summary>
+    private static void UseSavedLanguage(string code)
+    {
+        var languages = Languages.All(out _);
+        Tr.Use(languages.FirstOrDefault(l => l.Code == code) ?? Languages.ForSystem(languages));
     }
 
     private static Views.MainWindow? Main =>

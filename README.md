@@ -88,6 +88,9 @@ Bildschirm abgezogen wird.
 - **In den Papierkorb** statt endgültig löschen.
 - **Dateiinfos** zu jedem Bild: Kamera, Aufnahme, Ort, Urheber und Farbprofil aus EXIF, IPTC und XMP.
 - **Formate:** JPEG, PNG, GIF, BMP und WebP.
+- **Deutsch und Englisch** eingebaut, umschaltbar in den Einstellungen. Weitere Sprachen kommen als Datei in den Ordner
+  `languages` neben dem Programm: *Einstellungen › Sprache › Beispieldatei erstellen* legt eine Vorlage mit allen
+  Texten an – kopieren, z. B. als `fr.json`, übersetzen, fertig.
 
 ---
 
